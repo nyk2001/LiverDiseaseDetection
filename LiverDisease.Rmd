@@ -1,0 +1,154 @@
+---
+title: "Liver Disease Classification"
+author: "Nabeel Khan"
+date: "16-May-2020"
+output:
+  pdf_document: 
+    keep_tex: true
+    number_sections: yes
+    toc: yes
+    highlight: tango
+    df_print: kable
+  html_document:
+    df_print: paged
+    number_sections: yes
+    toc: yes
+---
+\section{Introduction}
+\label{sec:introduction}
+This report is part of the ‘HarvardX: PH125.9x Data Science: Capstone’ course. In this report, we chose a dataset of our choice and apply various machine learning techniques to perform binary classification to diagnose liver disease. 
+
+\subsection{Background}
+\label{sec:background}
+The liver plays an important role in keeping us healthy. The main job of liver is to filter the blood coming from the digestive tract, before passing it to the rest of the body. The liver also turns nutrients into chemicals our body needs, turns food into energy, and filters out poisons. So, malfunctioing of liver affects the whole body.
+
+The classification techniques are used in various automatic medical diagnoses tools\cite{cad}.The problems with liver patients are not easily discovered in an early stage. An early diagnosis of liver problems will help in increasing the survival rate of patiets. We can detect the liver disease by analyzing the levels of enzymes in the blood \cite{ld}. A classification algorithm capable of automatically detecting the liver disease can assisst the doctors. 
+
+\subsection{Aim of Project}
+\label{sec:aim}
+The patients with liver disease are on the rise because of excessive consumption of
+alcohol, inhale of harmful gases, intake of contaminated food, pickles and drugs. The aim of this proect is to develop a bianry classifier, which can use blood enzymes information to diagnose liver disease. 
+
+\section{Dataset and Evaluation Metrics}
+\label{sec:dataset}
+We use the Liver Patient Records, which are collected from North East of Andhra Pradesh, India. The data set contains:
+\begin{enumerate}
+\item 416 liver patient records and 167 non-liver patient records.
+\end{enumerate} 
+
+\subsection{Download Data}
+\label{sec:dd}
+The dataset is publically available online both at Kaggle and UCI repository.
+We download data from the website. Then, we split data into a training and validation sets. 
+\begin{itemize}
+\item 10% of the data is used for validation, and 90% is used for training.
+\end{itemize}
+```{r}
+################################
+#  Install packages (if not installed)
+################################
+# Note: this process could take a couple of minutes
+repos_path<- "http://cran.us.r-project.org"
+if(!require(tidyverse)) install.packages("tidyverse", repos =repos_path)
+if(!require(caret)) install.packages("caret", repos = repos_path)
+if(!require(data.table)) install.packages("data.table", repos =repos_path)
+if(!require(lubridate)) install.packages("lubridate", repos = repos_path)
+if(!require(dplyr)) install.packages("dplyr", repos = repos_path)
+if(!require(sjmisc)) install.packages("dplyr", repos = repos_path)
+if(!require(sjmisc)) install.packages("scales", repos = repos_path)
+
+################################
+# Load libraries
+################################
+library(lubridate)
+library(tidyverse)
+library(dplyr)
+library(lubridate)
+library(sjmisc)
+library(scales)
+
+```
+
+```{r}
+################################
+# Downloading data
+################################
+# Indian Live Patient Records :
+ # https://www.kaggle.com/uciml/indian-liver-patient-records/
+ # https://archive.ics.uci.edu/ml/machine-learning-databases/00225/Indian Liver Patient Dataset (ILPD).csv
+
+url <- "https://archive.ics.uci.edu/ml/machine-learning-databases/00225/Indian Liver Patient Dataset (ILPD).csv"
+# Download csv
+liverData <- read.csv(url)
+
+# Rename columns of csv
+colnames(liverData)<- c("Age","Gender","Total_Bilirubin","Direct_Bilirubin", "Alkaline_Phosphotase","Alamine_Aminotransferase","Aspartate_Aminotransferase",	"Total_Protiens","Albumin","Albumin_and_Globulin_Ratio","Dataset")
+
+################################
+# Creating training and validation sets
+################################
+
+# Validation set will be 10% of whole data
+set.seed(1, sample.kind = "Rounding")
+test_index <- createDataPartition(y = liverData$Dataset, times = 1, p = 0.1, list = FALSE)
+
+training <- liverData[-test_index,]
+validation <- liverData[test_index,]
+
+ # Removing the objects from environment as no longer required
+rm(liverData)
+
+```
+\subsection{Metrics}
+\label{sec:metrics}
+To evaluate the performance of classifiers, we will use following metrics:
+\begin{enumerate}
+\item \textbf{Accuracy}
+It is the ratio of number of correct predictions to the total number of input samples.
+\begin{equation}
+Accuracy = \frac{True positives + True negatives} {Total Predictions}
+\end{equation}
+
+\item \textbf{Sensitivity}
+It is also referred as true positive rate or recall. It is the proportion of true positives that are correctly identified.
+
+\begin{equation}
+Sensitivity = \frac{Number of true positives} {Number of true positives + Number of false negatives}
+\end{equation}
+
+\item \textbf{Precision}
+It is defined as the proportion of the true positives against all the positive
+results.
+
+\begin{equation}
+Precision = \frac{Number of true positives} {Number of true positives + Number of false positives}
+\end{equation}
+
+\item \textbf{Specificity}
+It is the True negative rate. It is the proportion of true negatives that are
+correctly identified.
+
+\begin{equation}
+Specificity = \frac{Number of true negatives} {Number of true negatives + Number of false positives}
+\end{equation}
+
+\item \textbf{F1 Score}
+One metric that is preferred over overall accuracy is the average of specificity and sensitivity, referred to as balanced accuracy. Because specificity and sensitivity are rates, it is more appropriate to compute the harmonic average. In fact, the F1-score is widely used to compute harmonic average of precision and recall.
+
+\begin{equation}
+F1 Score = 2 * \frac{Precision - Recall} {Precision + Recall}
+\end{equation}
+
+\end{enumerate}
+
+\begin{thebibliography}{9}
+\bibitem{cad} 
+Ethan Du-Crowa, Lucy Warrenb, Susan M Astleya and Johan Hullemanc,"Is there a safety-net effect with Computer-Aided Detection (CAD)?", Medical Imaging 2019.
+\bibitem{ld}
+Eugene, R., Sorrell, Michael F.; Maddrey, Willis C., "Schiff's Diseases of the Liver", 10th Edition, Lippincott Williams \& Wilkins by Schiff.
+ 
+
+
+\end{thebibliography}
+
+
