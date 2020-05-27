@@ -410,6 +410,7 @@ ggplot(train_rpart)
 ```
 \subsection{RF}
 ```{r}
+library(caret)
 ctrl <- trainControl(method = "repeatedcv", repeats = 3)
 
 train_rpart <- train(Disease~Total_Bilirubin+Direct_Bilirubin+Alkaline_Phosphotase+Alamine_Aminotransferase+Aspartate_Aminotransferase, 
