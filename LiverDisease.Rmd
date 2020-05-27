@@ -188,25 +188,248 @@ head(training)
 In this section, we extract insights from all variables to get in depth understanding.
 
 \subsection{Age}
-The patients in our dataset has varying ages, which is good and makes our dataset un-biased. 
+The dataset consists of patients with varying ages, which makes this dataset robust and un-biased towards a specific age group. 
 
 ```{r}
-my_breaks <- seq(1,10,by=1)
-
+# Extracting frequency of patient ages
 age_stats <-as.data.frame(table(training$Age))
 names(age_stats)<- c("Age","Count")
-age_stats %>% ggplot(aes(Age, Count )) +
-  geom_point() 
+# Remvoing the factor
+age_stats$Age<-as.numeric(levels(age_stats$Age))
+
+# Plotting distribution of ages
+age_stats %>% ggplot(aes(Age, Count)) +
+  geom_point(color="cadetblue") +
+  scale_x_continuous(breaks = round(seq(min(age_stats$Age), max(age_stats$Age), by = 6),1)) +
+  ggtitle("Distribution of Patient Ages")
+
+```
+We analyse the age distributions with respect to the liver disease. The distributions again suggest a good spread of age group. 
+
+```{r}
+# Plotting distributions of ages versus liver diseases
+training %>% 
+  ggplot(aes(as.numeric(row.names(training)),Age, color=Disease)) +
+  geom_point() +
+  labs(y="Age", x = "Number of patients")+
+  facet_wrap( ~ Disease) +
+  ggtitle("Distribution of ages w.r.t liver disease")
+```
+\subsection{Gender}
+The analysis indicates that 76% of the patient records belong to males. It would have been good to have more and less equal distribution of genders. Although, it may not make difference in the performance of models.  
+```{r}
+# Getting summary of genders
+summary(training$Gender)
+```
+\subsection{Total_Bilirubin}
+Bilirubin refears to any form of a yellowish pigment made in the liver when red blood cells are broken down. We can see pattern that levels of Total_Bilirubin are high for patients with liver diseases.  
+
+```{r}
+# Plotting distributions of Total_Bilirubin versus liver diseases
+training %>% 
+  ggplot(aes(as.numeric(row.names(training)),Total_Bilirubin, color=Disease)) +
+  geom_boxplot() +
+  labs(y="Total_Bilirubin", x = "Number of patients")+
+  facet_wrap( ~ Disease) +
+  ggtitle("Distribution of Total_Bilirubin w.r.t liver disease")
 
 ```
 
+\subsection{Direct_Bilirubin}
+Again, we can see that levels of Direct_Bilirubin are also high for patients with liver diseases.  
 
 ```{r}
+# Plotting distributions of Total_Bilirubin versus liver diseases
 training %>% 
-  ggplot(aes(as.numeric(row.names(training)),Age, color=Disease)) +
-  geom_line() +
-  labs(y="Age", x = "Number of patients")+
-  facet_wrap( ~ Disease) 
+  ggplot(aes(as.numeric(row.names(training)),Direct_Bilirubin, color=Disease)) +
+  geom_boxplot() +
+  labs(y="Direct_Bilirubin", x = "Number of patients")+
+  facet_wrap( ~ Disease) +
+  ggtitle("Distribution of Direct_Bilirubin w.r.t liver disease")
+
+```
+The correlations indicate that there is a weak correlation between liver disease and bilirubin. Though, the values are comparatively higher with liver diseases.
+```{r}
+subset_train <- training[c("Total_Bilirubin","Direct_Bilirubin")]
+subset_train <- transform(subset_train, Disease= ifelse(training$Disease=="M", 1,0))
+cor(subset_train) 
+```
+\subsection{Alkaline Phosphotase}
+Alkaline phosphatase (ALP) is an enzyme in a person's blood that helps break down proteins. We observe that levels of Alkaline Phosphotase are comparatively high for patients with liver diseases.  
+
+```{r}
+# Plotting distributions of Alkaline Phosphotase versus liver diseases
+training %>% 
+  ggplot(aes(as.numeric(row.names(training)),Alkaline_Phosphotase, color=Disease)) +
+  geom_boxplot() +
+  labs(y="Alkaline Phosphotase", x = "Number of patients")+
+  facet_wrap( ~ Disease) +
+  ggtitle("Distribution of Alkaline Phosphotase w.r.t liver disease")
+```
+ 
+\subsection{Alamine_Aminotransferase}
+Alanine aminotransferase (ALT) is an enzyme found primarily in the liver and kidney. ALT is increased with liver damage and is used to screen liver disease. We can see that levels of Alamine_Aminotransferase are high for patients with liver diseases.  
+
+```{r}
+# Plotting distributions of Alamine Aminotransferase versus liver diseases
+training %>% 
+  ggplot(aes(as.numeric(row.names(training)),Alamine_Aminotransferase, color=Disease)) +
+  geom_boxplot() +
+  labs(y="Alamine Aminotransferase", x = "Number of patients")+
+  facet_wrap( ~ Disease) +
+  ggtitle("Distribution of Alamine Aminotransferase w.r.t liver disease") 
+```
+
+\subsection{Aspartate_Aminotransferase}
+Aspartate aminotransferase (AST) is an enzyme found in cells throughout the body but mostly in the heart and liver. In healthy individuals, levels of AST in the blood are low. When liver is damaged, they release AST into the blood thus raising the levels.We can see that levels of AST are comparatively high for very few patients with liver diseases.  
+
+```{r}
+# Plotting distributions of Aspartate_Aminotransferase versus liver diseases
+training %>% 
+  ggplot(aes(as.numeric(row.names(training)),Aspartate_Aminotransferase, color=Disease)) +
+  geom_boxplot() +
+  labs(y="Aspartate Aminotransferase", x = "Number of patients")+
+  facet_wrap( ~ Disease) +
+  ggtitle("Distribution of Aspartate Aminotransferase w.r.t liver disease") 
+```
+\subsection{Total Protiens}
+The total protein test measures the total amount albumin and globulin in your body. It is used as part of your routine health checkup. The anaysis suggest that there is no correlation between liver disease and total protiens in our dataset. So, we will not use it for model training.
+
+```{r}
+# Plotting distributions of Total Protiens versus liver diseases
+training %>% 
+  ggplot(aes(as.numeric(row.names(training)),Total_Protiens, color=Disease)) +
+  geom_boxplot() +
+  labs(y="Total Protiens", x = "Number of patients")+
+  facet_wrap( ~ Disease) +
+  ggtitle("Distribution of Total Protiens w.r.t liver disease") 
+```
+
+
+\subsection{Albumin}
+Albumin is a protein made by your liver. Albumin helps keep fluid in your bloodstream so it doesn't leak into other tissues. Low albumin levels can indicate a problem with your liver or kidneys. In our dataset, this variable has no strong correlation with the liver disease.
+
+```{r}
+# Plotting distributions of Albumin versus liver diseases
+training %>% 
+  ggplot(aes(as.numeric(row.names(training)),Albumin, color=Disease)) +
+  geom_boxplot() +
+  labs(y="Albumin", x = "Number of patients")+
+  facet_wrap( ~ Disease) +
+  ggtitle("Distribution of Albumin w.r.t liver disease") 
+```
+\subsection{Albumin_and_Globulin_Ratio}
+There are two classes of proteins are found in the blood. They are important for body growth, development, and health. They form the structural part of most organs and make up enzymes and hormones that regulate body functions. We can see that these protiens have no correlation with the liver disease.
+
+```{r}
+# Plotting distributions of Albumin versus liver diseases
+training %>% 
+  ggplot(aes(as.numeric(row.names(training)),Albumin_and_Globulin_Ratio, color=Disease)) +
+  geom_boxplot() +
+  labs(y="Albumin and Globulin Ratio", x = "Number of patients")+
+  facet_wrap( ~ Disease) +
+  ggtitle("Distribution of Albumin and Globulin Ratio w.r.t liver disease") 
+```
+We can that Bilirubin enzymes are highly correlated with the liver disease. We are going to use these 5 variables to predict the liver disease.
+```{r}
+samples <- training 
+samples <- transform(samples, Disease= ifelse(training$Disease=="M", 1,0))
+samples<-within(samples, rm(Age,Gender,Total_Protiens,Albumin,Albumin_and_Globulin_Ratio))
+colnames(samples)<-c ("T_Bil","T_Bil","A_Phos","Al_Amin","Asp_Amino","Disease")
+cor(samples)
+
+```
+
+\section{Methods}
+\label{sec:methods}
+In this section, we train different machine learning models using the training dataset.
+\subsection{Logistic Regression}
+We use logistic regression along with corss validation. The accuracy is around 0.71.
+```{r}
+library(caret)
+train_glm <- train(Disease~Total_Bilirubin+Direct_Bilirubin+Alkaline_Phosphotase+Alamine_Aminotransferase+Aspartate_Aminotransferase, method = "glm", data = training)
+train_glm$results$Accuracy
+```
+\subsection{KNN}
+We use KNN along with corss validation. The accuracy is around 0.71.
+```{r}
+library(caret)
+train_knn <- train(Disease~Total_Bilirubin+Direct_Bilirubin+Alkaline_Phosphotase+Alamine_Aminotransferase+Aspartate_Aminotransferase, method = "knn", 
+                   data = training,
+                   tuneGrid = data.frame(k = seq(3, 25, 2)))
+#ggplot(train_knn, highlight = TRUE)
+print(max(train_knn$results$Accuracy))
+```
+\subsection{PLS}
+```{r}
+ctrl <- trainControl(method = "repeatedcv", repeats = 3)
+
+train_pls <- train(Disease~Total_Bilirubin+Direct_Bilirubin+Alkaline_Phosphotase+Alamine_Aminotransferase+Aspartate_Aminotransferase, 
+                     method = "pls",
+                     data = training,
+                     preProc = c("center", "scale"),
+                      tuneLength = 15,
+                      trControl = ctrl)
+print(train_pls$results$Accuracy)
+
+```
+\subsection{LDA}
+```{r}
+ctrl <- trainControl(method = "repeatedcv", repeats = 3)
+
+train_lda <- train(Disease~Total_Bilirubin+Direct_Bilirubin+Alkaline_Phosphotase+Alamine_Aminotransferase+Aspartate_Aminotransferase, 
+                     method = "lda",
+                     data = training,
+                      trControl = ctrl)
+print(train_lda$results$Accuracy)
+
+```
+
+\subsection{QDA}
+```{r}
+ctrl <- trainControl(method = "repeatedcv", repeats = 3)
+
+train_qda <- train(Disease~Total_Bilirubin+Direct_Bilirubin+Alkaline_Phosphotase+Alamine_Aminotransferase+Aspartate_Aminotransferase, 
+                     method = "qda",
+                     data = training,
+                      trControl = ctrl)
+print(train_qda$results$Accuracy)
+
+```
+\subsection{Rpart}
+```{r}
+ctrl <- trainControl(method = "repeatedcv", repeats = 3)
+
+train_rpart <- train(Disease~Total_Bilirubin+Direct_Bilirubin+Alkaline_Phosphotase+Alamine_Aminotransferase+Aspartate_Aminotransferase, 
+                     method = "rpart",
+                     data = training,
+                      trControl = ctrl,
+                   tuneGrid = data.frame(cp = seq(0, 0.05, len = 25)))
+ggplot(train_rpart)
+
+```
+\subsection{RF}
+```{r}
+ctrl <- trainControl(method = "repeatedcv", repeats = 3)
+
+train_rpart <- train(Disease~Total_Bilirubin+Direct_Bilirubin+Alkaline_Phosphotase+Alamine_Aminotransferase+Aspartate_Aminotransferase, 
+                     method = "rf",
+                     data = training,
+                     trControl = ctrl,
+                     tuneGrid = data.frame(mtry=seq(1,7)),
+                     ntree=100)
+#qplot(nodesize, acc)
+print(train_rpart$results$Accuracy)
+```
+
+```{r}
+ctrl <- trainControl(method = "repeatedcv", repeats = 3)
+
+train_rpart <- train(Disease~Total_Bilirubin+Direct_Bilirubin+Alkaline_Phosphotase+Alamine_Aminotransferase+Aspartate_Aminotransferase, 
+                     data = training,
+                     method = "Rborist",
+                    tuneGrid = data.frame(predFixed = 2, minNode = c(3, 50)))
+print(train_rpart$results$Accuracy)
 ```
 
 

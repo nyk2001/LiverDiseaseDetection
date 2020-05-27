@@ -204,7 +204,7 @@ a training and validation sets.
 \end{verbatim}
 
 \begin{verbatim}
-## -- Attaching packages -------------------------------------------------------------------------------- tidyverse 1.2.1 --
+## -- Attaching packages --------------------------------------------------- tidyverse 1.3.0 --
 \end{verbatim}
 
 \begin{verbatim}
@@ -215,7 +215,7 @@ a training and validation sets.
 \end{verbatim}
 
 \begin{verbatim}
-## -- Conflicts ----------------------------------------------------------------------------------- tidyverse_conflicts() --
+## -- Conflicts ------------------------------------------------------ tidyverse_conflicts() --
 ## x dplyr::filter() masks stats::filter()
 ## x dplyr::lag()    masks stats::lag()
 \end{verbatim}
@@ -228,10 +228,6 @@ a training and validation sets.
 
 \begin{verbatim}
 ## Loading required package: caret
-\end{verbatim}
-
-\begin{verbatim}
-## Warning: package 'caret' was built under R version 3.6.3
 \end{verbatim}
 
 \begin{verbatim}
@@ -257,10 +253,6 @@ a training and validation sets.
 
 \begin{verbatim}
 ## Loading required package: data.table
-\end{verbatim}
-
-\begin{verbatim}
-## Warning: package 'data.table' was built under R version 3.6.3
 \end{verbatim}
 
 \begin{verbatim}
@@ -317,10 +309,6 @@ a training and validation sets.
 
 \begin{verbatim}
 ## Loading required package: sjmisc
-\end{verbatim}
-
-\begin{verbatim}
-## Warning: package 'sjmisc' was built under R version 3.6.3
 \end{verbatim}
 
 \begin{verbatim}
@@ -619,6 +607,275 @@ M\tabularnewline
 M\tabularnewline
 \bottomrule
 \end{longtable}
+
+\section{Data Analysis}
+\label{sec:dataanalysis}
+
+In this section, we extract insights from all variables to get in depth
+understanding.
+
+\subsection{Age}
+
+The dataset consists of patients with varying ages, which makes this
+dataset robust and un-biased towards a specific age group.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Extracting frequency of patient ages}
+\NormalTok{age_stats <-}\KeywordTok{as.data.frame}\NormalTok{(}\KeywordTok{table}\NormalTok{(training}\OperatorTok{$}\NormalTok{Age))}
+\KeywordTok{names}\NormalTok{(age_stats)<-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{"Age"}\NormalTok{,}\StringTok{"Count"}\NormalTok{)}
+\CommentTok{# Remvoing the factor}
+\NormalTok{age_stats}\OperatorTok{$}\NormalTok{Age<-}\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{levels}\NormalTok{(age_stats}\OperatorTok{$}\NormalTok{Age))}
+
+\CommentTok{# Plotting distribution of ages}
+\NormalTok{age_stats }\OperatorTok{%>%}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\KeywordTok{aes}\NormalTok{(Age, Count)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_point}\NormalTok{(}\DataTypeTok{color=}\StringTok{"cadetblue"}\NormalTok{) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{scale_x_continuous}\NormalTok{(}\DataTypeTok{breaks =} \KeywordTok{round}\NormalTok{(}\KeywordTok{seq}\NormalTok{(}\KeywordTok{min}\NormalTok{(age_stats}\OperatorTok{$}\NormalTok{Age), }\KeywordTok{max}\NormalTok{(age_stats}\OperatorTok{$}\NormalTok{Age), }\DataTypeTok{by =} \DecValTok{6}\NormalTok{),}\DecValTok{1}\NormalTok{)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{ggtitle}\NormalTok{(}\StringTok{"Distribution of Patient Ages"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{LiverDisease_files/figure-latex/unnamed-chunk-6-1.pdf}
+We analyse the age distributions with respect to the liver disease. The
+distributions again suggest a good spread of age group.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Plotting distributions of ages versus liver diseases}
+\NormalTok{training }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{ggplot}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{row.names}\NormalTok{(training)),Age, }\DataTypeTok{color=}\NormalTok{Disease)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_point}\NormalTok{() }\OperatorTok{+}
+\StringTok{  }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{y=}\StringTok{"Age"}\NormalTok{, }\DataTypeTok{x =} \StringTok{"Number of patients"}\NormalTok{)}\OperatorTok{+}
+\StringTok{  }\KeywordTok{facet_wrap}\NormalTok{( }\OperatorTok{~}\StringTok{ }\NormalTok{Disease) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{ggtitle}\NormalTok{(}\StringTok{"Distribution of ages w.r.t liver disease"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{LiverDisease_files/figure-latex/unnamed-chunk-7-1.pdf}
+
+\subsection{Gender}
+
+The analysis indicates that 76\% of the patient records belong to males.
+It would have been good to have more and less equal distribution of
+genders. Although, it may not make difference in the performance of
+models.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Getting summary of genders}
+\KeywordTok{summary}\NormalTok{(training}\OperatorTok{$}\NormalTok{Gender)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Female   Male 
+##    125    398
+\end{verbatim}
+
+\textbackslash subsection\{Total\_Bilirubin\} Bilirubin refears to any
+form of a yellowish pigment made in the liver when red blood cells are
+broken down. We can see pattern that levels of Total\_Bilirubin are high
+for patients with liver diseases.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Plotting distributions of Total_Bilirubin versus liver diseases}
+\NormalTok{training }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{ggplot}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{row.names}\NormalTok{(training)),Total_Bilirubin, }\DataTypeTok{color=}\NormalTok{Disease)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_boxplot}\NormalTok{() }\OperatorTok{+}
+\StringTok{  }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{y=}\StringTok{"Total_Bilirubin"}\NormalTok{, }\DataTypeTok{x =} \StringTok{"Number of patients"}\NormalTok{)}\OperatorTok{+}
+\StringTok{  }\KeywordTok{facet_wrap}\NormalTok{( }\OperatorTok{~}\StringTok{ }\NormalTok{Disease) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{ggtitle}\NormalTok{(}\StringTok{"Distribution of Total_Bilirubin w.r.t liver disease"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{LiverDisease_files/figure-latex/unnamed-chunk-9-1.pdf}
+
+\textbackslash subsection\{Direct\_Bilirubin\} Again, we can see that
+levels of Direct\_Bilirubin are also high for patients with liver
+diseases.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Plotting distributions of Total_Bilirubin versus liver diseases}
+\NormalTok{training }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{ggplot}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{row.names}\NormalTok{(training)),Direct_Bilirubin, }\DataTypeTok{color=}\NormalTok{Disease)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_boxplot}\NormalTok{() }\OperatorTok{+}
+\StringTok{  }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{y=}\StringTok{"Direct_Bilirubin"}\NormalTok{, }\DataTypeTok{x =} \StringTok{"Number of patients"}\NormalTok{)}\OperatorTok{+}
+\StringTok{  }\KeywordTok{facet_wrap}\NormalTok{( }\OperatorTok{~}\StringTok{ }\NormalTok{Disease) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{ggtitle}\NormalTok{(}\StringTok{"Distribution of Direct_Bilirubin w.r.t liver disease"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{LiverDisease_files/figure-latex/unnamed-chunk-10-1.pdf}
+The correlations indicate that there is a weak correlation between liver
+disease and bilirubin. Though, the values are comparatively higher with
+liver diseases.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{subset_train <-}\StringTok{ }\NormalTok{training[}\KeywordTok{c}\NormalTok{(}\StringTok{"Total_Bilirubin"}\NormalTok{,}\StringTok{"Direct_Bilirubin"}\NormalTok{)]}
+\NormalTok{subset_train <-}\StringTok{ }\KeywordTok{transform}\NormalTok{(subset_train, }\DataTypeTok{Disease=} \KeywordTok{ifelse}\NormalTok{(training}\OperatorTok{$}\NormalTok{Disease}\OperatorTok{==}\StringTok{"M"}\NormalTok{, }\DecValTok{1}\NormalTok{,}\DecValTok{0}\NormalTok{))}
+\KeywordTok{cor}\NormalTok{(subset_train) }
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##                  Total_Bilirubin Direct_Bilirubin   Disease
+## Total_Bilirubin        1.0000000        0.8584292 0.2065553
+## Direct_Bilirubin       0.8584292        1.0000000 0.2347388
+## Disease                0.2065553        0.2347388 1.0000000
+\end{verbatim}
+
+\subsection{Alkaline Phosphotase}
+
+Alkaline phosphatase (ALP) is an enzyme in a person's blood that helps
+break down proteins. We observe that levels of Alkaline Phosphotase are
+comparatively high for patients with liver diseases.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Plotting distributions of Alkaline Phosphotase versus liver diseases}
+\NormalTok{training }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{ggplot}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{row.names}\NormalTok{(training)),Alkaline_Phosphotase, }\DataTypeTok{color=}\NormalTok{Disease)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_boxplot}\NormalTok{() }\OperatorTok{+}
+\StringTok{  }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{y=}\StringTok{"Alkaline Phosphotase"}\NormalTok{, }\DataTypeTok{x =} \StringTok{"Number of patients"}\NormalTok{)}\OperatorTok{+}
+\StringTok{  }\KeywordTok{facet_wrap}\NormalTok{( }\OperatorTok{~}\StringTok{ }\NormalTok{Disease) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{ggtitle}\NormalTok{(}\StringTok{"Distribution of Alkaline Phosphotase w.r.t liver disease"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{LiverDisease_files/figure-latex/unnamed-chunk-12-1.pdf}
+
+\textbackslash subsection\{Alamine\_Aminotransferase\} Alanine
+aminotransferase (ALT) is an enzyme found primarily in the liver and
+kidney. ALT is increased with liver damage and is used to screen liver
+disease. We can see that levels of Alamine\_Aminotransferase are high
+for patients with liver diseases.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Plotting distributions of Alamine Aminotransferase versus liver diseases}
+\NormalTok{training }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{ggplot}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{row.names}\NormalTok{(training)),Alamine_Aminotransferase, }\DataTypeTok{color=}\NormalTok{Disease)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_boxplot}\NormalTok{() }\OperatorTok{+}
+\StringTok{  }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{y=}\StringTok{"Alamine Aminotransferase"}\NormalTok{, }\DataTypeTok{x =} \StringTok{"Number of patients"}\NormalTok{)}\OperatorTok{+}
+\StringTok{  }\KeywordTok{facet_wrap}\NormalTok{( }\OperatorTok{~}\StringTok{ }\NormalTok{Disease) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{ggtitle}\NormalTok{(}\StringTok{"Distribution of Alamine Aminotransferase w.r.t liver disease"}\NormalTok{) }
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{LiverDisease_files/figure-latex/unnamed-chunk-13-1.pdf}
+
+\textbackslash subsection\{Aspartate\_Aminotransferase\} Aspartate
+aminotransferase (AST) is an enzyme found in cells throughout the body
+but mostly in the heart and liver. In healthy individuals, levels of AST
+in the blood are low. When liver is damaged, they release AST into the
+blood thus raising the levels.We can see that levels of AST are
+comparatively high for very few patients with liver diseases.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Plotting distributions of Aspartate_Aminotransferase versus liver diseases}
+\NormalTok{training }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{ggplot}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{row.names}\NormalTok{(training)),Aspartate_Aminotransferase, }\DataTypeTok{color=}\NormalTok{Disease)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_boxplot}\NormalTok{() }\OperatorTok{+}
+\StringTok{  }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{y=}\StringTok{"Aspartate Aminotransferase"}\NormalTok{, }\DataTypeTok{x =} \StringTok{"Number of patients"}\NormalTok{)}\OperatorTok{+}
+\StringTok{  }\KeywordTok{facet_wrap}\NormalTok{( }\OperatorTok{~}\StringTok{ }\NormalTok{Disease) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{ggtitle}\NormalTok{(}\StringTok{"Distribution of Aspartate Aminotransferase w.r.t liver disease"}\NormalTok{) }
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{LiverDisease_files/figure-latex/unnamed-chunk-14-1.pdf}
+
+\subsection{Total Protiens}
+
+The total protein test measures the total amount albumin and globulin in
+your body. It is used as part of your routine health checkup. The
+anaysis suggest that there is no correlation between liver disease and
+total protiens in our dataset. So, we will not use it for model
+training.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Plotting distributions of Total Protiens versus liver diseases}
+\NormalTok{training }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{ggplot}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{row.names}\NormalTok{(training)),Total_Protiens, }\DataTypeTok{color=}\NormalTok{Disease)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_boxplot}\NormalTok{() }\OperatorTok{+}
+\StringTok{  }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{y=}\StringTok{"Total Protiens"}\NormalTok{, }\DataTypeTok{x =} \StringTok{"Number of patients"}\NormalTok{)}\OperatorTok{+}
+\StringTok{  }\KeywordTok{facet_wrap}\NormalTok{( }\OperatorTok{~}\StringTok{ }\NormalTok{Disease) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{ggtitle}\NormalTok{(}\StringTok{"Distribution of Total Protiens w.r.t liver disease"}\NormalTok{) }
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{LiverDisease_files/figure-latex/unnamed-chunk-15-1.pdf}
+
+\subsection{Albumin}
+
+Albumin is a protein made by your liver. Albumin helps keep fluid in
+your bloodstream so it doesn't leak into other tissues. Low albumin
+levels can indicate a problem with your liver or kidneys. In our
+dataset, this variable has no strong correlation with the liver disease.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Plotting distributions of Albumin versus liver diseases}
+\NormalTok{training }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{ggplot}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{row.names}\NormalTok{(training)),Albumin, }\DataTypeTok{color=}\NormalTok{Disease)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_boxplot}\NormalTok{() }\OperatorTok{+}
+\StringTok{  }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{y=}\StringTok{"Albumin"}\NormalTok{, }\DataTypeTok{x =} \StringTok{"Number of patients"}\NormalTok{)}\OperatorTok{+}
+\StringTok{  }\KeywordTok{facet_wrap}\NormalTok{( }\OperatorTok{~}\StringTok{ }\NormalTok{Disease) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{ggtitle}\NormalTok{(}\StringTok{"Distribution of Albumin w.r.t liver disease"}\NormalTok{) }
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{LiverDisease_files/figure-latex/unnamed-chunk-16-1.pdf}
+\textbackslash subsection\{Albumin\_and\_Globulin\_Ratio\} There are two
+classes of proteins are found in the blood. They are important for body
+growth, development, and health. They form the structural part of most
+organs and make up enzymes and hormones that regulate body functions. We
+can see that these protiens have no correlation with the liver disease.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Plotting distributions of Albumin versus liver diseases}
+\NormalTok{training }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{ggplot}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{row.names}\NormalTok{(training)),Albumin_and_Globulin_Ratio, }\DataTypeTok{color=}\NormalTok{Disease)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_boxplot}\NormalTok{() }\OperatorTok{+}
+\StringTok{  }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{y=}\StringTok{"Albumin and Globulin Ratio"}\NormalTok{, }\DataTypeTok{x =} \StringTok{"Number of patients"}\NormalTok{)}\OperatorTok{+}
+\StringTok{  }\KeywordTok{facet_wrap}\NormalTok{( }\OperatorTok{~}\StringTok{ }\NormalTok{Disease) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{ggtitle}\NormalTok{(}\StringTok{"Distribution of Albumin and Globulin Ratio w.r.t liver disease"}\NormalTok{) }
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning: Removed 4 rows containing non-finite values (stat_boxplot).
+\end{verbatim}
+
+\includegraphics{LiverDisease_files/figure-latex/unnamed-chunk-17-1.pdf}
+We can that Bilirubin enzymes are highly correlated with the liver
+disease. We are going to use these 5 variables to predict the liver
+disease.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{samples <-}\StringTok{ }\NormalTok{training }
+\NormalTok{samples <-}\StringTok{ }\KeywordTok{transform}\NormalTok{(samples, }\DataTypeTok{Disease=} \KeywordTok{ifelse}\NormalTok{(training}\OperatorTok{$}\NormalTok{Disease}\OperatorTok{==}\StringTok{"M"}\NormalTok{, }\DecValTok{1}\NormalTok{,}\DecValTok{0}\NormalTok{))}
+\NormalTok{samples<-}\KeywordTok{within}\NormalTok{(samples, }\KeywordTok{rm}\NormalTok{(Age,Gender,Total_Protiens,Albumin,Albumin_and_Globulin_Ratio))}
+\KeywordTok{colnames}\NormalTok{(samples)<-}\KeywordTok{c}\NormalTok{ (}\StringTok{"T_Bil"}\NormalTok{,}\StringTok{"T_Bil"}\NormalTok{,}\StringTok{"A_Phos"}\NormalTok{,}\StringTok{"Al_Amin"}\NormalTok{,}\StringTok{"Asp_Amino"}\NormalTok{,}\StringTok{"Disease"}\NormalTok{)}
+\KeywordTok{cor}\NormalTok{(samples)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##               T_Bil     T_Bil    A_Phos   Al_Amin Asp_Amino   Disease
+## T_Bil     1.0000000 0.8584292 0.2356568 0.1686019 0.2003604 0.2065553
+## T_Bil     0.8584292 1.0000000 0.2681528 0.1897871 0.2219221 0.2347388
+## A_Phos    0.2356568 0.2681528 1.0000000 0.1692258 0.2156400 0.1782120
+## Al_Amin   0.1686019 0.1897871 0.1692258 1.0000000 0.7317857 0.1616705
+## Asp_Amino 0.2003604 0.2219221 0.2156400 0.7317857 1.0000000 0.1488358
+## Disease   0.2065553 0.2347388 0.1782120 0.1616705 0.1488358 1.0000000
+\end{verbatim}
 
 \begin{thebibliography}{9}
 \bibitem{cad} 
