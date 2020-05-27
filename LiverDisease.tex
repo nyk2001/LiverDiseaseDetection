@@ -69,6 +69,7 @@
 \newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
 \newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
 \newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{longtable,booktabs}
 \usepackage{graphicx,grffile}
 \makeatletter
 \def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
@@ -122,7 +123,7 @@
   \postauthor{\par}
       \predate{\centering\large\emph}
   \postdate{\par}
-    \date{16-May-2020}
+    \date{27-May-2020}
 
 
 \begin{document}
@@ -154,8 +155,8 @@ diagnoses tools\cite{cad}.The problems with liver patients are not
 easily discovered in an early stage. An early diagnosis of liver
 problems will help in increasing the survival rate of patiets. We can
 detect the liver disease by analyzing the levels of enzymes in the blood
-\cite{ld}. A classification algorithm capable of automatically detecting
-the liver disease can assisst the doctors.
+\cite{ld,bendi}. A classification algorithm capable of automatically
+detecting the liver disease can assisst the doctors.
 
 \subsection{Aim of Project}
 \label{sec:aim}
@@ -184,7 +185,7 @@ repository. We download data from the website. Then, we split data into
 a training and validation sets.
 
 \begin{itemize}
-\item 10% of the data is used for validation, and 90% is used for training.
+\item 10\% of the data is used for validation, and 90% is used for training.
 \end{itemize}
 
 \begin{Shaded}
@@ -203,7 +204,7 @@ a training and validation sets.
 \end{verbatim}
 
 \begin{verbatim}
-## -- Attaching packages --------------------------------------------------- tidyverse 1.3.0 --
+## -- Attaching packages -------------------------------------------------------------------------------- tidyverse 1.2.1 --
 \end{verbatim}
 
 \begin{verbatim}
@@ -214,7 +215,7 @@ a training and validation sets.
 \end{verbatim}
 
 \begin{verbatim}
-## -- Conflicts ------------------------------------------------------ tidyverse_conflicts() --
+## -- Conflicts ----------------------------------------------------------------------------------- tidyverse_conflicts() --
 ## x dplyr::filter() masks stats::filter()
 ## x dplyr::lag()    masks stats::lag()
 \end{verbatim}
@@ -227,6 +228,10 @@ a training and validation sets.
 
 \begin{verbatim}
 ## Loading required package: caret
+\end{verbatim}
+
+\begin{verbatim}
+## Warning: package 'caret' was built under R version 3.6.3
 \end{verbatim}
 
 \begin{verbatim}
@@ -252,6 +257,10 @@ a training and validation sets.
 
 \begin{verbatim}
 ## Loading required package: data.table
+\end{verbatim}
+
+\begin{verbatim}
+## Warning: package 'data.table' was built under R version 3.6.3
 \end{verbatim}
 
 \begin{verbatim}
@@ -311,7 +320,7 @@ a training and validation sets.
 \end{verbatim}
 
 \begin{verbatim}
-## Learn more about sjmisc with 'browseVignettes("sjmisc")'.
+## Warning: package 'sjmisc' was built under R version 3.6.3
 \end{verbatim}
 
 \begin{verbatim}
@@ -457,12 +466,168 @@ F1 Score = 2 * \frac{Precision - Recall} {Precision + Recall}
 
 \end{enumerate}
 
+\section{Data Exploration}
+\label{sec:exploration}
+
+The dataset contains 11 variables namely,
+`Age',`Gender',`Total\_Bilirubin', or ``Alkaline\_Phosphotase''. The
+`Dataset' variable indicates if the liver has a disease or not. For
+instance, a value of 1 indicates a disease and 2 indicates no disease.
+
+All other variables except \texttt{Age",}Gender``, and ``Dataset''
+represent the amount of enzymes in the blood. These variables will be
+used to train our machine learning models for making predictions or
+diagnosis.
+
+\small
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{head}\NormalTok{(training)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}rlrrrrrrrrr@{}}
+\toprule
+Age & Gender & Total\_Bilirubin & Direct\_Bilirubin &
+Alkaline\_Phosphotase & Alamine\_Aminotransferase &
+Aspartate\_Aminotransferase & Total\_Protiens & Albumin &
+Albumin\_and\_Globulin\_Ratio & Dataset\tabularnewline
+\midrule
+\endhead
+62 & Male & 10.9 & 5.5 & 699 & 64 & 100 & 7.5 & 3.2 & 0.74 &
+1\tabularnewline
+62 & Male & 7.3 & 4.1 & 490 & 60 & 68 & 7.0 & 3.3 & 0.89 &
+1\tabularnewline
+58 & Male & 1.0 & 0.4 & 182 & 14 & 20 & 6.8 & 3.4 & 1.00 &
+1\tabularnewline
+72 & Male & 3.9 & 2.0 & 195 & 27 & 59 & 7.3 & 2.4 & 0.40 &
+1\tabularnewline
+46 & Male & 1.8 & 0.7 & 208 & 19 & 14 & 7.6 & 4.4 & 1.30 &
+1\tabularnewline
+26 & Female & 0.9 & 0.2 & 154 & 16 & 12 & 7.0 & 3.5 & 1.00 &
+1\tabularnewline
+\bottomrule
+\end{longtable}
+
+The training dataset has 523 records and there are no null values
+(confirmed using summary).
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{sprintf}\NormalTok{(}\StringTok{"Rows of training dataset = %d"}\NormalTok{, }\KeywordTok{nrow}\NormalTok{(training))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "Rows of training dataset = 523"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{print}\NormalTok{(}\StringTok{"========================="}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "========================="
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{summary}\NormalTok{(training)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##       Age           Gender    Total_Bilirubin Direct_Bilirubin
+##  Min.   : 4.00   Female:125   Min.   : 0.40   Min.   : 0.100  
+##  1st Qu.:33.00   Male  :398   1st Qu.: 0.80   1st Qu.: 0.200  
+##  Median :45.00                Median : 1.00   Median : 0.300  
+##  Mean   :45.33                Mean   : 3.22   Mean   : 1.446  
+##  3rd Qu.:58.00                3rd Qu.: 2.60   3rd Qu.: 1.300  
+##  Max.   :90.00                Max.   :75.00   Max.   :19.700  
+##                                                               
+##  Alkaline_Phosphotase Alamine_Aminotransferase Aspartate_Aminotransferase
+##  Min.   :  63.0       Min.   :  10.00          Min.   :  10.0            
+##  1st Qu.: 176.0       1st Qu.:  24.00          1st Qu.:  25.0            
+##  Median : 208.0       Median :  35.00          Median :  41.0            
+##  Mean   : 289.9       Mean   :  76.34          Mean   : 105.0            
+##  3rd Qu.: 298.0       3rd Qu.:  60.00          3rd Qu.:  86.5            
+##  Max.   :1896.0       Max.   :1680.00          Max.   :4929.0            
+##                                                                          
+##  Total_Protiens    Albumin      Albumin_and_Globulin_Ratio    Dataset     
+##  Min.   :2.70   Min.   :0.900   Min.   :0.3000             Min.   :1.000  
+##  1st Qu.:5.80   1st Qu.:2.600   1st Qu.:0.7000             1st Qu.:1.000  
+##  Median :6.60   Median :3.100   Median :0.9300             Median :1.000  
+##  Mean   :6.49   Mean   :3.147   Mean   :0.9458             Mean   :1.281  
+##  3rd Qu.:7.20   3rd Qu.:3.800   3rd Qu.:1.1000             3rd Qu.:2.000  
+##  Max.   :9.50   Max.   :5.500   Max.   :2.8000             Max.   :2.000  
+##                                 NA's   :4
+\end{verbatim}
+
+\subsubsection{Data Wrangling}
+\label{sec:dw}
+
+The variable ``Dataset" is our prediction and we will use it to analyse
+the performance of machine lerning models. To improve readability, we
+create a new column namely ``Liver Disease'', which will have two
+values:
+
+\begin{enumerate}
+\item Malignant (M) indicating that the patienit has a liver disease.
+\item Benign (B) indicating that the patient has no no liver disease.
+\end{enumerate}
+
+After creating a new column, wr delete the `Dataset' variable. We apply
+these operations to both training and validation datasets.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Adding a new column, which will contain the disease information}
+\NormalTok{training <-}\StringTok{ }\KeywordTok{transform}\NormalTok{(training, }\DataTypeTok{Disease=} \KeywordTok{ifelse}\NormalTok{(Dataset}\OperatorTok{==}\DecValTok{1}\NormalTok{, }\StringTok{"M"}\NormalTok{,}\StringTok{"B"}\NormalTok{))}
+\NormalTok{validation <-}\StringTok{ }\KeywordTok{transform}\NormalTok{(validation, }\DataTypeTok{Disease=} \KeywordTok{ifelse}\NormalTok{(Dataset}\OperatorTok{==}\DecValTok{1}\NormalTok{, }\StringTok{"M"}\NormalTok{,}\StringTok{"B"}\NormalTok{))}
+
+\CommentTok{# Deleting the column 'Dataset' as no longer required}
+\NormalTok{training<-}\KeywordTok{within}\NormalTok{(training, }\KeywordTok{rm}\NormalTok{(Dataset))}
+\NormalTok{validation<-}\KeywordTok{within}\NormalTok{(validation, }\KeywordTok{rm}\NormalTok{(Dataset))}
+
+\CommentTok{# Displaying the first siz rows}
+\KeywordTok{head}\NormalTok{(training)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}rlrrrrrrrrl@{}}
+\toprule
+Age & Gender & Total\_Bilirubin & Direct\_Bilirubin &
+Alkaline\_Phosphotase & Alamine\_Aminotransferase &
+Aspartate\_Aminotransferase & Total\_Protiens & Albumin &
+Albumin\_and\_Globulin\_Ratio & Disease\tabularnewline
+\midrule
+\endhead
+62 & Male & 10.9 & 5.5 & 699 & 64 & 100 & 7.5 & 3.2 & 0.74 &
+M\tabularnewline
+62 & Male & 7.3 & 4.1 & 490 & 60 & 68 & 7.0 & 3.3 & 0.89 &
+M\tabularnewline
+58 & Male & 1.0 & 0.4 & 182 & 14 & 20 & 6.8 & 3.4 & 1.00 &
+M\tabularnewline
+72 & Male & 3.9 & 2.0 & 195 & 27 & 59 & 7.3 & 2.4 & 0.40 &
+M\tabularnewline
+46 & Male & 1.8 & 0.7 & 208 & 19 & 14 & 7.6 & 4.4 & 1.30 &
+M\tabularnewline
+26 & Female & 0.9 & 0.2 & 154 & 16 & 12 & 7.0 & 3.5 & 1.00 &
+M\tabularnewline
+\bottomrule
+\end{longtable}
+
 \begin{thebibliography}{9}
 \bibitem{cad} 
 Ethan Du-Crowa, Lucy Warrenb, Susan M Astleya and Johan Hullemanc,"Is there a safety-net effect with Computer-Aided Detection (CAD)?", Medical Imaging 2019.
 \bibitem{ld}
 Eugene, R., Sorrell, Michael F.; Maddrey, Willis C., "Schiff's Diseases of the Liver", 10th Edition, Lippincott Williams \& Wilkins by Schiff.
- 
+
+\bibitem{bendi}
+Bendi,  Venkata . R, M. S. Prasad Babu, and N. B. Venkateswarlu, "Critical Comparative Study of Liver Patients from USA and INDIA: An Exploratory Analysis", International Journal of Computer Science Issues, May 2012.
 
 
 \end{thebibliography}

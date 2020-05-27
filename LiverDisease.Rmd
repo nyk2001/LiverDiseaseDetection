@@ -1,7 +1,7 @@
 ---
 title: "Liver Disease Classification"
 author: "Nabeel Khan"
-date: "16-May-2020"
+date: "27-May-2020"
 output:
   pdf_document: 
     keep_tex: true
@@ -22,7 +22,7 @@ This report is part of the ‘HarvardX: PH125.9x Data Science: Capstone’ cours
 \label{sec:background}
 The liver plays an important role in keeping us healthy. The main job of liver is to filter the blood coming from the digestive tract, before passing it to the rest of the body. The liver also turns nutrients into chemicals our body needs, turns food into energy, and filters out poisons. So, malfunctioing of liver affects the whole body.
 
-The classification techniques are used in various automatic medical diagnoses tools\cite{cad}.The problems with liver patients are not easily discovered in an early stage. An early diagnosis of liver problems will help in increasing the survival rate of patiets. We can detect the liver disease by analyzing the levels of enzymes in the blood \cite{ld}. A classification algorithm capable of automatically detecting the liver disease can assisst the doctors. 
+The classification techniques are used in various automatic medical diagnoses tools\cite{cad}.The problems with liver patients are not easily discovered in an early stage. An early diagnosis of liver problems will help in increasing the survival rate of patiets. We can detect the liver disease by analyzing the levels of enzymes in the blood \cite{ld,bendi}. A classification algorithm capable of automatically detecting the liver disease can assisst the doctors. 
 
 \subsection{Aim of Project}
 \label{sec:aim}
@@ -41,7 +41,7 @@ We use the Liver Patient Records, which are collected from North East of Andhra 
 The dataset is publically available online both at Kaggle and UCI repository.
 We download data from the website. Then, we split data into a training and validation sets. 
 \begin{itemize}
-\item 10% of the data is used for validation, and 90% is used for training.
+\item 10\% of the data is used for validation, and 90% is used for training.
 \end{itemize}
 ```{r}
 ################################
@@ -141,12 +141,83 @@ F1 Score = 2 * \frac{Precision - Recall} {Precision + Recall}
 
 \end{enumerate}
 
+\section{Data Exploration}
+\label{sec:exploration}
+The dataset contains 11 variables namely, 'Age','Gender','Total_Bilirubin', or "Alkaline_Phosphotase". The 'Dataset' variable indicates if the liver has a disease or not. For instance, a value of 1 indicates a disease and 2 indicates no disease. 
+
+
+All other variables except ``Age", ``Gender", and ``Dataset" represent the amount of enzymes in the blood. These variables will be used to train our machine learning models for making predictions or diagnosis. 
+
+\small
+```{r}
+head(training)
+```
+
+The training dataset has 523 records and there are no null values (confirmed using summary). 
+```{r}
+sprintf("Rows of training dataset = %d", nrow(training))
+print("=========================")
+summary(training)
+```
+\subsubsection{Data Wrangling}
+\label{sec:dw}
+The variable ``Dataset" is our prediction and we will use it to analyse the performance of machine lerning models. To improve readability, we create a new column namely "Liver Disease", which will have two values: 
+\begin{enumerate}
+\item Malignant (M) indicating that the patienit has a liver disease.
+\item Benign (B) indicating that the patient has no no liver disease.
+\end{enumerate}
+
+
+After creating a new column, wr delete the 'Dataset' variable. We apply these operations to both training and validation datasets.
+
+```{r}
+# Adding a new column, which will contain the disease information
+training <- transform(training, Disease= ifelse(Dataset==1, "M","B"))
+validation <- transform(validation, Disease= ifelse(Dataset==1, "M","B"))
+
+# Deleting the column 'Dataset' as no longer required
+training<-within(training, rm(Dataset))
+validation<-within(validation, rm(Dataset))
+
+# Displaying the first siz rows
+head(training)
+```
+
+\section{Data Analysis}
+\label{sec:dataanalysis}
+In this section, we extract insights from all variables to get in depth understanding.
+
+\subsection{Age}
+The patients in our dataset has varying ages, which is good and makes our dataset un-biased. 
+
+```{r}
+my_breaks <- seq(1,10,by=1)
+
+age_stats <-as.data.frame(table(training$Age))
+names(age_stats)<- c("Age","Count")
+age_stats %>% ggplot(aes(Age, Count )) +
+  geom_point() 
+
+```
+
+
+```{r}
+training %>% 
+  ggplot(aes(as.numeric(row.names(training)),Age, color=Disease)) +
+  geom_line() +
+  labs(y="Age", x = "Number of patients")+
+  facet_wrap( ~ Disease) 
+```
+
+
 \begin{thebibliography}{9}
 \bibitem{cad} 
 Ethan Du-Crowa, Lucy Warrenb, Susan M Astleya and Johan Hullemanc,"Is there a safety-net effect with Computer-Aided Detection (CAD)?", Medical Imaging 2019.
 \bibitem{ld}
 Eugene, R., Sorrell, Michael F.; Maddrey, Willis C., "Schiff's Diseases of the Liver", 10th Edition, Lippincott Williams \& Wilkins by Schiff.
- 
+
+\bibitem{bendi}
+Bendi,  Venkata . R, M. S. Prasad Babu, and N. B. Venkateswarlu, "Critical Comparative Study of Liver Patients from USA and INDIA: An Exploratory Analysis", International Journal of Computer Science Issues, May 2012.
 
 
 \end{thebibliography}
