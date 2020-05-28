@@ -334,7 +334,7 @@ We can that Bilirubin enzymes are highly correlated with the liver disease. We a
 ```{r}
 samples <- training 
 samples <- transform(samples, Disease= ifelse(training$Disease=="M", 1,0))
-samples<-within(samples, rm(Age,Gender,Total_Protiens,Albumin,Albumin_and_Globulin_Ratio))
+#samples<-within(samples, rm(Age,Gender,Total_Protiens,Albumin,Albumin_and_Globulin_Ratio))
 colnames(samples)<-c ("T_Bil","T_Bil","A_Phos","Al_Amin","Asp_Amino","Disease")
 cor(samples)
 
@@ -346,42 +346,48 @@ In this section, we train different machine learning models using the training d
 \subsection{Logistic Regression}
 We use logistic regression along with corss validation. The accuracy is around 0.71.
 ```{r}
-library(caret)
-train_glm <- train(Disease~Total_Bilirubin+Direct_Bilirubin+Alkaline_Phosphotase+Alamine_Aminotransferase+Aspartate_Aminotransferase, method = "glm", data = training)
+ctrl <- trainControl(method = "repeatedcv", repeats = 3)
+
+train_glm <- train(Disease~Total_Bilirubin+Direct_Bilirubin+Alkaline_Phosphotase+Alamine_Aminotransferase+Aspartate_Aminotransferase+Albumin, 
+                   method = "glm",
+                   data = training,
+                   trControl=ctrl)
 train_glm$results$Accuracy
 ```
 \subsection{KNN}
 We use KNN along with corss validation. The accuracy is around 0.71.
 ```{r}
-library(caret)
-train_knn <- train(Disease~Total_Bilirubin+Direct_Bilirubin+Alkaline_Phosphotase+Alamine_Aminotransferase+Aspartate_Aminotransferase, method = "knn", 
+ctrl <- trainControl(method = "repeatedcv", repeats = 5)
+
+train_knn <- train(Disease~Total_Bilirubin+Direct_Bilirubin+Alkaline_Phosphotase+Alamine_Aminotransferase+Aspartate_Aminotransferase+Albumin, method = "knn", 
                    data = training,
-                   tuneGrid = data.frame(k = seq(3, 25, 2)))
+                   tuneGrid = data.frame(k = seq(3, 51, 2)),
+                   trControl = ctrl)
 #ggplot(train_knn, highlight = TRUE)
 print(max(train_knn$results$Accuracy))
 ```
 \subsection{PLS}
 ```{r}
-ctrl <- trainControl(method = "repeatedcv", repeats = 3)
+ctrl <- trainControl(method = "repeatedcv", repeats = 5)
 
-train_pls <- train(Disease~Total_Bilirubin+Direct_Bilirubin+Alkaline_Phosphotase+Alamine_Aminotransferase+Aspartate_Aminotransferase, 
+train_pls <- train(Disease~Total_Bilirubin+Alkaline_Phosphotase+Aspartate_Aminotransferase+Total_Protiens, 
                      method = "pls",
                      data = training,
                      preProc = c("center", "scale"),
                       tuneLength = 15,
                       trControl = ctrl)
-print(train_pls$results$Accuracy)
+print(max(train_pls$results$Accuracy))
 
 ```
 \subsection{LDA}
 ```{r}
 ctrl <- trainControl(method = "repeatedcv", repeats = 3)
 
-train_lda <- train(Disease~Total_Bilirubin+Direct_Bilirubin+Alkaline_Phosphotase+Alamine_Aminotransferase+Aspartate_Aminotransferase, 
+train_lda <- train(Disease~Total_Bilirubin+Direct_Bilirubin+Alkaline_Phosphotase+Alamine_Aminotransferase+Aspartate_Aminotransferase+Albumin, 
                      method = "lda",
                      data = training,
                       trControl = ctrl)
-print(train_lda$results$Accuracy)
+print(max(train_lda$results$Accuracy))
 
 ```
 
@@ -389,48 +395,79 @@ print(train_lda$results$Accuracy)
 ```{r}
 ctrl <- trainControl(method = "repeatedcv", repeats = 3)
 
-train_qda <- train(Disease~Total_Bilirubin+Direct_Bilirubin+Alkaline_Phosphotase+Alamine_Aminotransferase+Aspartate_Aminotransferase, 
+train_qda <- train(Disease~Total_Bilirubin+Direct_Bilirubin+Alkaline_Phosphotase+Alamine_Aminotransferase+Aspartate_Aminotransferase+Albumin, 
                      method = "qda",
                      data = training,
                       trControl = ctrl)
-print(train_qda$results$Accuracy)
+print(max(train_qda$results$Accuracy))
 
 ```
 \subsection{Rpart}
 ```{r}
-ctrl <- trainControl(method = "repeatedcv", repeats = 3)
+ctrl <- trainControl(method = "repeatedcv", repeats = 5)
 
-train_rpart <- train(Disease~Total_Bilirubin+Direct_Bilirubin+Alkaline_Phosphotase+Alamine_Aminotransferase+Aspartate_Aminotransferase, 
+train_rpart <- train(Disease~Total_Bilirubin+Direct_Bilirubin+Alkaline_Phosphotase+Alamine_Aminotransferase+Aspartate_Aminotransferase+Albumin, 
                      method = "rpart",
                      data = training,
                       trControl = ctrl,
                    tuneGrid = data.frame(cp = seq(0, 0.05, len = 25)))
-ggplot(train_rpart)
-
+#ggplot(train_rpart)
+print(max(train_rpart$results$Accuracy))
 ```
 \subsection{RF}
 ```{r}
 library(caret)
-ctrl <- trainControl(method = "repeatedcv", repeats = 3)
+ctrl <- trainControl(method = "repeatedcv", repeats = 5)
 
-train_rpart <- train(Disease~Total_Bilirubin+Direct_Bilirubin+Alkaline_Phosphotase+Alamine_Aminotransferase+Aspartate_Aminotransferase, 
+train_rpart <- train(Disease~Total_Bilirubin+Direct_Bilirubin+Alkaline_Phosphotase+Alamine_Aminotransferase+Aspartate_Aminotransferase+Albumin, 
                      method = "rf",
                      data = training,
                      trControl = ctrl,
                      tuneGrid = data.frame(mtry=seq(1,7)),
                      ntree=100)
 #qplot(nodesize, acc)
-print(train_rpart$results$Accuracy)
+print(max(train_rpart$results$Accuracy))
 ```
 
 ```{r}
-ctrl <- trainControl(method = "repeatedcv", repeats = 3)
+ctrl <- trainControl(method = "repeatedcv", repeats = 5)
 
-train_rpart <- train(Disease~Total_Bilirubin+Direct_Bilirubin+Alkaline_Phosphotase+Alamine_Aminotransferase+Aspartate_Aminotransferase, 
+train_svm <- train(Disease~Total_Bilirubin+Direct_Bilirubin+Alkaline_Phosphotase+Alamine_Aminotransferase+Aspartate_Aminotransferase+Albumin, 
                      data = training,
-                     method = "Rborist",
-                    tuneGrid = data.frame(predFixed = 2, minNode = c(3, 50)))
-print(train_rpart$results$Accuracy)
+                     method = "svmLinear",
+                   trControl = ctrl,)
+print(train_svm$results$Accuracy)
+```
+
+```{r}
+ctrl <- trainControl(method = "repeatedcv", repeats = 5)
+
+train_svm_radial <- train(Disease~Total_Bilirubin+Direct_Bilirubin+Alkaline_Phosphotase+Alamine_Aminotransferase+Aspartate_Aminotransferase+Albumin, 
+                     data = training,
+                     method = "svmRadial",
+                   trControl = ctrl,)
+print(train_svm_radial$results$Accuracy)
+```
+```{r}
+library(mlbench)
+library(caretEnsemble)
+control <- trainControl(method="repeatedcv", repeats=5, savePredictions=TRUE, classProbs=TRUE)
+algorithmList <- c('lda', 'rpart', 'glm', 'knn', 'svmRadial')
+set.seed(1)
+models <- caretList(Disease~Total_Bilirubin+Direct_Bilirubin+Alkaline_Phosphotase+Alamine_Aminotransferase+Aspartate_Aminotransferase,
+                    data=training, 
+                    trControl=control, 
+                    methodList=algorithmList)
+results <- resamples(models)
+summary(results)
+dotplot(results)
+```
+
+```{r}
+summary(results)
+stackControl <- trainControl(method="repeatedcv", number=10, repeats=3, savePredictions=TRUE, classProbs=TRUE)
+stack.glm <- caretStack(models, method="glm", metric="Accuracy", trControl=stackControl)
+print(stack.glm)
 ```
 
 
