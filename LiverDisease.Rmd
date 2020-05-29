@@ -20,14 +20,13 @@ This report is part of the ‘HarvardX: PH125.9x Data Science: Capstone’ cours
 
 \subsection{Background}
 \label{sec:background}
-The liver plays an important role in keeping us healthy. The main job of liver is to filter the blood coming from the digestive tract, before passing it to the rest of the body. The liver also turns nutrients into chemicals our body needs, turns food into energy, and filters out poisons. The malfunctioing of liver affects the whole body.
+The liver plays a vital role in keeping us healthy. The liver's main job is to filter the blood coming from the digestive tract before passing it to the rest of the body. The liver also turns nutrients into chemicals our body needs, converts food into energy, and filters out poisons. The malfunctioning of the liver affects the whole body.
 
-The problems with liver patients are not easily discovered in an early stage. An early diagnosis of liver disease increases the survival rate of patiets. The liver disease can be detected by analyzing the levels of enzymes in the human blood \cite{ld,bendi}. Therefore, a classification algorithm capable of automatically detecting the liver disease can provide assisstance to the doctors in daignosis. The classification techniques are commonly employed in various automatic medical diagnoses tools\cite{cad}. 
+The problems with liver patients are not easily discovered in an early stage. Early diagnosis of liver disease increases the survival rate of patients. The liver disease can be detected by analyzing the levels of enzymes in the human blood \cite{ld,bendi}. Therefore, a classification algorithm capable of automatically detecting the liver disease can assist the doctors in diagnosis. The classification techniques are commonly employed in various automatic medical diagnoses tools\cite{cad}. 
 
 \subsection{Aim of Project}
 \label{sec:aim}
-The patients with liver disease are on the rise because of excessive consumption of
-alcohol, inhale of harmful gases, or intake of contaminated food. The aim of this proect is to develop a bianry classifier, which can use blood enzymes information to diagnose liver disease. 
+The patients with liver disease are on the rise because of excessive consumption of alcohol, inhale of harmful gases, or intake of contaminated food. This project aims to develop a binary classifier, which can use blood enzymes information to diagnose liver disease. 
 
 \section{Dataset and Evaluation Metrics}
 \label{sec:dataset}
@@ -108,11 +107,11 @@ rm(liverData)
 
 \subsection{Metrics}
 \label{sec:metrics}
-To evaluate the performance of classifiers, we will use following metrics:
+To evaluate the performance of classifiers, we will use the following metrics:
 
 \begin{enumerate}
 \item \textbf{Accuracy}
-It is the ratio of number of correct predictions to the total number of input samples.
+It is the ratio of the number of correct predictions to the total number of input samples.
 \begin{equation}
 Accuracy = \frac{True positives + True negatives} {Total Predictions}
 \end{equation}
@@ -133,7 +132,7 @@ Precision = \frac{Number of true positives} {Number of true positives + Number o
 \end{equation}
 
 \item \textbf{Specificity}
-It is the True negative rate. It is the proportion of true negatives that are
+It is the true negative rate. It is the proportion of true negatives that are
 correctly identified.
 
 \begin{equation}
@@ -141,7 +140,7 @@ Specificity = \frac{Number of true negatives} {Number of true negatives + Number
 \end{equation}
 
 \item \textbf{F1 Score}
-One metric that is preferred over accuracy is the average of specificity and sensitivity, referred to as balanced accuracy. Because specificity and sensitivity are rates, it is more appropriate to compute the harmonic average. In fact, the F1-score is widely used to compute harmonic average of precision and recall.
+Specificity and sensitivity are rates. Therefore, it is more appropriate to compute the harmonic average of precision and recall. The metric is referred to as F1 Score:
 
 \begin{equation}
 F1 Score = 2 * \frac{Precision - Recall} {Precision + Recall}
@@ -151,17 +150,17 @@ F1 Score = 2 * \frac{Precision - Recall} {Precision + Recall}
 
 \section{Data Exploration}
 \label{sec:exploration}
-The dataset contains 11 variables namely, 'Age','Gender','Total_Bilirubin', or "Alkaline_Phosphotase". The 'Dataset' variable indicates if the liver has a disease or not. For instance, a value of 1 indicates a disease and 2 indicates no disease. 
+The dataset contains 11 variables, namely, "Age", "Gender'', "Total_Bilirubin", or "Alkaline_Phosphotase". The 'Dataset' variable indicates if the liver has a disease or not. For instance, a value of 1 means that the liver is damaged, while a value of 2 means that the liver is healthy. 
 
 
-All other variables except "Age", "Gender", and "Dataset" represent the amount of enzymes or protiens in the blood. These variables (or a subset) will be used to train our machine learning models to make diagnosis. 
+All other variables except "Age", "Gender", and "Dataset" represent the amount of enzymes or proteins in the blood. These variables (or a subset) will be used to train our machine learning models to make diagnoses. 
 
-\small
 ```{r}
 head(training)
 ```
 
-The training dataset has 523 records. We can see that "Albumin_and_Globulin_Ratio" variable has 4 null values. The remaining variables have no NULL values. 
+The training dataset has 523 records. We can see that the "Albumin_and_Globulin_Ratio" variable has 4 null values. The remaining variables do not contain any null values.
+
 \begin{itemize}
 \item The validation data has no null values (confirmed via summary).
 \end{itemize}
@@ -171,26 +170,27 @@ sprintf("Rows of training dataset = %d", nrow(training))
 print("=========================")
 summary(training)
 ```
+
 ```{r}
 summary(validation)
 ```
 
 
-\subsubsection{Data Wrangling}
+\subsection{Data Wrangling}
 \label{sec:dw}
-\subsubsubsectionP{Remove null values}
-The variable "Albumin_and_Globulin_Ratio" has four null values. We replace null values with the mean of the variable.
+\subsubsection{Remove null values}
+The variable "Albumin_and_Globulin_Ratio" has four null values. We replace null values with the mean of the variable as done commonly in data science.
 
 ```{r}
 # Replace null values with the mean
 training$Albumin_and_Globulin_Ratio[is.na(training$Albumin_and_Globulin_Ratio)] <- mean(training$Albumin_and_Globulin_Ratio, na.rm=TRUE)
 
 ```
-\subsubsubsectionP{Create Diagnosis Variable}
-The variable "Dataset" indicates if the liver has disease or not. To improve readability, we create a new column namely "LiverDisease", which can have one of the following values: 
+\subsubsection{Create Diagnosis Variable}
+To improve readability, we create a new column, namely, "LiverDisease", which can have one of the following values: 
 \begin{enumerate}
-\item Malignant (M) indicating that the patient has a liver disease.
-\item Benign (B) indicating that the patient has no no liver disease.
+\item Malignant (M) indicating that the patient has liver disease.
+\item Benign (B) indicating that the patient has no liver disease.
 \end{enumerate}
 
 
@@ -211,10 +211,10 @@ head(training)
 
 \section{Data Analysis}
 \label{sec:dataanalysis}
-In this section, we extract insights from all variables to get in depth understanding.
+In this section, we extract insights from all variables to get in-depth understanding.
 
 \subsection{Age}
-The dataset consists of patients with varying ages ranging from 4 to 90. The distribution of ages shows a nice spread and indicates that the dataset is un-biased towards a specific age group. 
+The dataset consists of patients with varying ages ranging from 4 to 90. The distribution of ages shows a nice spread and indicates that the dataset is unbiased towards a specific age group. 
 ```{r}
 sprintf("Minimum age = %d",min(training$Age))
 sprintf("Maximum age = %d",max(training$Age))
@@ -232,14 +232,15 @@ age_stats$Age<-as.numeric(levels(age_stats$Age))
 # Plotting distribution of ages
 age_stats %>% ggplot(aes(Age, Count)) +
   geom_point(color="cadetblue") +
-  scale_x_continuous(breaks = round(seq(min(age_stats$Age), max(age_stats$Age), by = 6),1)) +
+  scale_x_continuous(breaks = round(seq(min(age_stats$Age), 
+                                        max(age_stats$Age), by = 6),1)) +
   ggtitle("Distribution of Patient Ages")
 
 ```
-We breakdown the distrbution of ages with respect to the presence or absence of liver disease. Again, we notice a good spread of age group for both scenarios.   
+We breakdown the distribution of ages to the presence or absence of liver disease. Again, we notice a good spread of age group for both scenarios.   
 
 ```{r}
-# Plotting distributions of ages versus liver diseases
+# Plotting distributions of ages based on liver diseases
 training %>% 
   ggplot(aes(as.numeric(row.names(training)),Age, color=LiverDisease)) +
   geom_point() +
@@ -247,16 +248,17 @@ training %>%
   facet_wrap( ~ LiverDisease) +
   ggtitle("Distribution of ages based on liver disease")
 ```
+
 \subsection{Gender}
-76% of the patient records are of males. It would be good to have more and less equal distribution of records for both genders. Although, we do not expect it to make any difference on the performance of our models.  
+76% of the patient records are of males. It would be good to have a more and less equal distribution of records for both genders, although we do not expect it to make any difference in our models.  
+
 ```{r}
 # Getting summary of genders
 summary(training$Gender)
 ```
-\subsection{Total_Bilirubin and Direct_Bilirubin}
-Bilirubin refears to any form of a yellowish pigment made in the liver when red blood cells are broken down. The elevated levels indicate that liver is damaged.
 
-We can notice that levels of Bilirubin are high for patients with liver diseases.  
+\subsection{Total_Bilirubin and Direct_Bilirubin}
+Bilirubin refers to any form of a yellowish pigment made in the liver when red blood cells are broken down. The elevated levels indicate that the liver is damaged. We find a similar trend with the variable that Bilirubin levels are high for patients with liver diseases.  
 
 ```{r}
 # Plotting distributions of Total_Bilirubin based on liver diseases
@@ -279,7 +281,8 @@ training %>%
   ggtitle("Distribution of Direct_Bilirubin based on liver disease")
 
 ```
-The correlations indicate that both bilirubins are weakly correlated with the liver disease. However, both direct and total bilirubins are highly correlated with each other.
+
+The correlations show that both bilirubins are weakly correlated with liver disease. However, both bilirubins are highly correlated with each other.
 ```{r}
 # Making a subset of data
 subset_train <- training[c("Total_Bilirubin","Direct_Bilirubin","LiverDisease")]
@@ -289,7 +292,7 @@ subset_train <- transform(subset_train, LiverDisease= ifelse(subset_train$LiverD
 cor(subset_train) 
 ```
 \subsection{Alkaline Phosphotase}
-Alkaline phosphatase (ALP) is an enzyme in a person's blood, which helps to break down proteins. We notice that levels of ALP are comparatively high for patients with liver diseases.  
+Alkaline phosphatase (ALP) is an enzyme in a person's blood that helps break down proteins. We notice that levels of ALP are comparatively high for patients with liver diseases.  
 
 ```{r}
 # Plotting distributions of Alkaline Phosphotase based on liver diseases
@@ -298,11 +301,11 @@ training %>%
   geom_boxplot() +
   labs(y="Alkaline Phosphotase", x = "Number of patients")+
   facet_wrap( ~ LiverDisease) +
-  ggtitle("Distribution of Alkaline Phosphotase w.r.t liver disease")
+  ggtitle("Distribution of Alkaline Phosphotase based on liver disease")
 ```
  
 \subsection{Alamine_Aminotransferase and Aspartate_Aminotransferase}
-Aminotransferases are enzymes that are important in the synthesis of amino acids, which form proteins. Alanine aminotransferase (ALT) and Aspartate aminotransferase (AST) are found primarily in the liver and kidney. A high levels of ALT and AST are expected for patients with liver diseases. We also observe the slightly elevated levels for these enzymes for patients with liver diseases. 
+Aminotransferases are enzymes that are important in the synthesis of amino acids, which form proteins. Alanine aminotransferase (ALT) and Aspartate aminotransferase (AST) are found primarily in the liver and kidney. High levels of ALT and AST are expected for patients with liver diseases. We also observe the slightly elevated levels of these enzymes for patients with liver diseases. 
 
 ```{r}
 # Plotting distributions of Alamine Aminotransferase based on liver diseases
@@ -323,19 +326,22 @@ training %>%
   facet_wrap( ~ LiverDisease) +
   ggtitle("Distribution of Aspartate Aminotransferase based on liver disease") 
 ```
-Contrary to bilirubins, there exists a weak correlation between both aminotransferase. They also have a low correlation with disease compared to bilirubins.
 
+Contrary to bilirubins, there exists a weak correlation between both aminotransferases. 
 ```{r}
 # Making a subset of data
 subset_train <- training[c("Alkaline_Phosphotase","Aspartate_Aminotransferase","LiverDisease")]
+
 # Converting disease variable to numeric format
 subset_train <- transform(subset_train, LiverDisease= ifelse(subset_train$LiverDisease=="M", 1,0))
+
 # Looking at the coorelations
 cor(subset_train) 
 ```
 
 \subsection{Total Protiens}
-The total protein test measures the total amount of protien in your body. The distributions indicate that we can disagnose liver disease realibly using this variable. 
+The total protein test measures the total amount of protein in your body. The distributions indicate that we can diagnose liver disease reliably using this variable. 
+
 
 ```{r}
 # Plotting distributions of Total Protiens based on liver diseases
@@ -348,7 +354,7 @@ training %>%
 ```
 
 \subsection{Albumin}
-Albumin is a protein made by the liver to keep fluid in the bloodstream. The low levels of albumin often indicate a problem with liver. We can notice that trend from distributions.
+Albumin is a protein made by the liver to keep fluid in the bloodstream. The low levels of albumin often indicate a problem with the liver, and we notice a similar trend with this variable.
 
 ```{r}
 # Plotting distributions of Albumin based on liver diseases
@@ -359,8 +365,9 @@ training %>%
   facet_wrap( ~ LiverDisease) +
   ggtitle("Distribution of Albumin based on liver disease") 
 ```
+
 \subsection{Albumin_and_Globulin_Ratio}
-These proteins are important for body growth, development, and health. They form the structural part of most organs and make up enzymes and hormones that regulate body functions. The low ratios refer to liver issues and we can notice the same from distributions graphs. 
+These proteins are crucial for body growth, development, and health. They form the structural part of most organs and makeup enzymes and hormones that regulate body functions. The low ratios refer to liver issues, and we can notice the same from distributions graphs. 
 
 ```{r}
 # Plotting distributions of Albumin based on liver diseases
@@ -374,7 +381,7 @@ training %>%
 
 \section{Methods}
 \label{sec:methods}
-Based on discussion in Section \ref{sec:dataanalysis}, we will not use "age" and "Total Protien" variables to train the machine learning models. We remove these variables from both training and validation datasets.
+Based on the discussion in Section \ref{sec:dataanalysis}, we will not use "Age" and "Total Protein" variables to train the machine learning models. We remove these variables from both training and validation datasets.
 
 ```{r}
 # Deleting the column 'Dataset' as no longer required
@@ -384,9 +391,10 @@ validation<-within(validation, rm(Age,Total_Protiens))
 ```
 
 \subsection{Logistic Regression}
-We use logistic regression with a cross validation of 10 folds to train the model. 
+We use logistic regression with cross-validation of 10 folds to train the model.
+
 ```{r}
-# Defining a cross validation (10 K folds )
+# Defining a cross-validation (10 K folds )
 control <- trainControl(method = "cv", number =10)
 
 # Train logistic regression model
@@ -397,8 +405,9 @@ train_glm <- train(LiverDisease ~.,
 sprintf("The accuracy of GLM = %f",train_glm$results$Accuracy)
 model_results <- data_frame(method = "glm", Accuracy = train_glm$results$Accuracy)
 ```
-\subsection{KNN}
-We use KNN with corss validation of 10 folds to train the model. 
+\subsection{K-nearest neigbors (knn)}
+We use knn with cross-validation of 10 folds to train the model. 
+
 
 ```{r}
 # Defining a cross validation (10 K folds )
@@ -415,12 +424,12 @@ sprintf("The best accuracy = %f",max(train_knn$results$Accuracy))
 
 # Stroing the results
 model_results <- bind_rows(model_results,data_frame(method="knn",  
-                                     RMSE = max(train_knn$results$Accuracy) ))
+                                     Accuracy = max(train_knn$results$Accuracy) ))
 
 ```
 
 \subsection{Partial Least Squares (PLS)}
-We use PLS with corss validation of 10 folds to train the model. 
+We use PLS with cross-validation of 10 folds to train the model. 
 
 ```{r}
 set.seed(10)
@@ -438,12 +447,12 @@ sprintf("The accuracy of PLS  = %f",max(train_pls$results$Accuracy))
 
 # Stroing the results
 model_results <- bind_rows(model_results,data_frame(method="pls",  
-                                     RMSE = max(train_pls$results$Accuracy) ))
+                                     Accuracy = max(train_pls$results$Accuracy) ))
 
 
 ```
 \subsection{Linear Discriminant Analysis (LDA)}
-The LDA is a statistical classifier and we use it with a corss validation of 10 folds for training.
+The LDA is a statistical classifier, and we use it with a cross-validation of 10 folds for training.
 
 ```{r}
 # Defining a cross validation (10 K folds )
@@ -458,13 +467,13 @@ sprintf("The accuracy of lda = %f",max(train_lda$results$Accuracy))
 
 # Stroing the results
 model_results <- bind_rows(model_results,data_frame(method="lda",  
-                                     RMSE = max(train_lda$results$Accuracy) ))
+                                     Accuracy = max(train_lda$results$Accuracy) ))
 
 
 ```
 
 \subsection{Quadratic Discriminant Analysis (QDA)}
-The QDA is a statistical classifier and we use it with a corss validation of 5 folds for training.The qda model gives the worse performance on training dataset.
+The QDA is a statistical classifier, and we use it with a cross-validation of 10 folds for training.
 
 ```{r}
 # Defining a cross validation (10 K folds )
@@ -478,12 +487,12 @@ train_qda <- train(LiverDisease~.,
 sprintf("The accuracy of qda = %f",max(train_qda$results$Accuracy))
 # Stroing the results
 model_results <- bind_rows(model_results,data_frame(method="qda",  
-                                     RMSE = max(train_qda$results$Accuracy) ))
+                                     Accuracy = max(train_qda$results$Accuracy) ))
 
 
 ```
 \subsection{Decision Tress}
-We use decision trees with a corss validation of 10 folds for training.
+We use decision trees with a cross-validation of 10 folds for training.
 
 ```{r}
 # Defining a cross validation (10 K folds )
@@ -499,12 +508,12 @@ sprintf("The accuracy of decision tree = %f",max(train_rpart$results$Accuracy))
 
 # Stroing the results
 model_results <- bind_rows(model_results,data_frame(method="rpart",  
-                                     RMSE = max(train_rpart$results$Accuracy) ))
+                                     Accuracy = max(train_rpart$results$Accuracy) ))
 
 
 ```
 \subsection{Random Forests}
-We use random forests with a corss validation of 10 folds for training.
+We use random forests with a cross-validation of 10 folds for training.
 
 ```{r}
 # Defining a cross validation (10 K folds )
@@ -519,11 +528,11 @@ train_rf <- train(LiverDisease~.,
 sprintf("The accuracy of forest tree = %f",max(train_rf$results$Accuracy))
 # Stroing the results
 model_results <- bind_rows(model_results,data_frame(method="rf",  
-                                     RMSE = max(train_rf$results$Accuracy) ))
+                                     Accuracy = max(train_rf$results$Accuracy) ))
 
 ```
 \subsection{Support Vector Machine}
-We use support vector machine with a corss validation of 10 folds for training.
+We use support vector machine with a cross-validation of 10 folds for training.
 
 ```{r}
 # Defining a cross validation (10 K folds )
@@ -537,12 +546,12 @@ train_svm <- train(LiverDisease~.,
 sprintf("The accuracy of svm = %f",max(train_svm$results$Accuracy))
 # Stroing the results
 model_results <- bind_rows(model_results,data_frame(method="svm",  
-                                     RMSE = max(train_svm$results$Accuracy) ))
+                                     Accuracy = max(train_svm$results$Accuracy) ))
 
 ```
 
-\subsection{Adaboost}
-AdaBoost, short for Adaptive Boosting, is a machine learning meta-algorithm for classification. We train the model with a corss validation of 10 folds.
+\subsection{Adaptive Boosting (Adaboost)}
+AdaBoost is a machine learning meta-algorithm for classification. We train the model with a cross-validation of 10 folds.
 
 ```{r}
 # Defining a cross validation (10 K folds )
@@ -556,16 +565,33 @@ train_ada <- train(LiverDisease~.,
 sprintf("The accuracy of adaboost = %f",max(train_ada$results$Accuracy))
 # Stroing the results
 model_results <- bind_rows(model_results,data_frame(method="ada",  
-                                     RMSE = max(train_ada$results$Accuracy) ))
+                                     Accuracy = max(train_ada$results$Accuracy) ))
 
 ```
-The reported accuracies for all models across training dataset are shown in the followin table. The results show that lda model performs the worse. All other models provide an accuracy of around 0.70.The random forest seems to perform the best.
+The reported accuracies for all models across training dataset are shown in the following table. The results show that lda model performs the worse. All other models provide an accuracy of around 0.70.The random forest seems to perform the best.
 
 ```{r}
 model_results
 ```
 \section{Results}
 \label{sec:results}
+In the Section \ref{sec:methods}, we trained a number of models using training data. Now, we will evaluate the performance of these models using validation data. We will not use \textbf{lda} model due to poor performance.
+
+```{r}
+y_hat<-predict(train_glm, validation) 
+sensitivity(data = y_hat, reference = validation$LiverDisease)
+specificity(data = y_hat, reference = validation$LiverDisease)
+F_meas(data = y_hat, reference = validation$LiverDisease)
+cm<-confusionMatrix(y_hat,validation$LiverDisease)
+cm$overall['Accuracy']
+cm$byClass[c("Sensitivty","Specificity")]
+
+#y_hat<-predict(train_knn, validation) 
+#sensitivity(data = y_hat, reference = validation$LiverDisease)
+#specificity(data = y_hat, reference = validation$LiverDisease)
+#F_meas(data = y_hat, reference = validation$LiverDisease)
+
+```
 
 
 \begin{thebibliography}{9}

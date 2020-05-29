@@ -137,40 +137,40 @@
 \label{sec:introduction}
 
 This report is part of the `HarvardX: PH125.9x Data Science: Capstone'
-course. In this report, we chose a dataset of our choice and apply
-various machine learning techniques to perform binary classification to
-diagnose liver disease.
+course. In this report, we chose a dataset of our choice and develop
+machine learning models to perform binary classification to diagnose
+liver disease.
 
 \subsection{Background}
 \label{sec:background}
 
-The liver plays an important role in keeping us healthy. The main job of
-liver is to filter the blood coming from the digestive tract, before
-passing it to the rest of the body. The liver also turns nutrients into
-chemicals our body needs, turns food into energy, and filters out
-poisons. So, malfunctioing of liver affects the whole body.
+The liver plays a vital role in keeping us healthy. The liver's main job
+is to filter the blood coming from the digestive tract before passing it
+to the rest of the body. The liver also turns nutrients into chemicals
+our body needs, converts food into energy, and filters out poisons. The
+malfunctioning of the liver affects the whole body.
 
-The classification techniques are used in various automatic medical
-diagnoses tools\cite{cad}.The problems with liver patients are not
-easily discovered in an early stage. An early diagnosis of liver
-problems will help in increasing the survival rate of patiets. We can
-detect the liver disease by analyzing the levels of enzymes in the blood
-\cite{ld,bendi}. A classification algorithm capable of automatically
-detecting the liver disease can assisst the doctors.
+The problems with liver patients are not easily discovered in an early
+stage. Early diagnosis of liver disease increases the survival rate of
+patients. The liver disease can be detected by analyzing the levels of
+enzymes in the human blood \cite{ld,bendi}. Therefore, a classification
+algorithm capable of automatically detecting the liver disease can
+assist the doctors in diagnosis. The classification techniques are
+commonly employed in various automatic medical diagnoses
+tools\cite{cad}.
 
 \subsection{Aim of Project}
 \label{sec:aim}
 
 The patients with liver disease are on the rise because of excessive
-consumption of alcohol, inhale of harmful gases, intake of contaminated
-food, pickles and drugs. The aim of this proect is to develop a bianry
-classifier, which can use blood enzymes information to diagnose liver
-disease.
+consumption of alcohol, inhale of harmful gases, or intake of
+contaminated food. This project aims to develop a binary classifier,
+which can use blood enzymes information to diagnose liver disease.
 
 \section{Dataset and Evaluation Metrics}
 \label{sec:dataset}
 
-We use the Liver Patient Records, which are collected from North East of
+We use the liver patient records, which are collected from North East of
 Andhra Pradesh, India. The data set contains:
 
 \begin{enumerate}
@@ -182,7 +182,7 @@ Andhra Pradesh, India. The data set contains:
 
 The dataset is publically available online both at Kaggle and UCI
 repository. We download data from the website. Then, we split data into
-a training and validation sets.
+training and validation sets.
 
 \begin{itemize}
 \item 10\% of the data is used for validation, and 90% is used for training.
@@ -204,7 +204,7 @@ a training and validation sets.
 \end{verbatim}
 
 \begin{verbatim}
-## -- Attaching packages --------------------------------------------------- tidyverse 1.3.0 --
+## -- Attaching packages --------------------------------------------------------------------------------- tidyverse 1.2.1 --
 \end{verbatim}
 
 \begin{verbatim}
@@ -215,7 +215,7 @@ a training and validation sets.
 \end{verbatim}
 
 \begin{verbatim}
-## -- Conflicts ------------------------------------------------------ tidyverse_conflicts() --
+## -- Conflicts ------------------------------------------------------------------------------------ tidyverse_conflicts() --
 ## x dplyr::filter() masks stats::filter()
 ## x dplyr::lag()    masks stats::lag()
 \end{verbatim}
@@ -228,6 +228,10 @@ a training and validation sets.
 
 \begin{verbatim}
 ## Loading required package: caret
+\end{verbatim}
+
+\begin{verbatim}
+## Warning: package 'caret' was built under R version 3.6.3
 \end{verbatim}
 
 \begin{verbatim}
@@ -253,6 +257,10 @@ a training and validation sets.
 
 \begin{verbatim}
 ## Loading required package: data.table
+\end{verbatim}
+
+\begin{verbatim}
+## Warning: package 'data.table' was built under R version 3.6.3
 \end{verbatim}
 
 \begin{verbatim}
@@ -312,6 +320,10 @@ a training and validation sets.
 \end{verbatim}
 
 \begin{verbatim}
+## Warning: package 'sjmisc' was built under R version 3.6.3
+\end{verbatim}
+
+\begin{verbatim}
 ## 
 ## Attaching package: 'sjmisc'
 \end{verbatim}
@@ -336,19 +348,13 @@ a training and validation sets.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\ControlFlowTok{if}\NormalTok{(}\OperatorTok{!}\KeywordTok{require}\NormalTok{(sjmisc)) }\KeywordTok{install.packages}\NormalTok{(}\StringTok{"scales"}\NormalTok{, }\DataTypeTok{repos =}\NormalTok{ repos_path)}
-
-\CommentTok{################################}
-\CommentTok{# Load libraries}
-\CommentTok{################################}
-\KeywordTok{library}\NormalTok{(lubridate)}
-\KeywordTok{library}\NormalTok{(tidyverse)}
-\KeywordTok{library}\NormalTok{(dplyr)}
-\KeywordTok{library}\NormalTok{(lubridate)}
-\KeywordTok{library}\NormalTok{(sjmisc)}
-\KeywordTok{library}\NormalTok{(scales)}
+\ControlFlowTok{if}\NormalTok{(}\OperatorTok{!}\KeywordTok{require}\NormalTok{(scales)) }\KeywordTok{install.packages}\NormalTok{(}\StringTok{"scales"}\NormalTok{, }\DataTypeTok{repos =}\NormalTok{ repos_path)}
 \end{Highlighting}
 \end{Shaded}
+
+\begin{verbatim}
+## Loading required package: scales
+\end{verbatim}
 
 \begin{verbatim}
 ## 
@@ -369,6 +375,48 @@ a training and validation sets.
 
 \begin{Shaded}
 \begin{Highlighting}[]
+\ControlFlowTok{if}\NormalTok{(}\OperatorTok{!}\KeywordTok{require}\NormalTok{(caret)) }\KeywordTok{install.packages}\NormalTok{(}\StringTok{"caret"}\NormalTok{, }\DataTypeTok{repos =}\NormalTok{ repos_path)}
+\ControlFlowTok{if}\NormalTok{(}\OperatorTok{!}\KeywordTok{require}\NormalTok{(caretEnsemble)) }\KeywordTok{install.packages}\NormalTok{(}\StringTok{"caretEnsemble"}\NormalTok{, }\DataTypeTok{repos =}\NormalTok{ repos_path)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Loading required package: caretEnsemble
+\end{verbatim}
+
+\begin{verbatim}
+## Warning: package 'caretEnsemble' was built under R version 3.6.3
+\end{verbatim}
+
+\begin{verbatim}
+## 
+## Attaching package: 'caretEnsemble'
+\end{verbatim}
+
+\begin{verbatim}
+## The following object is masked from 'package:ggplot2':
+## 
+##     autoplot
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{################################}
+\CommentTok{# Load libraries}
+\CommentTok{################################}
+\KeywordTok{library}\NormalTok{(lubridate)}
+\KeywordTok{library}\NormalTok{(tidyverse)}
+\KeywordTok{library}\NormalTok{(dplyr)}
+\KeywordTok{library}\NormalTok{(lubridate)}
+\KeywordTok{library}\NormalTok{(sjmisc)}
+\KeywordTok{library}\NormalTok{(scales)}
+\KeywordTok{library}\NormalTok{(caret)}
+\KeywordTok{library}\NormalTok{(caretEnsemble)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
 \CommentTok{################################}
 \CommentTok{# Downloading data}
 \CommentTok{################################}
@@ -377,6 +425,7 @@ a training and validation sets.
  \CommentTok{# https://archive.ics.uci.edu/ml/machine-learning-databases/00225/Indian Liver Patient Dataset (ILPD).csv}
 
 \NormalTok{url <-}\StringTok{ "https://archive.ics.uci.edu/ml/machine-learning-databases/00225/Indian Liver Patient Dataset (ILPD).csv"}
+
 \CommentTok{# Download csv}
 \NormalTok{liverData <-}\StringTok{ }\KeywordTok{read.csv}\NormalTok{(url)}
 
@@ -412,12 +461,12 @@ a training and validation sets.
 \subsection{Metrics}
 \label{sec:metrics}
 
-To evaluate the performance of classifiers, we will use following
+To evaluate the performance of classifiers, we will use the following
 metrics:
 
 \begin{enumerate}
 \item \textbf{Accuracy}
-It is the ratio of number of correct predictions to the total number of input samples.
+It is the ratio of the number of correct predictions to the total number of input samples.
 \begin{equation}
 Accuracy = \frac{True positives + True negatives} {Total Predictions}
 \end{equation}
@@ -438,7 +487,7 @@ Precision = \frac{Number of true positives} {Number of true positives + Number o
 \end{equation}
 
 \item \textbf{Specificity}
-It is the True negative rate. It is the proportion of true negatives that are
+It is the true negative rate. It is the proportion of true negatives that are
 correctly identified.
 
 \begin{equation}
@@ -446,7 +495,7 @@ Specificity = \frac{Number of true negatives} {Number of true negatives + Number
 \end{equation}
 
 \item \textbf{F1 Score}
-One metric that is preferred over overall accuracy is the average of specificity and sensitivity, referred to as balanced accuracy. Because specificity and sensitivity are rates, it is more appropriate to compute the harmonic average. In fact, the F1-score is widely used to compute harmonic average of precision and recall.
+Specificity and sensitivity are rates. Therefore, it is more appropriate to compute the harmonic average of precision and recall. The metric is referred to as F1 Score:
 
 \begin{equation}
 F1 Score = 2 * \frac{Precision - Recall} {Precision + Recall}
@@ -457,17 +506,16 @@ F1 Score = 2 * \frac{Precision - Recall} {Precision + Recall}
 \section{Data Exploration}
 \label{sec:exploration}
 
-The dataset contains 11 variables namely,
-`Age',`Gender',`Total\_Bilirubin', or ``Alkaline\_Phosphotase''. The
-`Dataset' variable indicates if the liver has a disease or not. For
-instance, a value of 1 indicates a disease and 2 indicates no disease.
+The dataset contains 11 variables, namely, ``Age'', "Gender'`,
+``Total\_Bilirubin'', or ``Alkaline\_Phosphotase''. The 'Dataset'
+variable indicates if the liver has a disease or not. For instance, a
+value of 1 means that the liver is damaged, while a value of 2 means
+that the liver is healthy.
 
-All other variables except \texttt{Age",}Gender``, and ``Dataset''
-represent the amount of enzymes in the blood. These variables will be
-used to train our machine learning models for making predictions or
-diagnosis.
-
-\small
+All other variables except ``Age'', ``Gender'', and ``Dataset''
+represent the amount of enzymes or proteins in the blood. These
+variables (or a subset) will be used to train our machine learning
+models to make diagnoses.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -498,8 +546,13 @@ Albumin\_and\_Globulin\_Ratio & Dataset\tabularnewline
 \bottomrule
 \end{longtable}
 
-The training dataset has 523 records and there are no null values
-(confirmed using summary).
+The training dataset has 523 records. We can see that the
+``Albumin\_and\_Globulin\_Ratio'' variable has 4 null values. The
+remaining variables do not contain any null values.
+
+\begin{itemize}
+\item The validation data has no null values (confirmed via summary).
+\end{itemize}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -554,33 +607,82 @@ The training dataset has 523 records and there are no null values
 ##                                 NA's   :4
 \end{verbatim}
 
-\subsubsection{Data Wrangling}
-\label{sec:dw}
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{summary}\NormalTok{(validation)}
+\end{Highlighting}
+\end{Shaded}
 
-The variable ``Dataset" is our prediction and we will use it to analyse
-the performance of machine lerning models. To improve readability, we
-create a new column namely ``Liver Disease'', which will have two
-values:
+\begin{verbatim}
+##       Age          Gender   Total_Bilirubin  Direct_Bilirubin
+##  Min.   : 8.0   Female:16   Min.   : 0.600   Min.   : 0.100  
+##  1st Qu.:27.5   Male  :43   1st Qu.: 0.800   1st Qu.: 0.200  
+##  Median :38.0               Median : 1.100   Median : 0.400  
+##  Mean   :39.2               Mean   : 4.037   Mean   : 1.863  
+##  3rd Qu.:49.5               3rd Qu.: 2.300   3rd Qu.: 1.300  
+##  Max.   :75.0               Max.   :26.300   Max.   :12.100  
+##  Alkaline_Phosphotase Alamine_Aminotransferase Aspartate_Aminotransferase
+##  Min.   :  92.0       Min.   :  10.0           Min.   :  15.0            
+##  1st Qu.: 160.5       1st Qu.:  22.0           1st Qu.:  28.5            
+##  Median : 215.0       Median :  36.0           Median :  43.0            
+##  Mean   : 298.4       Mean   : 120.6           Mean   : 155.0            
+##  3rd Qu.: 305.0       3rd Qu.:  63.0           3rd Qu.:  90.0            
+##  Max.   :2110.0       Max.   :2000.0           Max.   :2946.0            
+##  Total_Protiens     Albumin      Albumin_and_Globulin_Ratio
+##  Min.   :3.600   Min.   :0.900   Min.   :0.3000            
+##  1st Qu.:5.700   1st Qu.:2.500   1st Qu.:0.8000            
+##  Median :6.300   Median :3.200   Median :1.0000            
+##  Mean   :6.419   Mean   :3.095   Mean   :0.9593            
+##  3rd Qu.:7.200   3rd Qu.:3.550   3rd Qu.:1.1900            
+##  Max.   :9.600   Max.   :4.700   Max.   :1.9000            
+##     Dataset     
+##  Min.   :1.000  
+##  1st Qu.:1.000  
+##  Median :1.000  
+##  Mean   :1.339  
+##  3rd Qu.:2.000  
+##  Max.   :2.000
+\end{verbatim}
+
+\subsection{Data Wrangling}
+\label{sec:dw}
+\subsubsection{Remove null values}
+
+The variable ``Albumin\_and\_Globulin\_Ratio'' has four null values. We
+replace null values with the mean of the variable as done commonly in
+data science.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Replace null values with the mean}
+\NormalTok{training}\OperatorTok{$}\NormalTok{Albumin_and_Globulin_Ratio[}\KeywordTok{is.na}\NormalTok{(training}\OperatorTok{$}\NormalTok{Albumin_and_Globulin_Ratio)] <-}\StringTok{ }\KeywordTok{mean}\NormalTok{(training}\OperatorTok{$}\NormalTok{Albumin_and_Globulin_Ratio, }\DataTypeTok{na.rm=}\OtherTok{TRUE}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\subsubsection{Create Diagnosis Variable}
+
+To improve readability, we create a new column, namely,
+``LiverDisease'', which can have one of the following values:
 
 \begin{enumerate}
-\item Malignant (M) indicating that the patienit has a liver disease.
-\item Benign (B) indicating that the patient has no no liver disease.
+\item Malignant (M) indicating that the patient has liver disease.
+\item Benign (B) indicating that the patient has no liver disease.
 \end{enumerate}
 
-After creating a new column, wr delete the `Dataset' variable. We apply
-these operations to both training and validation datasets.
+We further delete the ``Dataset'' variable as it is no longer needed. We
+apply these operations to both training and validation datasets.
 
 \begin{Shaded}
 \begin{Highlighting}[]
 \CommentTok{# Adding a new column, which will contain the disease information}
-\NormalTok{training <-}\StringTok{ }\KeywordTok{transform}\NormalTok{(training, }\DataTypeTok{Disease=} \KeywordTok{ifelse}\NormalTok{(Dataset}\OperatorTok{==}\DecValTok{1}\NormalTok{, }\StringTok{"M"}\NormalTok{,}\StringTok{"B"}\NormalTok{))}
-\NormalTok{validation <-}\StringTok{ }\KeywordTok{transform}\NormalTok{(validation, }\DataTypeTok{Disease=} \KeywordTok{ifelse}\NormalTok{(Dataset}\OperatorTok{==}\DecValTok{1}\NormalTok{, }\StringTok{"M"}\NormalTok{,}\StringTok{"B"}\NormalTok{))}
+\NormalTok{training <-}\StringTok{ }\KeywordTok{transform}\NormalTok{(training, }\DataTypeTok{LiverDisease=} \KeywordTok{ifelse}\NormalTok{(Dataset}\OperatorTok{==}\DecValTok{1}\NormalTok{, }\StringTok{"M"}\NormalTok{,}\StringTok{"B"}\NormalTok{))}
+\NormalTok{validation <-}\StringTok{ }\KeywordTok{transform}\NormalTok{(validation, }\DataTypeTok{LiverDisease=} \KeywordTok{ifelse}\NormalTok{(Dataset}\OperatorTok{==}\DecValTok{1}\NormalTok{, }\StringTok{"M"}\NormalTok{,}\StringTok{"B"}\NormalTok{))}
 
 \CommentTok{# Deleting the column 'Dataset' as no longer required}
 \NormalTok{training<-}\KeywordTok{within}\NormalTok{(training, }\KeywordTok{rm}\NormalTok{(Dataset))}
 \NormalTok{validation<-}\KeywordTok{within}\NormalTok{(validation, }\KeywordTok{rm}\NormalTok{(Dataset))}
 
-\CommentTok{# Displaying the first siz rows}
+\CommentTok{# Displaying the first six rows}
 \KeywordTok{head}\NormalTok{(training)}
 \end{Highlighting}
 \end{Shaded}
@@ -590,7 +692,7 @@ these operations to both training and validation datasets.
 Age & Gender & Total\_Bilirubin & Direct\_Bilirubin &
 Alkaline\_Phosphotase & Alamine\_Aminotransferase &
 Aspartate\_Aminotransferase & Total\_Protiens & Albumin &
-Albumin\_and\_Globulin\_Ratio & Disease\tabularnewline
+Albumin\_and\_Globulin\_Ratio & LiverDisease\tabularnewline
 \midrule
 \endhead
 62 & Male & 10.9 & 5.5 & 699 & 64 & 100 & 7.5 & 3.2 & 0.74 &
@@ -611,54 +713,77 @@ M\tabularnewline
 \section{Data Analysis}
 \label{sec:dataanalysis}
 
-In this section, we extract insights from all variables to get in depth
+In this section, we extract insights from all variables to get in-depth
 understanding.
 
 \subsection{Age}
 
-The dataset consists of patients with varying ages, which makes this
-dataset robust and un-biased towards a specific age group.
+The dataset consists of patients with varying ages ranging from 4 to 90.
+The distribution of ages shows a nice spread and indicates that the
+dataset is unbiased towards a specific age group.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{sprintf}\NormalTok{(}\StringTok{"Minimum age = %d"}\NormalTok{,}\KeywordTok{min}\NormalTok{(training}\OperatorTok{$}\NormalTok{Age))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "Minimum age = 4"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{sprintf}\NormalTok{(}\StringTok{"Maximum age = %d"}\NormalTok{,}\KeywordTok{max}\NormalTok{(training}\OperatorTok{$}\NormalTok{Age))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "Maximum age = 90"
+\end{verbatim}
 
 \begin{Shaded}
 \begin{Highlighting}[]
 \CommentTok{# Extracting frequency of patient ages}
 \NormalTok{age_stats <-}\KeywordTok{as.data.frame}\NormalTok{(}\KeywordTok{table}\NormalTok{(training}\OperatorTok{$}\NormalTok{Age))}
 \KeywordTok{names}\NormalTok{(age_stats)<-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{"Age"}\NormalTok{,}\StringTok{"Count"}\NormalTok{)}
+
 \CommentTok{# Remvoing the factor}
 \NormalTok{age_stats}\OperatorTok{$}\NormalTok{Age<-}\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{levels}\NormalTok{(age_stats}\OperatorTok{$}\NormalTok{Age))}
 
 \CommentTok{# Plotting distribution of ages}
 \NormalTok{age_stats }\OperatorTok{%>%}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\KeywordTok{aes}\NormalTok{(Age, Count)) }\OperatorTok{+}
 \StringTok{  }\KeywordTok{geom_point}\NormalTok{(}\DataTypeTok{color=}\StringTok{"cadetblue"}\NormalTok{) }\OperatorTok{+}
-\StringTok{  }\KeywordTok{scale_x_continuous}\NormalTok{(}\DataTypeTok{breaks =} \KeywordTok{round}\NormalTok{(}\KeywordTok{seq}\NormalTok{(}\KeywordTok{min}\NormalTok{(age_stats}\OperatorTok{$}\NormalTok{Age), }\KeywordTok{max}\NormalTok{(age_stats}\OperatorTok{$}\NormalTok{Age), }\DataTypeTok{by =} \DecValTok{6}\NormalTok{),}\DecValTok{1}\NormalTok{)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{scale_x_continuous}\NormalTok{(}\DataTypeTok{breaks =} \KeywordTok{round}\NormalTok{(}\KeywordTok{seq}\NormalTok{(}\KeywordTok{min}\NormalTok{(age_stats}\OperatorTok{$}\NormalTok{Age), }
+                                        \KeywordTok{max}\NormalTok{(age_stats}\OperatorTok{$}\NormalTok{Age), }\DataTypeTok{by =} \DecValTok{6}\NormalTok{),}\DecValTok{1}\NormalTok{)) }\OperatorTok{+}
 \StringTok{  }\KeywordTok{ggtitle}\NormalTok{(}\StringTok{"Distribution of Patient Ages"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{LiverDisease_files/figure-latex/unnamed-chunk-6-1.pdf}
-We analyse the age distributions with respect to the liver disease. The
-distributions again suggest a good spread of age group.
+\includegraphics{LiverDisease_files/figure-latex/unnamed-chunk-9-1.pdf}
+We breakdown the distribution of ages to the presence or absence of
+liver disease. Again, we notice a good spread of age group for both
+scenarios.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{# Plotting distributions of ages versus liver diseases}
+\CommentTok{# Plotting distributions of ages based on liver diseases}
 \NormalTok{training }\OperatorTok{%>%}\StringTok{ }
-\StringTok{  }\KeywordTok{ggplot}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{row.names}\NormalTok{(training)),Age, }\DataTypeTok{color=}\NormalTok{Disease)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{ggplot}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{row.names}\NormalTok{(training)),Age, }\DataTypeTok{color=}\NormalTok{LiverDisease)) }\OperatorTok{+}
 \StringTok{  }\KeywordTok{geom_point}\NormalTok{() }\OperatorTok{+}
 \StringTok{  }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{y=}\StringTok{"Age"}\NormalTok{, }\DataTypeTok{x =} \StringTok{"Number of patients"}\NormalTok{)}\OperatorTok{+}
-\StringTok{  }\KeywordTok{facet_wrap}\NormalTok{( }\OperatorTok{~}\StringTok{ }\NormalTok{Disease) }\OperatorTok{+}
-\StringTok{  }\KeywordTok{ggtitle}\NormalTok{(}\StringTok{"Distribution of ages w.r.t liver disease"}\NormalTok{)}
+\StringTok{  }\KeywordTok{facet_wrap}\NormalTok{( }\OperatorTok{~}\StringTok{ }\NormalTok{LiverDisease) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{ggtitle}\NormalTok{(}\StringTok{"Distribution of ages based on liver disease"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{LiverDisease_files/figure-latex/unnamed-chunk-7-1.pdf}
+\includegraphics{LiverDisease_files/figure-latex/unnamed-chunk-10-1.pdf}
 
 \subsection{Gender}
 
-The analysis indicates that 76\% of the patient records belong to males.
-It would have been good to have more and less equal distribution of
-genders. Although, it may not make difference in the performance of
-models.
+76\% of the patient records are of males. It would be good to have a
+more and less equal distribution of records for both genders, although
+we do not expect it to make any difference in our models.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -672,210 +797,571 @@ models.
 ##    125    398
 \end{verbatim}
 
-\textbackslash subsection\{Total\_Bilirubin\} Bilirubin refears to any
-form of a yellowish pigment made in the liver when red blood cells are
-broken down. We can see pattern that levels of Total\_Bilirubin are high
-for patients with liver diseases.
+\textbackslash subsection\{Total\_Bilirubin and Direct\_Bilirubin\}
+Bilirubin refers to any form of a yellowish pigment made in the liver
+when red blood cells are broken down. The elevated levels indicate that
+the liver is damaged. We find a similar trend with the variable that
+Bilirubin levels are high for patients with liver diseases.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{# Plotting distributions of Total_Bilirubin versus liver diseases}
+\CommentTok{# Plotting distributions of Total_Bilirubin based on liver diseases}
 \NormalTok{training }\OperatorTok{%>%}\StringTok{ }
-\StringTok{  }\KeywordTok{ggplot}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{row.names}\NormalTok{(training)),Total_Bilirubin, }\DataTypeTok{color=}\NormalTok{Disease)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{ggplot}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{row.names}\NormalTok{(training)),Total_Bilirubin, }\DataTypeTok{color=}\NormalTok{LiverDisease)) }\OperatorTok{+}
 \StringTok{  }\KeywordTok{geom_boxplot}\NormalTok{() }\OperatorTok{+}
 \StringTok{  }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{y=}\StringTok{"Total_Bilirubin"}\NormalTok{, }\DataTypeTok{x =} \StringTok{"Number of patients"}\NormalTok{)}\OperatorTok{+}
-\StringTok{  }\KeywordTok{facet_wrap}\NormalTok{( }\OperatorTok{~}\StringTok{ }\NormalTok{Disease) }\OperatorTok{+}
-\StringTok{  }\KeywordTok{ggtitle}\NormalTok{(}\StringTok{"Distribution of Total_Bilirubin w.r.t liver disease"}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
-\includegraphics{LiverDisease_files/figure-latex/unnamed-chunk-9-1.pdf}
-
-\textbackslash subsection\{Direct\_Bilirubin\} Again, we can see that
-levels of Direct\_Bilirubin are also high for patients with liver
-diseases.
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\CommentTok{# Plotting distributions of Total_Bilirubin versus liver diseases}
-\NormalTok{training }\OperatorTok{%>%}\StringTok{ }
-\StringTok{  }\KeywordTok{ggplot}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{row.names}\NormalTok{(training)),Direct_Bilirubin, }\DataTypeTok{color=}\NormalTok{Disease)) }\OperatorTok{+}
-\StringTok{  }\KeywordTok{geom_boxplot}\NormalTok{() }\OperatorTok{+}
-\StringTok{  }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{y=}\StringTok{"Direct_Bilirubin"}\NormalTok{, }\DataTypeTok{x =} \StringTok{"Number of patients"}\NormalTok{)}\OperatorTok{+}
-\StringTok{  }\KeywordTok{facet_wrap}\NormalTok{( }\OperatorTok{~}\StringTok{ }\NormalTok{Disease) }\OperatorTok{+}
-\StringTok{  }\KeywordTok{ggtitle}\NormalTok{(}\StringTok{"Distribution of Direct_Bilirubin w.r.t liver disease"}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
-\includegraphics{LiverDisease_files/figure-latex/unnamed-chunk-10-1.pdf}
-The correlations indicate that there is a weak correlation between liver
-disease and bilirubin. Though, the values are comparatively higher with
-liver diseases.
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{subset_train <-}\StringTok{ }\NormalTok{training[}\KeywordTok{c}\NormalTok{(}\StringTok{"Total_Bilirubin"}\NormalTok{,}\StringTok{"Direct_Bilirubin"}\NormalTok{)]}
-\NormalTok{subset_train <-}\StringTok{ }\KeywordTok{transform}\NormalTok{(subset_train, }\DataTypeTok{Disease=} \KeywordTok{ifelse}\NormalTok{(training}\OperatorTok{$}\NormalTok{Disease}\OperatorTok{==}\StringTok{"M"}\NormalTok{, }\DecValTok{1}\NormalTok{,}\DecValTok{0}\NormalTok{))}
-\KeywordTok{cor}\NormalTok{(subset_train) }
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-##                  Total_Bilirubin Direct_Bilirubin   Disease
-## Total_Bilirubin        1.0000000        0.8584292 0.2065553
-## Direct_Bilirubin       0.8584292        1.0000000 0.2347388
-## Disease                0.2065553        0.2347388 1.0000000
-\end{verbatim}
-
-\subsection{Alkaline Phosphotase}
-
-Alkaline phosphatase (ALP) is an enzyme in a person's blood that helps
-break down proteins. We observe that levels of Alkaline Phosphotase are
-comparatively high for patients with liver diseases.
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\CommentTok{# Plotting distributions of Alkaline Phosphotase versus liver diseases}
-\NormalTok{training }\OperatorTok{%>%}\StringTok{ }
-\StringTok{  }\KeywordTok{ggplot}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{row.names}\NormalTok{(training)),Alkaline_Phosphotase, }\DataTypeTok{color=}\NormalTok{Disease)) }\OperatorTok{+}
-\StringTok{  }\KeywordTok{geom_boxplot}\NormalTok{() }\OperatorTok{+}
-\StringTok{  }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{y=}\StringTok{"Alkaline Phosphotase"}\NormalTok{, }\DataTypeTok{x =} \StringTok{"Number of patients"}\NormalTok{)}\OperatorTok{+}
-\StringTok{  }\KeywordTok{facet_wrap}\NormalTok{( }\OperatorTok{~}\StringTok{ }\NormalTok{Disease) }\OperatorTok{+}
-\StringTok{  }\KeywordTok{ggtitle}\NormalTok{(}\StringTok{"Distribution of Alkaline Phosphotase w.r.t liver disease"}\NormalTok{)}
+\StringTok{  }\KeywordTok{facet_wrap}\NormalTok{( }\OperatorTok{~}\StringTok{ }\NormalTok{LiverDisease) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{ggtitle}\NormalTok{(}\StringTok{"Distribution of Total_Bilirubin based on liver disease"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
 \includegraphics{LiverDisease_files/figure-latex/unnamed-chunk-12-1.pdf}
 
-\textbackslash subsection\{Alamine\_Aminotransferase\} Alanine
-aminotransferase (ALT) is an enzyme found primarily in the liver and
-kidney. ALT is increased with liver damage and is used to screen liver
-disease. We can see that levels of Alamine\_Aminotransferase are high
-for patients with liver diseases.
-
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{# Plotting distributions of Alamine Aminotransferase versus liver diseases}
+\CommentTok{# Plotting distributions of Direct_Bilirubin based on liver disease}
 \NormalTok{training }\OperatorTok{%>%}\StringTok{ }
-\StringTok{  }\KeywordTok{ggplot}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{row.names}\NormalTok{(training)),Alamine_Aminotransferase, }\DataTypeTok{color=}\NormalTok{Disease)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{ggplot}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{row.names}\NormalTok{(training)),Direct_Bilirubin, }\DataTypeTok{color=}\NormalTok{LiverDisease)) }\OperatorTok{+}
 \StringTok{  }\KeywordTok{geom_boxplot}\NormalTok{() }\OperatorTok{+}
-\StringTok{  }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{y=}\StringTok{"Alamine Aminotransferase"}\NormalTok{, }\DataTypeTok{x =} \StringTok{"Number of patients"}\NormalTok{)}\OperatorTok{+}
-\StringTok{  }\KeywordTok{facet_wrap}\NormalTok{( }\OperatorTok{~}\StringTok{ }\NormalTok{Disease) }\OperatorTok{+}
-\StringTok{  }\KeywordTok{ggtitle}\NormalTok{(}\StringTok{"Distribution of Alamine Aminotransferase w.r.t liver disease"}\NormalTok{) }
+\StringTok{  }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{y=}\StringTok{"Direct_Bilirubin"}\NormalTok{, }\DataTypeTok{x =} \StringTok{"Number of patients"}\NormalTok{)}\OperatorTok{+}
+\StringTok{  }\KeywordTok{facet_wrap}\NormalTok{( }\OperatorTok{~}\StringTok{ }\NormalTok{LiverDisease) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{ggtitle}\NormalTok{(}\StringTok{"Distribution of Direct_Bilirubin based on liver disease"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
 \includegraphics{LiverDisease_files/figure-latex/unnamed-chunk-13-1.pdf}
 
-\textbackslash subsection\{Aspartate\_Aminotransferase\} Aspartate
-aminotransferase (AST) is an enzyme found in cells throughout the body
-but mostly in the heart and liver. In healthy individuals, levels of AST
-in the blood are low. When liver is damaged, they release AST into the
-blood thus raising the levels.We can see that levels of AST are
-comparatively high for very few patients with liver diseases.
+The correlations show that both bilirubins are weakly correlated with
+liver disease. However, both bilirubins are highly correlated with each
+other.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{# Plotting distributions of Aspartate_Aminotransferase versus liver diseases}
-\NormalTok{training }\OperatorTok{%>%}\StringTok{ }
-\StringTok{  }\KeywordTok{ggplot}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{row.names}\NormalTok{(training)),Aspartate_Aminotransferase, }\DataTypeTok{color=}\NormalTok{Disease)) }\OperatorTok{+}
-\StringTok{  }\KeywordTok{geom_boxplot}\NormalTok{() }\OperatorTok{+}
-\StringTok{  }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{y=}\StringTok{"Aspartate Aminotransferase"}\NormalTok{, }\DataTypeTok{x =} \StringTok{"Number of patients"}\NormalTok{)}\OperatorTok{+}
-\StringTok{  }\KeywordTok{facet_wrap}\NormalTok{( }\OperatorTok{~}\StringTok{ }\NormalTok{Disease) }\OperatorTok{+}
-\StringTok{  }\KeywordTok{ggtitle}\NormalTok{(}\StringTok{"Distribution of Aspartate Aminotransferase w.r.t liver disease"}\NormalTok{) }
+\CommentTok{# Making a subset of data}
+\NormalTok{subset_train <-}\StringTok{ }\NormalTok{training[}\KeywordTok{c}\NormalTok{(}\StringTok{"Total_Bilirubin"}\NormalTok{,}\StringTok{"Direct_Bilirubin"}\NormalTok{,}\StringTok{"LiverDisease"}\NormalTok{)]}
+\CommentTok{# Converting disease variable to numeric format}
+\NormalTok{subset_train <-}\StringTok{ }\KeywordTok{transform}\NormalTok{(subset_train, }\DataTypeTok{LiverDisease=} \KeywordTok{ifelse}\NormalTok{(subset_train}\OperatorTok{$}\NormalTok{LiverDisease}\OperatorTok{==}\StringTok{"M"}\NormalTok{, }\DecValTok{1}\NormalTok{,}\DecValTok{0}\NormalTok{))}
+\CommentTok{# Looking at the coorelations}
+\KeywordTok{cor}\NormalTok{(subset_train) }
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{LiverDisease_files/figure-latex/unnamed-chunk-14-1.pdf}
+\begin{verbatim}
+##                  Total_Bilirubin Direct_Bilirubin LiverDisease
+## Total_Bilirubin        1.0000000        0.8584292    0.2065553
+## Direct_Bilirubin       0.8584292        1.0000000    0.2347388
+## LiverDisease           0.2065553        0.2347388    1.0000000
+\end{verbatim}
 
-\subsection{Total Protiens}
+\subsection{Alkaline Phosphotase}
 
-The total protein test measures the total amount albumin and globulin in
-your body. It is used as part of your routine health checkup. The
-anaysis suggest that there is no correlation between liver disease and
-total protiens in our dataset. So, we will not use it for model
-training.
+Alkaline phosphatase (ALP) is an enzyme in a person's blood that helps
+break down proteins. We notice that levels of ALP are comparatively high
+for patients with liver diseases.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{# Plotting distributions of Total Protiens versus liver diseases}
+\CommentTok{# Plotting distributions of Alkaline Phosphotase based on liver diseases}
 \NormalTok{training }\OperatorTok{%>%}\StringTok{ }
-\StringTok{  }\KeywordTok{ggplot}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{row.names}\NormalTok{(training)),Total_Protiens, }\DataTypeTok{color=}\NormalTok{Disease)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{ggplot}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{row.names}\NormalTok{(training)),Alkaline_Phosphotase, }\DataTypeTok{color=}\NormalTok{LiverDisease)) }\OperatorTok{+}
 \StringTok{  }\KeywordTok{geom_boxplot}\NormalTok{() }\OperatorTok{+}
-\StringTok{  }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{y=}\StringTok{"Total Protiens"}\NormalTok{, }\DataTypeTok{x =} \StringTok{"Number of patients"}\NormalTok{)}\OperatorTok{+}
-\StringTok{  }\KeywordTok{facet_wrap}\NormalTok{( }\OperatorTok{~}\StringTok{ }\NormalTok{Disease) }\OperatorTok{+}
-\StringTok{  }\KeywordTok{ggtitle}\NormalTok{(}\StringTok{"Distribution of Total Protiens w.r.t liver disease"}\NormalTok{) }
+\StringTok{  }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{y=}\StringTok{"Alkaline Phosphotase"}\NormalTok{, }\DataTypeTok{x =} \StringTok{"Number of patients"}\NormalTok{)}\OperatorTok{+}
+\StringTok{  }\KeywordTok{facet_wrap}\NormalTok{( }\OperatorTok{~}\StringTok{ }\NormalTok{LiverDisease) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{ggtitle}\NormalTok{(}\StringTok{"Distribution of Alkaline Phosphotase based on liver disease"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
 \includegraphics{LiverDisease_files/figure-latex/unnamed-chunk-15-1.pdf}
 
-\subsection{Albumin}
-
-Albumin is a protein made by your liver. Albumin helps keep fluid in
-your bloodstream so it doesn't leak into other tissues. Low albumin
-levels can indicate a problem with your liver or kidneys. In our
-dataset, this variable has no strong correlation with the liver disease.
+\textbackslash subsection\{Alamine\_Aminotransferase and
+Aspartate\_Aminotransferase\} Aminotransferases are enzymes that are
+important in the synthesis of amino acids, which form proteins. Alanine
+aminotransferase (ALT) and Aspartate aminotransferase (AST) are found
+primarily in the liver and kidney. High levels of ALT and AST are
+expected for patients with liver diseases. We also observe the slightly
+elevated levels of these enzymes for patients with liver diseases.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{# Plotting distributions of Albumin versus liver diseases}
+\CommentTok{# Plotting distributions of Alamine Aminotransferase based on liver diseases}
 \NormalTok{training }\OperatorTok{%>%}\StringTok{ }
-\StringTok{  }\KeywordTok{ggplot}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{row.names}\NormalTok{(training)),Albumin, }\DataTypeTok{color=}\NormalTok{Disease)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{ggplot}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{row.names}\NormalTok{(training)),Alamine_Aminotransferase, }\DataTypeTok{color=}\NormalTok{LiverDisease)) }\OperatorTok{+}
 \StringTok{  }\KeywordTok{geom_boxplot}\NormalTok{() }\OperatorTok{+}
-\StringTok{  }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{y=}\StringTok{"Albumin"}\NormalTok{, }\DataTypeTok{x =} \StringTok{"Number of patients"}\NormalTok{)}\OperatorTok{+}
-\StringTok{  }\KeywordTok{facet_wrap}\NormalTok{( }\OperatorTok{~}\StringTok{ }\NormalTok{Disease) }\OperatorTok{+}
-\StringTok{  }\KeywordTok{ggtitle}\NormalTok{(}\StringTok{"Distribution of Albumin w.r.t liver disease"}\NormalTok{) }
+\StringTok{  }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{y=}\StringTok{"Alamine Aminotransferase"}\NormalTok{, }\DataTypeTok{x =} \StringTok{"Number of patients"}\NormalTok{)}\OperatorTok{+}
+\StringTok{  }\KeywordTok{facet_wrap}\NormalTok{( }\OperatorTok{~}\StringTok{ }\NormalTok{LiverDisease) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{ggtitle}\NormalTok{(}\StringTok{"Distribution of Alamine Aminotransferase based on liver disease"}\NormalTok{) }
 \end{Highlighting}
 \end{Shaded}
 
 \includegraphics{LiverDisease_files/figure-latex/unnamed-chunk-16-1.pdf}
-\textbackslash subsection\{Albumin\_and\_Globulin\_Ratio\} There are two
-classes of proteins are found in the blood. They are important for body
-growth, development, and health. They form the structural part of most
-organs and make up enzymes and hormones that regulate body functions. We
-can see that these protiens have no correlation with the liver disease.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{# Plotting distributions of Albumin versus liver diseases}
+\CommentTok{# Plotting distributions of Aspartate_Aminotransferase based on liver diseases}
 \NormalTok{training }\OperatorTok{%>%}\StringTok{ }
-\StringTok{  }\KeywordTok{ggplot}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{row.names}\NormalTok{(training)),Albumin_and_Globulin_Ratio, }\DataTypeTok{color=}\NormalTok{Disease)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{ggplot}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{row.names}\NormalTok{(training)),Aspartate_Aminotransferase, }\DataTypeTok{color=}\NormalTok{LiverDisease)) }\OperatorTok{+}
 \StringTok{  }\KeywordTok{geom_boxplot}\NormalTok{() }\OperatorTok{+}
-\StringTok{  }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{y=}\StringTok{"Albumin and Globulin Ratio"}\NormalTok{, }\DataTypeTok{x =} \StringTok{"Number of patients"}\NormalTok{)}\OperatorTok{+}
-\StringTok{  }\KeywordTok{facet_wrap}\NormalTok{( }\OperatorTok{~}\StringTok{ }\NormalTok{Disease) }\OperatorTok{+}
-\StringTok{  }\KeywordTok{ggtitle}\NormalTok{(}\StringTok{"Distribution of Albumin and Globulin Ratio w.r.t liver disease"}\NormalTok{) }
+\StringTok{  }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{y=}\StringTok{"Aspartate Aminotransferase"}\NormalTok{, }\DataTypeTok{x =} \StringTok{"Number of patients"}\NormalTok{)}\OperatorTok{+}
+\StringTok{  }\KeywordTok{facet_wrap}\NormalTok{( }\OperatorTok{~}\StringTok{ }\NormalTok{LiverDisease) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{ggtitle}\NormalTok{(}\StringTok{"Distribution of Aspartate Aminotransferase based on liver disease"}\NormalTok{) }
 \end{Highlighting}
 \end{Shaded}
-
-\begin{verbatim}
-## Warning: Removed 4 rows containing non-finite values (stat_boxplot).
-\end{verbatim}
 
 \includegraphics{LiverDisease_files/figure-latex/unnamed-chunk-17-1.pdf}
-We can that Bilirubin enzymes are highly correlated with the liver
-disease. We are going to use these 5 variables to predict the liver
-disease.
+
+Contrary to bilirubins, there exists a weak correlation between both
+aminotransferases.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{samples <-}\StringTok{ }\NormalTok{training }
-\NormalTok{samples <-}\StringTok{ }\KeywordTok{transform}\NormalTok{(samples, }\DataTypeTok{Disease=} \KeywordTok{ifelse}\NormalTok{(training}\OperatorTok{$}\NormalTok{Disease}\OperatorTok{==}\StringTok{"M"}\NormalTok{, }\DecValTok{1}\NormalTok{,}\DecValTok{0}\NormalTok{))}
-\NormalTok{samples<-}\KeywordTok{within}\NormalTok{(samples, }\KeywordTok{rm}\NormalTok{(Age,Gender,Total_Protiens,Albumin,Albumin_and_Globulin_Ratio))}
-\KeywordTok{colnames}\NormalTok{(samples)<-}\KeywordTok{c}\NormalTok{ (}\StringTok{"T_Bil"}\NormalTok{,}\StringTok{"T_Bil"}\NormalTok{,}\StringTok{"A_Phos"}\NormalTok{,}\StringTok{"Al_Amin"}\NormalTok{,}\StringTok{"Asp_Amino"}\NormalTok{,}\StringTok{"Disease"}\NormalTok{)}
-\KeywordTok{cor}\NormalTok{(samples)}
+\CommentTok{# Making a subset of data}
+\NormalTok{subset_train <-}\StringTok{ }\NormalTok{training[}\KeywordTok{c}\NormalTok{(}\StringTok{"Alkaline_Phosphotase"}\NormalTok{,}\StringTok{"Aspartate_Aminotransferase"}\NormalTok{,}\StringTok{"LiverDisease"}\NormalTok{)]}
+
+\CommentTok{# Converting disease variable to numeric format}
+\NormalTok{subset_train <-}\StringTok{ }\KeywordTok{transform}\NormalTok{(subset_train, }\DataTypeTok{LiverDisease=} \KeywordTok{ifelse}\NormalTok{(subset_train}\OperatorTok{$}\NormalTok{LiverDisease}\OperatorTok{==}\StringTok{"M"}\NormalTok{, }\DecValTok{1}\NormalTok{,}\DecValTok{0}\NormalTok{))}
+
+\CommentTok{# Looking at the coorelations}
+\KeywordTok{cor}\NormalTok{(subset_train) }
 \end{Highlighting}
 \end{Shaded}
 
 \begin{verbatim}
-##               T_Bil     T_Bil    A_Phos   Al_Amin Asp_Amino   Disease
-## T_Bil     1.0000000 0.8584292 0.2356568 0.1686019 0.2003604 0.2065553
-## T_Bil     0.8584292 1.0000000 0.2681528 0.1897871 0.2219221 0.2347388
-## A_Phos    0.2356568 0.2681528 1.0000000 0.1692258 0.2156400 0.1782120
-## Al_Amin   0.1686019 0.1897871 0.1692258 1.0000000 0.7317857 0.1616705
-## Asp_Amino 0.2003604 0.2219221 0.2156400 0.7317857 1.0000000 0.1488358
-## Disease   0.2065553 0.2347388 0.1782120 0.1616705 0.1488358 1.0000000
+##                            Alkaline_Phosphotase Aspartate_Aminotransferase
+## Alkaline_Phosphotase                   1.000000                  0.2156400
+## Aspartate_Aminotransferase             0.215640                  1.0000000
+## LiverDisease                           0.178212                  0.1488358
+##                            LiverDisease
+## Alkaline_Phosphotase          0.1782120
+## Aspartate_Aminotransferase    0.1488358
+## LiverDisease                  1.0000000
 \end{verbatim}
+
+\subsection{Total Protiens}
+
+The total protein test measures the total amount of protein in your
+body. The distributions indicate that we can diagnose liver disease
+reliably using this variable.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Plotting distributions of Total Protiens based on liver diseases}
+\NormalTok{training }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{ggplot}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{row.names}\NormalTok{(training)),Total_Protiens, }\DataTypeTok{color=}\NormalTok{LiverDisease)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_boxplot}\NormalTok{() }\OperatorTok{+}
+\StringTok{  }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{y=}\StringTok{"Total Protiens"}\NormalTok{, }\DataTypeTok{x =} \StringTok{"Number of patients"}\NormalTok{)}\OperatorTok{+}
+\StringTok{  }\KeywordTok{facet_wrap}\NormalTok{( }\OperatorTok{~}\StringTok{ }\NormalTok{LiverDisease) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{ggtitle}\NormalTok{(}\StringTok{"Distribution of Total Protiens based on liver diseases"}\NormalTok{) }
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{LiverDisease_files/figure-latex/unnamed-chunk-19-1.pdf}
+
+\subsection{Albumin}
+
+Albumin is a protein made by the liver to keep fluid in the bloodstream.
+The low levels of albumin often indicate a problem with the liver, and
+we notice a similar trend with this variable.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Plotting distributions of Albumin based on liver diseases}
+\NormalTok{training }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{ggplot}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{row.names}\NormalTok{(training)),Albumin, }\DataTypeTok{color=}\NormalTok{LiverDisease)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_boxplot}\NormalTok{() }\OperatorTok{+}
+\StringTok{  }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{y=}\StringTok{"Albumin"}\NormalTok{, }\DataTypeTok{x =} \StringTok{"Number of patients"}\NormalTok{)}\OperatorTok{+}
+\StringTok{  }\KeywordTok{facet_wrap}\NormalTok{( }\OperatorTok{~}\StringTok{ }\NormalTok{LiverDisease) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{ggtitle}\NormalTok{(}\StringTok{"Distribution of Albumin based on liver disease"}\NormalTok{) }
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{LiverDisease_files/figure-latex/unnamed-chunk-20-1.pdf}
+
+\textbackslash subsection\{Albumin\_and\_Globulin\_Ratio\} These
+proteins are crucial for body growth, development, and health. They form
+the structural part of most organs and makeup enzymes and hormones that
+regulate body functions. The low ratios refer to liver issues, and we
+can notice the same from distributions graphs.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Plotting distributions of Albumin based on liver diseases}
+\NormalTok{training }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{ggplot}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{row.names}\NormalTok{(training)),Albumin_and_Globulin_Ratio, }\DataTypeTok{color=}\NormalTok{LiverDisease)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_boxplot}\NormalTok{() }\OperatorTok{+}
+\StringTok{  }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{y=}\StringTok{"Albumin and Globulin Ratio"}\NormalTok{, }\DataTypeTok{x =} \StringTok{"Number of patients"}\NormalTok{)}\OperatorTok{+}
+\StringTok{  }\KeywordTok{facet_wrap}\NormalTok{( }\OperatorTok{~}\StringTok{ }\NormalTok{LiverDisease) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{ggtitle}\NormalTok{(}\StringTok{"Distribution of Albumin and Globulin Ratio based on liver disease"}\NormalTok{) }
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{LiverDisease_files/figure-latex/unnamed-chunk-21-1.pdf}
+
+\section{Methods}
+\label{sec:methods}
+
+Based on the discussion in Section \ref{sec:dataanalysis}, we will not
+use ``Age'' and ``Total Protein'' variables to train the machine
+learning models. We remove these variables from both training and
+validation datasets.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Deleting the column 'Dataset' as no longer required}
+\NormalTok{training<-}\KeywordTok{within}\NormalTok{(training, }\KeywordTok{rm}\NormalTok{(Age,Total_Protiens))}
+\NormalTok{validation<-}\KeywordTok{within}\NormalTok{(validation, }\KeywordTok{rm}\NormalTok{(Age,Total_Protiens))}
+\end{Highlighting}
+\end{Shaded}
+
+\subsection{Logistic Regression}
+
+We use logistic regression with cross-validation of 10 folds to train
+the model.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Defining a cross-validation (10 K folds )}
+\NormalTok{control <-}\StringTok{ }\KeywordTok{trainControl}\NormalTok{(}\DataTypeTok{method =} \StringTok{"cv"}\NormalTok{, }\DataTypeTok{number =}\DecValTok{10}\NormalTok{)}
+
+\CommentTok{# Train logistic regression model}
+\NormalTok{train_glm <-}\StringTok{ }\KeywordTok{train}\NormalTok{(LiverDisease }\OperatorTok{~}\NormalTok{., }
+                   \DataTypeTok{method =} \StringTok{"glm"}\NormalTok{,}
+                   \DataTypeTok{data =}\NormalTok{ training,}
+                   \DataTypeTok{trControl=}\NormalTok{control)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
+
+## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
+
+## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
+
+## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
+
+## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
+
+## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
+
+## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{sprintf}\NormalTok{(}\StringTok{"The accuracy of GLM = %f"}\NormalTok{,train_glm}\OperatorTok{$}\NormalTok{results}\OperatorTok{$}\NormalTok{Accuracy)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "The accuracy of GLM = 0.703512"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{model_results <-}\StringTok{ }\KeywordTok{data_frame}\NormalTok{(}\DataTypeTok{method =} \StringTok{"glm"}\NormalTok{, }\DataTypeTok{Accuracy =}\NormalTok{ train_glm}\OperatorTok{$}\NormalTok{results}\OperatorTok{$}\NormalTok{Accuracy)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning: `data_frame()` is deprecated, use `tibble()`.
+## This warning is displayed once per session.
+\end{verbatim}
+
+\subsection{K-nearest neigbors (knn)}
+
+We use knn with cross-validation of 10 folds to train the model.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Defining a cross validation (10 K folds )}
+\NormalTok{control <-}\StringTok{ }\KeywordTok{trainControl}\NormalTok{(}\DataTypeTok{method =} \StringTok{"cv"}\NormalTok{, }\DataTypeTok{number =} \DecValTok{10}\NormalTok{)}
+\CommentTok{# Train knn model}
+\NormalTok{train_knn <-}\StringTok{ }\KeywordTok{train}\NormalTok{(LiverDisease}\OperatorTok{~}\StringTok{ }\NormalTok{.,}
+                   \DataTypeTok{method =} \StringTok{"knn"}\NormalTok{, }
+                   \DataTypeTok{data =}\NormalTok{ training,}
+                   \DataTypeTok{tuneGrid =} \KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{k =} \KeywordTok{seq}\NormalTok{(}\DecValTok{3}\NormalTok{, }\DecValTok{51}\NormalTok{, }\DecValTok{2}\NormalTok{)),}
+                   \DataTypeTok{trControl =}\NormalTok{ control)}
+
+\KeywordTok{ggplot}\NormalTok{(train_knn, }\DataTypeTok{highlight =} \OtherTok{TRUE}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{LiverDisease_files/figure-latex/unnamed-chunk-24-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{sprintf}\NormalTok{(}\StringTok{"The best accuracy = %f"}\NormalTok{,}\KeywordTok{max}\NormalTok{(train_knn}\OperatorTok{$}\NormalTok{results}\OperatorTok{$}\NormalTok{Accuracy))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "The best accuracy = 0.707565"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Stroing the results}
+\NormalTok{model_results <-}\StringTok{ }\KeywordTok{bind_rows}\NormalTok{(model_results,}\KeywordTok{data_frame}\NormalTok{(}\DataTypeTok{method=}\StringTok{"knn"}\NormalTok{,  }
+                                     \DataTypeTok{RMSE =} \KeywordTok{max}\NormalTok{(train_knn}\OperatorTok{$}\NormalTok{results}\OperatorTok{$}\NormalTok{Accuracy) ))}
+\end{Highlighting}
+\end{Shaded}
+
+\subsection{Partial Least Squares (PLS)}
+
+We use PLS with cross-validation of 10 folds to train the model.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{set.seed}\NormalTok{(}\DecValTok{10}\NormalTok{)}
+\CommentTok{# Defining a cross validation (10 K folds )}
+\NormalTok{control <-}\StringTok{ }\KeywordTok{trainControl}\NormalTok{(}\DataTypeTok{method =} \StringTok{"cv"}\NormalTok{, }\DataTypeTok{number =} \DecValTok{10}\NormalTok{)}
+\CommentTok{# Train the model}
+\NormalTok{train_pls <-}\StringTok{ }\KeywordTok{train}\NormalTok{(LiverDisease}\OperatorTok{~}\NormalTok{.,}
+                   \DataTypeTok{method =} \StringTok{"pls"}\NormalTok{,}
+                   \DataTypeTok{data =}\NormalTok{ training,}
+                   \DataTypeTok{preProc =} \KeywordTok{c}\NormalTok{(}\StringTok{"center"}\NormalTok{, }\StringTok{"scale"}\NormalTok{),}
+                   \DataTypeTok{tuneLength =} \DecValTok{15}\NormalTok{,}
+                   \DataTypeTok{trControl =}\NormalTok{ control)}
+
+\KeywordTok{sprintf}\NormalTok{(}\StringTok{"The accuracy of PLS  = %f"}\NormalTok{,}\KeywordTok{max}\NormalTok{(train_pls}\OperatorTok{$}\NormalTok{results}\OperatorTok{$}\NormalTok{Accuracy))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "The accuracy of PLS  = 0.720860"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Stroing the results}
+\NormalTok{model_results <-}\StringTok{ }\KeywordTok{bind_rows}\NormalTok{(model_results,}\KeywordTok{data_frame}\NormalTok{(}\DataTypeTok{method=}\StringTok{"pls"}\NormalTok{,  }
+                                     \DataTypeTok{RMSE =} \KeywordTok{max}\NormalTok{(train_pls}\OperatorTok{$}\NormalTok{results}\OperatorTok{$}\NormalTok{Accuracy) ))}
+\end{Highlighting}
+\end{Shaded}
+
+\subsection{Linear Discriminant Analysis (LDA)}
+
+The LDA is a statistical classifier, and we use it with a
+cross-validation of 10 folds for training.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Defining a cross validation (10 K folds )}
+\NormalTok{control <-}\StringTok{ }\KeywordTok{trainControl}\NormalTok{(}\DataTypeTok{method =} \StringTok{"cv"}\NormalTok{, }\DataTypeTok{number=}\DecValTok{10}\NormalTok{)}
+\CommentTok{# Train the model}
+\NormalTok{train_lda <-}\StringTok{ }\KeywordTok{train}\NormalTok{(LiverDisease}\OperatorTok{~}\NormalTok{., }
+                   \DataTypeTok{method =} \StringTok{"lda"}\NormalTok{,}
+                   \DataTypeTok{data =}\NormalTok{ training,}
+                   \DataTypeTok{trControl =}\NormalTok{ control)}
+
+\KeywordTok{sprintf}\NormalTok{(}\StringTok{"The accuracy of lda = %f"}\NormalTok{,}\KeywordTok{max}\NormalTok{(train_lda}\OperatorTok{$}\NormalTok{results}\OperatorTok{$}\NormalTok{Accuracy))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "The accuracy of lda = 0.717124"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Stroing the results}
+\NormalTok{model_results <-}\StringTok{ }\KeywordTok{bind_rows}\NormalTok{(model_results,}\KeywordTok{data_frame}\NormalTok{(}\DataTypeTok{method=}\StringTok{"lda"}\NormalTok{,  }
+                                     \DataTypeTok{RMSE =} \KeywordTok{max}\NormalTok{(train_lda}\OperatorTok{$}\NormalTok{results}\OperatorTok{$}\NormalTok{Accuracy) ))}
+\end{Highlighting}
+\end{Shaded}
+
+\subsection{Quadratic Discriminant Analysis (QDA)}
+
+The QDA is a statistical classifier, and we use it with a
+cross-validation of 10 folds for training.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Defining a cross validation (10 K folds )}
+\NormalTok{control <-}\StringTok{ }\KeywordTok{trainControl}\NormalTok{(}\DataTypeTok{method =} \StringTok{"cv"}\NormalTok{, }\DataTypeTok{number=}\DecValTok{10}\NormalTok{)}
+\CommentTok{# Train the model}
+\NormalTok{train_qda <-}\StringTok{ }\KeywordTok{train}\NormalTok{(LiverDisease}\OperatorTok{~}\NormalTok{.,}
+                   \DataTypeTok{method =} \StringTok{"qda"}\NormalTok{,}
+                   \DataTypeTok{data =}\NormalTok{ training,}
+                   \DataTypeTok{trControl =}\NormalTok{ control)}
+
+\KeywordTok{sprintf}\NormalTok{(}\StringTok{"The accuracy of qda = %f"}\NormalTok{,}\KeywordTok{max}\NormalTok{(train_qda}\OperatorTok{$}\NormalTok{results}\OperatorTok{$}\NormalTok{Accuracy))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "The accuracy of qda = 0.539227"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Stroing the results}
+\NormalTok{model_results <-}\StringTok{ }\KeywordTok{bind_rows}\NormalTok{(model_results,}\KeywordTok{data_frame}\NormalTok{(}\DataTypeTok{method=}\StringTok{"qda"}\NormalTok{,  }
+                                     \DataTypeTok{RMSE =} \KeywordTok{max}\NormalTok{(train_qda}\OperatorTok{$}\NormalTok{results}\OperatorTok{$}\NormalTok{Accuracy) ))}
+\end{Highlighting}
+\end{Shaded}
+
+\subsection{Decision Tress}
+
+We use decision trees with a cross-validation of 10 folds for training.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Defining a cross validation (10 K folds )}
+\NormalTok{control <-}\StringTok{ }\KeywordTok{trainControl}\NormalTok{(}\DataTypeTok{method =} \StringTok{"cv"}\NormalTok{, }\DataTypeTok{number =} \DecValTok{10}\NormalTok{)}
+\CommentTok{# Train the model}
+\NormalTok{train_rpart <-}\StringTok{ }\KeywordTok{train}\NormalTok{(LiverDisease}\OperatorTok{~}\NormalTok{., }
+                     \DataTypeTok{method =} \StringTok{"rpart"}\NormalTok{,}
+                     \DataTypeTok{data =}\NormalTok{ training,}
+                     \DataTypeTok{trControl =}\NormalTok{ control,}
+                     \DataTypeTok{tuneGrid =} \KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{cp =} \KeywordTok{seq}\NormalTok{(}\DecValTok{0}\NormalTok{, }\FloatTok{0.05}\NormalTok{, }\DataTypeTok{len =} \DecValTok{25}\NormalTok{)))}
+\KeywordTok{ggplot}\NormalTok{(train_rpart)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{LiverDisease_files/figure-latex/unnamed-chunk-28-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{sprintf}\NormalTok{(}\StringTok{"The accuracy of decision tree = %f"}\NormalTok{,}\KeywordTok{max}\NormalTok{(train_rpart}\OperatorTok{$}\NormalTok{results}\OperatorTok{$}\NormalTok{Accuracy))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "The accuracy of decision tree = 0.724688"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Stroing the results}
+\NormalTok{model_results <-}\StringTok{ }\KeywordTok{bind_rows}\NormalTok{(model_results,}\KeywordTok{data_frame}\NormalTok{(}\DataTypeTok{method=}\StringTok{"rpart"}\NormalTok{,  }
+                                     \DataTypeTok{RMSE =} \KeywordTok{max}\NormalTok{(train_rpart}\OperatorTok{$}\NormalTok{results}\OperatorTok{$}\NormalTok{Accuracy) ))}
+\end{Highlighting}
+\end{Shaded}
+
+\subsection{Random Forests}
+
+We use random forests with a cross-validation of 10 folds for training.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Defining a cross validation (10 K folds )}
+\NormalTok{control <-}\StringTok{ }\KeywordTok{trainControl}\NormalTok{(}\DataTypeTok{method =} \StringTok{"cv"}\NormalTok{, }\DataTypeTok{number =} \DecValTok{10}\NormalTok{)}
+\CommentTok{# Train the model}
+\NormalTok{train_rf <-}\StringTok{ }\KeywordTok{train}\NormalTok{(LiverDisease}\OperatorTok{~}\NormalTok{.,}
+                     \DataTypeTok{method =} \StringTok{"rf"}\NormalTok{,}
+                     \DataTypeTok{data =}\NormalTok{ training,}
+                     \DataTypeTok{trControl =}\NormalTok{ control,}
+                     \DataTypeTok{tuneGrid =} \KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{mtry=}\KeywordTok{seq}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{7}\NormalTok{)),}
+                     \DataTypeTok{ntree=}\DecValTok{100}\NormalTok{)}
+\KeywordTok{sprintf}\NormalTok{(}\StringTok{"The accuracy of forest tree = %f"}\NormalTok{,}\KeywordTok{max}\NormalTok{(train_rf}\OperatorTok{$}\NormalTok{results}\OperatorTok{$}\NormalTok{Accuracy))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "The accuracy of forest tree = 0.728628"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Stroing the results}
+\NormalTok{model_results <-}\StringTok{ }\KeywordTok{bind_rows}\NormalTok{(model_results,}\KeywordTok{data_frame}\NormalTok{(}\DataTypeTok{method=}\StringTok{"rf"}\NormalTok{,  }
+                                     \DataTypeTok{RMSE =} \KeywordTok{max}\NormalTok{(train_rf}\OperatorTok{$}\NormalTok{results}\OperatorTok{$}\NormalTok{Accuracy) ))}
+\end{Highlighting}
+\end{Shaded}
+
+\subsection{Support Vector Machine}
+
+We use support vector machine with a cross-validation of 10 folds for
+training.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Defining a cross validation (10 K folds )}
+\NormalTok{control <-}\StringTok{ }\KeywordTok{trainControl}\NormalTok{(}\DataTypeTok{method =} \StringTok{"cv"}\NormalTok{, }\DataTypeTok{number =} \DecValTok{10}\NormalTok{)}
+\CommentTok{# Train the model}
+\NormalTok{train_svm <-}\StringTok{ }\KeywordTok{train}\NormalTok{(LiverDisease}\OperatorTok{~}\NormalTok{.,}
+                   \DataTypeTok{data =}\NormalTok{ training,}
+                   \DataTypeTok{method =} \StringTok{"svmLinear"}\NormalTok{,}
+                   \DataTypeTok{trControl =}\NormalTok{ control)}
+
+\KeywordTok{sprintf}\NormalTok{(}\StringTok{"The accuracy of svm = %f"}\NormalTok{,}\KeywordTok{max}\NormalTok{(train_svm}\OperatorTok{$}\NormalTok{results}\OperatorTok{$}\NormalTok{Accuracy))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "The accuracy of svm = 0.718973"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Stroing the results}
+\NormalTok{model_results <-}\StringTok{ }\KeywordTok{bind_rows}\NormalTok{(model_results,}\KeywordTok{data_frame}\NormalTok{(}\DataTypeTok{method=}\StringTok{"svm"}\NormalTok{,  }
+                                     \DataTypeTok{RMSE =} \KeywordTok{max}\NormalTok{(train_svm}\OperatorTok{$}\NormalTok{results}\OperatorTok{$}\NormalTok{Accuracy) ))}
+\end{Highlighting}
+\end{Shaded}
+
+\subsection{Adaptive Boosting (Adaboost)}
+
+AdaBoost is a machine learning meta-algorithm for classification. We
+train the model with a cross-validation of 10 folds.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Defining a cross validation (10 K folds )}
+\NormalTok{control <-}\StringTok{ }\KeywordTok{trainControl}\NormalTok{(}\DataTypeTok{method =} \StringTok{"cv"}\NormalTok{, }\DataTypeTok{number =} \DecValTok{10}\NormalTok{)}
+\CommentTok{# Train the model}
+\NormalTok{train_ada <-}\StringTok{ }\KeywordTok{train}\NormalTok{(LiverDisease}\OperatorTok{~}\NormalTok{.,}
+                   \DataTypeTok{data =}\NormalTok{ training,}
+                   \DataTypeTok{method =} \StringTok{"ada"}\NormalTok{,}
+                   \DataTypeTok{trControl =}\NormalTok{ control)}
+
+\KeywordTok{sprintf}\NormalTok{(}\StringTok{"The accuracy of adaboost = %f"}\NormalTok{,}\KeywordTok{max}\NormalTok{(train_ada}\OperatorTok{$}\NormalTok{results}\OperatorTok{$}\NormalTok{Accuracy))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "The accuracy of adaboost = 0.724673"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Stroing the results}
+\NormalTok{model_results <-}\StringTok{ }\KeywordTok{bind_rows}\NormalTok{(model_results,}\KeywordTok{data_frame}\NormalTok{(}\DataTypeTok{method=}\StringTok{"ada"}\NormalTok{,  }
+                                     \DataTypeTok{RMSE =} \KeywordTok{max}\NormalTok{(train_ada}\OperatorTok{$}\NormalTok{results}\OperatorTok{$}\NormalTok{Accuracy) ))}
+\end{Highlighting}
+\end{Shaded}
+
+The reported accuracies for all models across training dataset are shown
+in the following table. The results show that lda model performs the
+worse. All other models provide an accuracy of around 0.70.The random
+forest seems to perform the best.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{model_results}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}lrr@{}}
+\toprule
+method & Accuracy & RMSE\tabularnewline
+\midrule
+\endhead
+glm & 0.7035118 & NA\tabularnewline
+knn & NA & 0.7075650\tabularnewline
+pls & NA & 0.7208600\tabularnewline
+lda & NA & 0.7171241\tabularnewline
+qda & NA & 0.5392271\tabularnewline
+rpart & NA & 0.7246884\tabularnewline
+rf & NA & 0.7286284\tabularnewline
+svm & NA & 0.7189732\tabularnewline
+ada & NA & 0.7246734\tabularnewline
+\bottomrule
+\end{longtable}
+
+\section{Results}
+\label{sec:results}
 
 \begin{thebibliography}{9}
 \bibitem{cad} 
