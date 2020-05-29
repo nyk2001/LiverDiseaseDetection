@@ -43,7 +43,7 @@ We download data from the website. Then, we split data into training and validat
 \item 10\% of the data is used for validation, and 90% is used for training.
 \end{itemize}
 
-```{r,message=FALSE}
+```{r,message=FALSE, warning=FALSE}
 ################################
 #  Install packages (if not installed)
 ################################
@@ -450,7 +450,7 @@ model_results <- bind_rows(model_results,data_frame(method="knn",
 
 ```
 \subsection{Local Regression (loess)}
-We use \emph{loess} methof with cross-validation of 10 folds to train the model. We also optimize span parameter of the method.
+We use \emph{loess} methof with cross-validation of 10 folds to train the model. We also optimize the span parameter of the method.
 
 ```{r, warning=FALSE}
 set.seed(1)
@@ -458,15 +458,17 @@ set.seed(1)
 control <- trainControl(method = "repeatedcv", number = 10, repeats=5)
 
 # Define tuning parameters
-tune_grid <- expand.grid(span = seq(0.15, 0.65, len = 10), degree = 1)
+tune_grid <- expand.grid(span = seq(0.15, 0.65, len = 15), degree = 1)
 
 # Train the model
 train_loess <- train(LiverDisease~.,
                    method = "gamLoess",
+                   preProc = c("zv","center", "scale"),
                    data = training,
                    tuneGrid= tune_grid, 
                    trControl = control)
 
+# Plot the model and highlight the best result
 ggplot(train_loess, highlight = TRUE) +
   ggtitle(paste("The best accuracy = ",round(max(train_loess$results$Accuracy),3)))
 
@@ -490,13 +492,14 @@ control <- trainControl(method = "repeatedcv", number = 10, repeats=5)
 # Train the model
 train_pls <- train(LiverDisease~.,
                    method = "pls",
-                   data = training,
-                   preProc = c("center", "scale"),
-                   tuneLength= 10,
-                   
+                   preProc = c("zv","center", "scale"),
+                   tuneLength = 15,
                    trControl = control)
 
-sprintf("The accuracy of PLS  = %f",max(train_pls$results$Accuracy))
+# Plot the model and highlight the best result
+ggplot(train_loess, highlight = TRUE) +
+  ggtitle(paste("The best accuracy = ",round(max(train_pls$results$Accuracy),3)))
+
 
 # Stroing the results
 model_results <- bind_rows(model_results,data_frame(method="pls",  
@@ -506,7 +509,7 @@ model_results <- bind_rows(model_results,data_frame(method="pls",
 ```
 
 \subsection{Linear Discriminant Analysis (LDA)}
-The LDA is a statistical classifier, and we use it with a cross-validation of 10 folds for training.
+The \emph{lda} is a statistical classifier, and we use this method with a cross-validation of 10 folds for training.
 
 ```{r}
 # Defining a cross validation (10 K folds )
@@ -515,6 +518,7 @@ control <- trainControl(method = "repeatedcv", number=10, repeats=5)
 # Train the model
 train_lda <- train(LiverDisease~., 
                    method = "lda",
+                   preProc = c("zv","center", "scale"),
                    data = training,
                    trControl = control)
 
@@ -528,18 +532,22 @@ model_results <- bind_rows(model_results,data_frame(method="lda",
 ```
 
 \subsection{Quadratic Discriminant Analysis (QDA)}
-The QDA is a statistical classifier, and we use it with a cross-validation of 10 folds for training.
+The \emph{qda} is a statistical classifier, and we use the method with a cross-validation of 10 folds for training.
 
 ```{r}
+
 # Defining a cross validation (10 K folds )
 control <- trainControl(method = "cv", number=10)
+
 # Train the model
 train_qda <- train(LiverDisease~.,
                    method = "qda",
+                   preProc = c("zv","center", "scale"),
                    data = training,
                    trControl = control)
 
 sprintf("The accuracy of qda = %f",max(train_qda$results$Accuracy))
+
 # Stroing the results
 model_results <- bind_rows(model_results,data_frame(method="qda",  
                                      Accuracy = max(train_qda$results$Accuracy) ))
@@ -547,7 +555,8 @@ model_results <- bind_rows(model_results,data_frame(method="qda",
 
 ```
 \subsection{Decision Tress}
-We use decision trees with a cross-validation of 10 folds for training.
+
+We use \emph{raprt} method with a cross-validation of 10 folds for training. We also attempt to optimise the \emph{cp} parameter of the model.
 
 ```{r}
 # Defining a cross validation (10 K folds )
@@ -555,11 +564,15 @@ control <- trainControl(method = "cv", number = 10)
 # Train the model
 train_rpart <- train(LiverDisease~., 
                      method = "rpart",
+                     preProc = c("zv","center", "scale"),
                      data = training,
+                     preProc = c("zv","center", "scale"),
                      trControl = control,
                      tuneGrid = data.frame(cp = seq(0, 0.05, len = 25)))
-ggplot(train_rpart)
-sprintf("The accuracy of decision tree = %f",max(train_rpart$results$Accuracy))
+
+# Plot the model and highlight the best result
+ggplot(train_rpart, highlight = TRUE) +
+  ggtitle(paste("The best accuracy = ",round(max(train_rpart$results$Accuracy),3)))
 
 # Stroing the results
 model_results <- bind_rows(model_results,data_frame(method="rpart",  
@@ -568,7 +581,7 @@ model_results <- bind_rows(model_results,data_frame(method="rpart",
 
 ```
 \subsection{Random Forests}
-We use random forests with a cross-validation of 10 folds for training.
+We use \emph{rf} method with a cross-validation of 10 folds for training. We also tune the \emph{cp} parameter of the model.
 
 ```{r}
 # Defining a cross validation (10 K folds )
@@ -576,11 +589,16 @@ control <- trainControl(method = "cv", number = 10)
 # Train the model
 train_rf <- train(LiverDisease~.,
                      method = "rf",
+                     preProc = c("zv","center", "scale"),
                      data = training,
                      trControl = control,
                      tuneGrid = data.frame(mtry=seq(1,7)),
                      ntree=100)
-sprintf("The accuracy of forest tree = %f",max(train_rf$results$Accuracy))
+
+# Plot the model and highlight the best result
+ggplot(train_rf, highlight = TRUE) +
+  ggtitle(paste("The best accuracy = ",round(max(train_rf$results$Accuracy),3)))
+
 # Stroing the results
 model_results <- bind_rows(model_results,data_frame(method="rf",  
                                      Accuracy = max(train_rf$results$Accuracy) ))
@@ -592,13 +610,16 @@ We use support vector machine with a cross-validation of 10 folds for training.
 ```{r}
 # Defining a cross validation (10 K folds )
 control <- trainControl(method = "cv", number = 10)
+
 # Train the model
 train_svm <- train(LiverDisease~.,
+                   preProc = c("zv","center", "scale"),
                    data = training,
                    method = "svmLinear",
                    trControl = control)
 
 sprintf("The accuracy of svm = %f",max(train_svm$results$Accuracy))
+
 # Stroing the results
 model_results <- bind_rows(model_results,data_frame(method="svm",  
                                      Accuracy = max(train_svm$results$Accuracy) ))
@@ -613,11 +634,13 @@ AdaBoost is a machine learning meta-algorithm for classification. We train the m
 control <- trainControl(method = "cv", number = 10)
 # Train the model
 train_ada <- train(LiverDisease~.,
+                   preProc = c("zv","center", "scale"),
                    data = training,
                    method = "ada",
                    trControl = control)
 
 sprintf("The accuracy of adaboost = %f",max(train_ada$results$Accuracy))
+
 # Stroing the results
 model_results <- bind_rows(model_results,data_frame(method="ada",  
                                      Accuracy = max(train_ada$results$Accuracy) ))
