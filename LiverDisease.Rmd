@@ -139,8 +139,6 @@ correctly identified.
 Specificity = \frac{Number of true negatives} {Number of true negatives + Number of false positives}
 \end{equation}
 
-\item \textbf{F1 Score}
-Specificity and sensitivity are rates. Therefore, it is more appropriate to compute the harmonic average of precision and recall. The metric is referred to as F1 Score:
 
 \begin{equation}
 F1 Score = 2 * \frac{Precision - Recall} {Precision + Recall}
@@ -575,23 +573,91 @@ model_results
 ```
 \section{Results}
 \label{sec:results}
-In the Section \ref{sec:methods}, we trained a number of models using training data. Now, we will evaluate the performance of these models using validation data. We will not use \textbf{lda} model due to poor performance.
+The statistical measurements of accuracy and precision reveal the basic reliability of a test. The specificity is the ability of a test to correctly exclude individuals who do not have a given disease. While sensitivity is the ability of a test to correctly identify people who have a given disease.  
+
+In the Section \ref{sec:methods}, we trained a number of models using training data. Now, we will evaluate the performance of these models using validation data. We will not use \textbf{lda} model due to poor performance. The results show that \textbf{rf} model performs best in terms of precision and recall. However, it has a slitghly lower sensitivity and specificity compared to other models.
 
 ```{r}
-y_hat<-predict(train_glm, validation) 
-sensitivity(data = y_hat, reference = validation$LiverDisease)
-specificity(data = y_hat, reference = validation$LiverDisease)
-F_meas(data = y_hat, reference = validation$LiverDisease)
-cm<-confusionMatrix(y_hat,validation$LiverDisease)
-cm$overall['Accuracy']
-cm$byClass[c("Sensitivty","Specificity")]
+# Creating an empty data frame to hold the results of models 
+# across validation dataset
+ml_results<-data_frame()
 
-#y_hat<-predict(train_knn, validation) 
-#sensitivity(data = y_hat, reference = validation$LiverDisease)
-#specificity(data = y_hat, reference = validation$LiverDisease)
-#F_meas(data = y_hat, reference = validation$LiverDisease)
+# Function to compute all stats from models
+evaluate_performance <- function(model_name, model, validation,model_results) 
+{
+  # Generating predictions
+  predictions<-predict(model, validation)
+  
+  # Generate metrics
+  accuracy<-confusionMatrix(predictions,validation$LiverDisease,positive="M")$overall["Accuracy"]
+  precision <- posPredValue(predictions, validation$LiverDisease,positive="M")
+  sensitivty <- sensitivity(predictions, validation$LiverDisease,positive="M")
+  specificity<- specificity(predictions, validation$LiverDisease,positive="M")
 
+  # Store metrics to a data frame
+  ml_results <- bind_rows(ml_results, data_frame(Models = model_name, 
+             Accuracy = accuracy,
+             Precision= precision,
+             Sensitivty=sensitivty,
+             Specificity=specificity))
+}
+
+# Evaluating the performance of models
+ml_results<-evaluate_performance("glm",train_glm,validation,ml_results)
+ml_results<-evaluate_performance("knn",train_knn,validation,ml_results)
+ml_results<-evaluate_performance("pls",train_pls,validation,ml_results)
+ml_results<-evaluate_performance("lda",train_lda,validation,ml_results)
+ml_results<-evaluate_performance("rpart",train_rpart,validation,ml_results)
+ml_results<-evaluate_performance("rf",train_rf,validation,ml_results)
+ml_results<-evaluate_performance("svmlinear",train_svm,validation,ml_results)
+ml_results<-evaluate_performance("ada",train_ada,validation,ml_results)
+ml_results
 ```
+Now, we try to combine the predictions of mulitple models i.e. ensemble model. The idea is to diagnose a disease only if 50% of the predictions from different models diagnose a liver disease otherwise not. We can see that the performance of ensemble model is not very good.
+```{r}
+# Generating prediction of all models
+glm_predictions<-predict(train_glm, validation)
+knn_predictions<-predict(train_knn, validation)
+pls_predictions<-predict(train_pls, validation)
+lda_predictions<-predict(train_lda, validation)
+rpart_predictions<-predict(train_rpart, validation)
+rf_predictions<-predict(train_rf, validation)
+svmlinear_predictions<-predict(train_svm, validation)
+ada_predictions<-predict(train_ada, validation)
+
+# Generate outputs fpr ensemble model
+ensemble_pred<-data.frame(glm_predictions, knn_predictions,
+                          pls_predictions, lda_predictions,
+                          rpart_predictions, rf_predictions, 
+                          svmlinear_predictions,ada_predictions)
+
+# If 50% of the predictions say disease then we pick it a disease
+votes <- rowMeans(ensemble_pred=="M")
+ensemble_predictions <- ifelse(votes > 0.5, "M", "B") %>% factor()
+
+# Generate metrics
+accuracy<-confusionMatrix(ensemble_predictions,validation$LiverDisease,positive="M")$overall["Accuracy"]
+precision <- posPredValue(ensemble_predictions, validation$LiverDisease,positive="M")
+sensitivty <- sensitivity(ensemble_predictions, validation$LiverDisease,positive="M")
+specificity<- specificity(ensemble_predictions, validation$LiverDisease,positive="M")
+
+# Store metrics to a data frame
+ml_results <- bind_rows(ml_results, data_frame(Models = "Ensemble", 
+             Accuracy = accuracy,
+             Precision= precision,
+             Sensitivty=sensitivty,
+             Specificity=specificity))
+ml_results
+  
+```
+\section{Conclusion}
+\label{sec:conclusion}
+In this project, we developed machine learning models to diagnose liver disease by analysing protien levels in the blood. We used patients liver record collected from India.  We found out that some variables had no correlation with the presence of absence of liver disease. So, we ignored those variables and used the remianing variables to trian the model. 
+
+We achieved an accuracy of around 72% on training dataset. The best accuracy of 69% was reported with \emph{rf} model on validation dataset. Some models, such as pls, rpart performed really well in terms of sensitivity and specificity. We tried tp further improve the results by combining the outputs of several models. But we saw a drop in the performance. 
+
+Unfortunately, we could not improve the accuracy of our models.The box plots have showed that we cannot reliably seperate liver diseases records with variables. So, we will need more data to improve the performance of our models. 
+
 
 
 \begin{thebibliography}{9}
