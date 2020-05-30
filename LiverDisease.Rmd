@@ -420,6 +420,8 @@ train_glm <- train(LiverDisease ~.,
                    data = training,
                    trControl=control)
 sprintf("The accuracy of GLM = %f",train_glm$results$Accuracy)
+
+# Storing the results
 model_results <- data_frame(method = "glm", Accuracy = train_glm$results$Accuracy)
 ```
 \subsection{K-nearest neigbors (knn)}
@@ -444,7 +446,7 @@ train_knn <- train(LiverDisease~ .,
 ggplot(train_knn, highlight = TRUE) +
   ggtitle(paste("The best accuracy = ",round(max(train_knn$results$Accuracy),3)))
 
-# Stroing the results
+# Storing the results
 model_results <- bind_rows(model_results,data_frame(method="knn",  
                                      Accuracy = max(train_knn$results$Accuracy) ))
 
@@ -473,7 +475,7 @@ ggplot(train_loess, highlight = TRUE) +
   ggtitle(paste("The best accuracy = ",round(max(train_loess$results$Accuracy),3)))
 
 
-# Stroing the results
+# Storing the results
 model_results <- bind_rows(model_results,data_frame(method="loess",  
                                      Accuracy = max(train_loess$results$Accuracy) ))
 
@@ -493,6 +495,7 @@ control <- trainControl(method = "repeatedcv", number = 10, repeats=5)
 train_pls <- train(LiverDisease~.,
                    method = "pls",
                    preProc = c("zv","center", "scale"),
+                   data = training,
                    tuneLength = 15,
                    trControl = control)
 
@@ -501,7 +504,7 @@ ggplot(train_loess, highlight = TRUE) +
   ggtitle(paste("The best accuracy = ",round(max(train_pls$results$Accuracy),3)))
 
 
-# Stroing the results
+# Storing the results
 model_results <- bind_rows(model_results,data_frame(method="pls",  
                                      Accuracy = max(train_pls$results$Accuracy) ))
 
@@ -524,7 +527,7 @@ train_lda <- train(LiverDisease~.,
 
 sprintf("The accuracy of lda = %f",max(train_lda$results$Accuracy))
 
-# Stroing the results
+# Storing the results
 model_results <- bind_rows(model_results,data_frame(method="lda",  
                                      Accuracy = max(train_lda$results$Accuracy) ))
 
@@ -537,7 +540,7 @@ The \emph{qda} is a statistical classifier, and we use the method with a cross-v
 ```{r}
 
 # Defining a cross validation (10 K folds )
-control <- trainControl(method = "cv", number=10)
+control <- trainControl(method = "repeatedcv", number=10, repeats=5)
 
 # Train the model
 train_qda <- train(LiverDisease~.,
@@ -560,13 +563,12 @@ We use \emph{raprt} method with a cross-validation of 10 folds for training. We 
 
 ```{r}
 # Defining a cross validation (10 K folds )
-control <- trainControl(method = "cv", number = 10)
+control <- trainControl(method = "repeatedcv", number = 10, repeats=5)
 # Train the model
 train_rpart <- train(LiverDisease~., 
                      method = "rpart",
                      preProc = c("zv","center", "scale"),
                      data = training,
-                     preProc = c("zv","center", "scale"),
                      trControl = control,
                      tuneGrid = data.frame(cp = seq(0, 0.05, len = 25)))
 
@@ -574,7 +576,7 @@ train_rpart <- train(LiverDisease~.,
 ggplot(train_rpart, highlight = TRUE) +
   ggtitle(paste("The best accuracy = ",round(max(train_rpart$results$Accuracy),3)))
 
-# Stroing the results
+# Storing the results
 model_results <- bind_rows(model_results,data_frame(method="rpart",  
                                      Accuracy = max(train_rpart$results$Accuracy) ))
 
@@ -585,7 +587,7 @@ We use \emph{rf} method with a cross-validation of 10 folds for training. We als
 
 ```{r}
 # Defining a cross validation (10 K folds )
-control <- trainControl(method = "cv", number = 10)
+control <- trainControl(method = "repeatedcv", number = 10, repeats=5)
 # Train the model
 train_rf <- train(LiverDisease~.,
                      method = "rf",
@@ -599,7 +601,7 @@ train_rf <- train(LiverDisease~.,
 ggplot(train_rf, highlight = TRUE) +
   ggtitle(paste("The best accuracy = ",round(max(train_rf$results$Accuracy),3)))
 
-# Stroing the results
+# Storing the results
 model_results <- bind_rows(model_results,data_frame(method="rf",  
                                      Accuracy = max(train_rf$results$Accuracy) ))
 
@@ -609,7 +611,7 @@ We use support vector machine with a cross-validation of 10 folds for training.
 
 ```{r}
 # Defining a cross validation (10 K folds )
-control <- trainControl(method = "cv", number = 10)
+control <- trainControl(method = "repeatedcv", number = 10, repeats = 5)
 
 # Train the model
 train_svm <- train(LiverDisease~.,
@@ -620,7 +622,7 @@ train_svm <- train(LiverDisease~.,
 
 sprintf("The accuracy of svm = %f",max(train_svm$results$Accuracy))
 
-# Stroing the results
+# Storing the results
 model_results <- bind_rows(model_results,data_frame(method="svm",  
                                      Accuracy = max(train_svm$results$Accuracy) ))
 
