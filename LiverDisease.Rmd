@@ -45,7 +45,7 @@ We have downloaded data from the UCI website. Then, we split data into training 
 
 For training, we use \emph{K}-fold cross-validation to train our models. The goal of cross-validation is to determine the hyperparameters of the model, which give the lowest error rate or the best performance. It is a very useful technique for assessing the effectiveness of the model, particularly in cases where you need to mitigate overfitting on unseen data.  
 
-In \emoh{K}-fold cross validation, we randomly split training data into \emph{K} non-overlapping sets. For each set, we train the model using hyperparameters and compute the average error rate for each hyperparameter. Finally, we select the hyperparameter of the model that gives the minimum error rate. The popular chocies for \emph{K} are 5 and 10. We will use 10 in this project.
+In \emph{K}-fold cross validation, we randomly split training data into \emph{K} non-overlapping sets. For each set, we train the model using hyperparameters and compute the average error rate for each hyperparameter. Finally, we select the hyperparameter of the model that gives the minimum error rate. The popular chocies for \emph{K} are 5 and 10. We will use 10 in this project.
 
 ```{r,message=FALSE, warning=FALSE}
 ################################
@@ -242,7 +242,7 @@ summary(training$LiverDisease)/nrow(training)*100.0
 
 \section{Data Analysis}
 \label{sec:dataanalysis}
-In this section, we extract insights from all variables to get an in-depth understanding before using them to train the machine learning models.
+In this section, we explore data and extract insights from all variables to get an in-depth understanding before using them to train the machine learning models.
 
 \subsection{Age}
 The dataset consists of patients with varying ages ranging from 4 to 90. The distribution of ages shows a nice spread and indicates that the dataset is unbiased towards a specific age group. 
@@ -433,7 +433,7 @@ We use \emph{glm} method with cross-validation of 10 folds to train the model.
 
 ```{r,warning=FALSE, message=FALSE}
 # Defining a cross-validation (10 K folds )
-control <- trainControl(method = "repeatedcv", number =10, repeats = 5,p = 0.9)
+control <- trainControl(method = "cv", number =10 , p = 0.9)
 
 # Train logistic regression model
 train_glm <- train(LiverDisease ~., 
@@ -444,10 +444,9 @@ train_glm <- train(LiverDisease ~.,
 
 # Showing the accuracy
 sprintf("The accuracy of GLM = %f",train_glm$results$Accuracy)
-ggplot(train_glm)
 
 # Storing the results
-#model_results <- data_frame(method = "glm", Accuracy = train_glm$results$Accuracy)
+model_results <- data_frame(method = "glm", Accuracy = train_glm$results$Accuracy)
 ```
 \subsection{K-nearest neigbors (knn)}
 We use \emph{knn} method with cross-validation of 10 folds to train the model. We tune the model with several values of \emph{k}, ranging from 3 to 51, to optimize the performance. 
