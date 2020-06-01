@@ -1,53 +1,4 @@
----
-title: "Liver Disease Classification"
-author: "Nabeel Khan"
-date: "27-May-2020"
-output:
-  pdf_document: 
-    keep_tex: true
-    number_sections: yes
-    toc: yes
-    highlight: tango
-    df_print: kable
-  html_document:
-    df_print: paged
-    number_sections: yes
-    toc: yes
----
-\section{Introduction}
-\label{sec:introduction}
-This project is part of the ‘HarvardX: PH125.9x Data Science: Capstone’ course. In this project, we develop machine learning models to perform binary classification to diagnose liver disease. 
-
-\subsection{Background}
-\label{sec:background}
-The liver plays a vital role in keeping us healthy. The liver's main job is to filter the blood coming from the digestive tract before passing it to the rest of the body. The liver also turns nutrients into chemicals our body needs, converts food into energy, and filters out poisons. The damage to the liver affects the whole body.
-
-The patients with liver disease are on the rise because of excessive consumption of alcohol, inhale of harmful gases, or intake of contaminated food. The liver disease can be detected by analysing the levels of enzymes in the human blood \cite{ld,bendi}. The problems with the liver are not easily discovered in an early stage. Moreover, the diagnosis of liver damage is subjective and varies from doctor to doctor based on experience.  The initial diagnosis of liver disease increases the survival rate of patients. Therefore, a classification algorithm capable of automatically detecting the liver disease can assist the doctors in early diagnosis of liver damage. The classification techniques are commonly used in various automatic medical diagnoses tools\cite{cad}.  
-
-\subsection{Aim of Project}
-\label{sec:aim}
-This project aims to develop a binary classifier or mahcine learning model, which uses information of blood enzymes to diagnose liver disease. That information will help doctors in making diagnosis and treat patients in time to save lives.
-
-\subsection{Dataset}
-\label{sec:dataset}
-We use the liver patient records data, which is collected from North East of Andhra Pradesh, India. The data set contains:
-\begin{enumerate}
-\item 416 liver patient records and 167 non-liver patient records.
-\end{enumerate} 
-
-\subsubsection{Download Data}
-\label{sec:dd}
-The dataset is publically available online both at Kaggle and UCI repository.
-We have downloaded data from the UCI website. Then, we split data into training and validation sets. 
-\begin{itemize}
-\item The dataset is small and has only 583 patient records. So, we use a typical approach and select 10\% of the data for validation. This allows us to use most of the data (90%) to train the models. 
-\end{itemize}
-
-For training, we use \emph{K}-fold cross-validation to train our models. The goal of cross-validation is to determine the hyperparameters of the model, which give the lowest error rate or the best performance. It is a very useful technique for assessing the effectiveness of the model, particularly in cases where you need to mitigate overfitting on unseen data.  
-
-In \emoh{K}-fold cross validation, we randomly split training data into \emph{K} non-overlapping sets. For each set, we train the model using hyperparameters and compute the average error rate for each hyperparameter. Finally, we select the hyperparameter of the model that gives the minimum error rate. The popular chocies for \emph{K} are 5 and 10. We will use 10 in this project.
-
-```{r,message=FALSE, warning=FALSE}
+## ----message=FALSE, warning=FALSE----------------------------------------
 ################################
 #  Install packages (if not installed)
 ################################
@@ -73,9 +24,9 @@ library(sjmisc)
 library(scales)
 library(caret)
 library(gam)
-```
 
-```{r,message=FALSE, warning=FALSE}
+
+## ----message=FALSE, warning=FALSE----------------------------------------
 ################################
 # Downloading data
 ################################
@@ -105,122 +56,39 @@ validation <- liverData[test_index,]
  # Removing the objects from environment as no longer required
 rm(liverData)
 
-```
 
-Both training and validation datasets have distributions of patients with and with no disease.
-\begin{itemize}
-\item The variable \emph{Dataset} indicates that if the liver is healthy or damaged. For instance, a value of 1 refers to disease. And, a value 2 means that liver is health.
-\end{itemize}
 
-```{r}
+## ------------------------------------------------------------------------
 # Looking at distributions of liver disease
+# 1 indicates that the liver is damage. While 2 means that the liver is healthy 
 print("Training Data")
 table(training$Dataset)
 print("Validation Data")
 table(validation$Dataset)
 
-```
-
-\section{Metrics}
-\label{sec:metrics}
-To evaluate the performance of classifiers, we use the following metrics:
-
-\begin{enumerate}
-\item \textbf{Accuracy}
-It is the ratio of the number of correct predictions to the total number of input samples.
-\begin{equation}
-Accuracy = \frac{True Positives + True Negatives} {Total Predictions}
-\end{equation}
-
-\item \textbf{Precision}
-It is defined as the proportion of the true positives against all the positive
-results.
-
-\begin{equation}
-Precision = \frac{Number of True Positives} {Number of True Positives + Number of False Positives}
-\end{equation}
-
-\item \textbf{Sensitivity}
-It is also referred as true positive rate or recall. It is the proportion of true positives that are correctly identified.
-
-\begin{equation}
-Sensitivity = \frac{Number of True Positives} {Number of True Positives + Number of False Negatives}
-\end{equation}
 
 
-\item \textbf{Specificity}
-It is the true negative rate. It is the proportion of true negatives that are
-correctly identified.
-
-\begin{equation}
-Specificity = \frac{Number of True Negatives} {Number of True Negatives + Number of False Positives}
-\end{equation}
-
-\item \textbf{F1 Score}
-F1 score is a function of Precision and Recall. F1 Score is a better measure to use if we need to seek a balance between Precision and Recall. And, there is an uneven class distribution.
-
-
-\begin{equation}
-F1 Score = 2 * \frac{Precision * Recall} {Precision + Recall}
-\end{equation}
-
-\item \textbf{Cohen's Kappa}
-Cohen's Kappa (or simple kappa) measures inter-rater reliability (sometimes called interobserver agreement) and is often used to analyse the performance of classifiers. The kappa statistic measures the percentage of data values in the main diagonal of the table and then adjusts the values for the amount of agreement that could be expected due to chance alone.
-
-\end{enumerate}
-
-The values of all metrics range from 0 to 1. Higher the value better is the metric.
-
-\section{Data Exploration}
-\label{sec:exploration}
-The dataset contains 11 variables, namely, "Age", "Gender", "Total_Bilirubin", "Direct_Bilirubin","Alkaline_Phosphotase","Alamine_Aminotransferase", "Aspartate_Aminotransferase","Total_Protiens", "Albumin", "Albumin_and_Globulin_Ratio", "Dataset". The 'Dataset' variable indicates if the liver has a disease or not. For instance, a value of 1 means that the liver is damaged, while a value of 2 means that the liver is healthy. 
-
-
-All other variables except "Age", "Gender", and "Dataset" represent the amount of enzymes or proteins in the blood. These variables (or a subset) will be used to train our machine learning models to make diagnoses. 
-
-```{r}
+## ------------------------------------------------------------------------
 head(training)
-```
 
-The training dataset has 523 records. We can see that the "Albumin_and_Globulin_Ratio" variable has 4 null values. The remaining variables do not contain any null values.
 
-\begin{itemize}
-\item The validation data also has no null values (confirmed via summary).
-\end{itemize}
-
-```{r}
+## ------------------------------------------------------------------------
 sprintf("Rows of training dataset = %d", nrow(training))
 print("=========================")
 summary(training)
-```
 
-```{r}
+
+## ------------------------------------------------------------------------
 print("Validation Dataset")
 summary(validation)
-```
 
 
-\subsection{Data Wrangling}
-\label{sec:dw}
-\subsubsection{Remove null values}
-We use the traditional data science approach and replace null values with the mean of the "Albumin_and_Globulin_Ratio" variable.
-
-```{r}
+## ------------------------------------------------------------------------
 # Replace null values with the mean of the variable
 training$Albumin_and_Globulin_Ratio[is.na(training$Albumin_and_Globulin_Ratio)] <- mean(training$Albumin_and_Globulin_Ratio, na.rm=TRUE)
-```
-
-\subsubsection{Create LiverDisease Variable}
-To improve readability, we create a new variable, namely, "LiverDisease", which will have one of the following values: 
-\begin{enumerate}
-\item Malignant (M) indicating that the patient has liver disease.
-\item Benign (B) indicating that the patient has no liver disease.
-\end{enumerate}
 
 
-We further delete the "Dataset" variable as it is no longer needed. We apply these operations to both training and validation datasets.
-
-```{r}
+## ------------------------------------------------------------------------
 # Adding a new column, which will contain the disease information
 # M -> Malignant
 # B -> Benign
@@ -233,26 +101,18 @@ validation<-within(validation, rm(Dataset))
 
 # Displaying the first six rows
 head(training)
-```
-The training data has 28% of the patient records, which has no liver damage or dieases. The rest of the patients have a liver damage.
 
-```{r}
+
+## ------------------------------------------------------------------------
 summary(training$LiverDisease)/nrow(training)*100.0
-```
 
-\section{Data Analysis}
-\label{sec:dataanalysis}
-In this section, we extract insights from all variables to get an in-depth understanding before using them to train the machine learning models.
 
-\subsection{Age}
-The dataset consists of patients with varying ages ranging from 4 to 90. The distribution of ages shows a nice spread and indicates that the dataset is unbiased towards a specific age group. 
-```{r}
+## ------------------------------------------------------------------------
 sprintf("Minimum age = %d",min(training$Age))
 sprintf("Maximum age = %d",max(training$Age))
-```
 
 
-```{r}
+## ------------------------------------------------------------------------
 # Extracting frequency of patient ages
 age_stats <-as.data.frame(table(training$Age))
 names(age_stats)<- c("Age","Count")
@@ -267,10 +127,9 @@ age_stats %>% ggplot(aes(Age, Count)) +
                                         max(age_stats$Age), by = 6),1)) +
   ggtitle("Distribution of Patient Ages")
 
-```
-Now, we breakdown the distribution of ages to the presence or absence of liver diseases. We notice a good spread of age group for both scenarios.
 
-```{r}
+
+## ------------------------------------------------------------------------
 # Plotting distributions of ages based on liver diseases
 training %>% 
   ggplot(aes(as.numeric(row.names(training)),Age, color=LiverDisease)) +
@@ -278,22 +137,14 @@ training %>%
   labs(y="Age", x = "Number of patients")+
   facet_wrap( ~ LiverDisease) +
   ggtitle("Distribution of ages based on liver disease")
-```
 
-\subsection{Gender}
-76% of the patient records are of males. It would be good to have a more and less equal distribution of records for both genders, although we do not expect it to make any difference in the performance of our models.  
 
-Both "Gender" and "Age" variables are not used to train the model. These variables provide descriptive information.
-
-```{r}
+## ------------------------------------------------------------------------
 # Getting summary of genders
 summary(training$Gender)
-```
 
-\subsection{Total_Bilirubin and Direct_Bilirubin}
-Bilirubin refers to any form of a yellowish pigment made in the liver when red blood cells are broken down. The elevated levels of bilirubin indicate that the liver is damaged. We find a similar trend with these variables that levels of bilirubin are high for patients with liver diseases.  
 
-```{r}
+## ------------------------------------------------------------------------
 # Plotting distributions of Total_Bilirubin based on liver diseases
 training %>% 
   ggplot(aes(as.numeric(row.names(training)),Total_Bilirubin, color=LiverDisease)) +
@@ -302,9 +153,9 @@ training %>%
   facet_wrap( ~ LiverDisease) +
   ggtitle("Distribution of Total_Bilirubin based on liver disease")
 
-```
 
-```{r}
+
+## ------------------------------------------------------------------------
 # Plotting distributions of Direct_Bilirubin based on liver disease
 training %>% 
   ggplot(aes(as.numeric(row.names(training)),Direct_Bilirubin, color=LiverDisease)) +
@@ -313,22 +164,18 @@ training %>%
   facet_wrap( ~ LiverDisease) +
   ggtitle("Distribution of Direct_Bilirubin based on liver disease")
 
-```
 
-Now, we look at the correlations of bilirubins. We observe that both bilirubins are weakly correlated with liver disease. However, both bilirubins are highly correlated, and we can also use one of them to train the model (if required).
 
-```{r}
+## ------------------------------------------------------------------------
 # Making a subset of data
 subset_train <- training[c("Total_Bilirubin","Direct_Bilirubin","LiverDisease")]
 # Converting disease variable to numeric format
 subset_train <- transform(subset_train, LiverDisease= ifelse(subset_train$LiverDisease=="M", 1,0))
 # Looking at the correlations
 cor(subset_train) 
-```
-\subsection{Alkaline Phosphotase}
-Alkaline phosphatase (ALP) is an enzyme in a person's blood that helps break down proteins. The elevated levels indicate that the liver has a disease, and we notice a similar trend in our dataset.  
 
-```{r}
+
+## ------------------------------------------------------------------------
 # Plotting distributions of Alkaline Phosphotase based on liver diseases
 training %>% 
   ggplot(aes(as.numeric(row.names(training)),Alkaline_Phosphotase, color=LiverDisease)) +
@@ -336,12 +183,9 @@ training %>%
   labs(y="Alkaline Phosphotase", x = "Number of patients")+
   facet_wrap( ~ LiverDisease) +
   ggtitle("Distribution of Alkaline Phosphotase based on liver disease")
-```
- 
-\subsection{Alamine_Aminotransferase and Aspartate_Aminotransferase}
-Aminotransferases are enzymes that are important in the synthesis of amino acids, which form proteins. Alanine aminotransferase (ALT) and Aspartate aminotransferase (AST) are found primarily in the liver and kidney. High levels of ALT and AST are expected for patients with liver diseases. We also notice slightly elevated levels of these enzymes for patients with liver diseases in our dataset. 
 
-```{r}
+
+## ------------------------------------------------------------------------
 # Plotting distributions of Alamine Aminotransferase based on liver diseases
 training %>% 
   ggplot(aes(as.numeric(row.names(training)),Alamine_Aminotransferase, color=LiverDisease)) +
@@ -349,9 +193,9 @@ training %>%
   labs(y="Alamine Aminotransferase", x = "Number of patients")+
   facet_wrap( ~ LiverDisease) +
   ggtitle("Distribution of Alamine Aminotransferase based on liver disease") 
-```
 
-```{r}
+
+## ------------------------------------------------------------------------
 # Plotting distributions of Aspartate_Aminotransferase based on liver diseases
 training %>% 
   ggplot(aes(as.numeric(row.names(training)),Aspartate_Aminotransferase, color=LiverDisease)) +
@@ -359,11 +203,9 @@ training %>%
   labs(y="Aspartate Aminotransferase", x = "Number of patients")+
   facet_wrap( ~ LiverDisease) +
   ggtitle("Distribution of Aspartate Aminotransferase based on liver disease") 
-```
 
-Contrary to bilirubins, there exists a weak correlation between both aminotransferases. 
 
-```{r}
+## ------------------------------------------------------------------------
 # Making a subset of data
 subset_train <- training[c("Alkaline_Phosphotase","Aspartate_Aminotransferase","LiverDisease")]
 
@@ -372,13 +214,9 @@ subset_train <- transform(subset_train, LiverDisease= ifelse(subset_train$LiverD
 
 # Looking at the coorelations
 cor(subset_train) 
-```
-
-\subsection{Total Protiens}
-The total protein test measures the total amount of protein in your body. The distributions indicate that this variable cannot be used to diagnose liver disease. We do not see any pattern which we can use for classification.  
 
 
-```{r}
+## ------------------------------------------------------------------------
 # Plotting distributions of Total Protiens based on liver diseases
 training %>% 
   ggplot(aes(as.numeric(row.names(training)),Total_Protiens, color=LiverDisease)) +
@@ -386,12 +224,9 @@ training %>%
   labs(y="Total Protiens", x = "Number of patients")+
   facet_wrap( ~ LiverDisease) +
   ggtitle("Distribution of Total Protiens based on liver diseases") 
-```
 
-\subsection{Albumin}
-Albumin is a protein made by the liver to keep fluid in the bloodstream. The low levels of albumin indicate a problem with the liver, and we notice a similar trend in our dataset.
 
-```{r}
+## ------------------------------------------------------------------------
 # Plotting distributions of Albumin based on liver diseases
 training %>% 
   ggplot(aes(as.numeric(row.names(training)),Albumin, color=LiverDisease)) +
@@ -399,12 +234,9 @@ training %>%
   labs(y="Albumin", x = "Number of patients")+
   facet_wrap( ~ LiverDisease) +
   ggtitle("Distribution of Albumin based on liver disease") 
-```
 
-\subsection{Albumin_and_Globulin_Ratio (AG)}
-These proteins are crucial for body growth, development, and health. They form the structural part of most organs and makeup enzymes that regulate body functions. The low ratios of AG refer to liver issues, and we notice the same trend from distributions plot. 
 
-```{r}
+## ------------------------------------------------------------------------
 # Plotting distributions of Albumin based on liver diseases
 training %>% 
   ggplot(aes(as.numeric(row.names(training)),Albumin_and_Globulin_Ratio, color=LiverDisease)) +
@@ -412,28 +244,18 @@ training %>%
   labs(y="Albumin and Globulin Ratio", x = "Number of patients")+
   facet_wrap( ~ LiverDisease) +
   ggtitle("Distribution of Albumin and Globulin Ratio based on liver disease") 
-```
 
-\section{Methods}
-\label{sec:methods}
-Based on the discussion in Section \ref{sec:dataanalysis}, we will not use "Age" and "Total Protein" variables to train the machine learning models. So, we remove these variables from both training and validation datasets. Then, we predict the liver disease using all the remaining variables of the dataset.
 
-```{r}
+## ------------------------------------------------------------------------
 # Removing the variables 'Age' and 'Dataset' 
 training<-within(training, rm(Age,Total_Protiens))
 validation<-within(validation, rm(Age,Total_Protiens))
 
-```
 
 
-For data pre-processing, we remove zero-variance predictors and then center and scale all those remaining using the preProc argument. Feature scaling is one of the most critical steps during the pre-processing of data before creating a machine learning model. It can make a significant difference between a weak machine learning model and a better one.
-
-\subsection{Logistic Regression}
-We use \emph{glm} method with cross-validation of 10 folds to train the model. 
-
-```{r,warning=FALSE, message=FALSE}
+## ----warning=FALSE, message=FALSE----------------------------------------
 # Defining a cross-validation (10 K folds )
-control <- trainControl(method = "repeatedcv", number =10, repeats = 5,p = 0.9)
+control <- trainControl(method = "repeatedcv", number =10,repeats = 5)
 
 # Train logistic regression model
 train_glm <- train(LiverDisease ~., 
@@ -444,16 +266,12 @@ train_glm <- train(LiverDisease ~.,
 
 # Showing the accuracy
 sprintf("The accuracy of GLM = %f",train_glm$results$Accuracy)
-ggplot(train_glm)
 
 # Storing the results
-#model_results <- data_frame(method = "glm", Accuracy = train_glm$results$Accuracy)
-```
-\subsection{K-nearest neigbors (knn)}
-We use \emph{knn} method with cross-validation of 10 folds to train the model. We tune the model with several values of \emph{k}, ranging from 3 to 51, to optimize the performance. 
+model_results <- data_frame(method = "glm", Accuracy = train_glm$results$Accuracy)
 
 
-```{r,warning=FALSE,message=FALSE}
+## ----warning=FALSE,message=FALSE-----------------------------------------
 
 set.seed(1)
 # Defining a cross validation (10 K folds )
@@ -475,11 +293,9 @@ ggplot(train_knn, highlight = TRUE) +
 model_results <- bind_rows(model_results,data_frame(method="knn",  
                                      Accuracy = max(train_knn$results$Accuracy) ))
 
-```
-\subsection{Local Regression}
-We use \emph{loess} method with cross-validation of 10 folds to train the model. We tune the \textbf{span} and \textbf{degree} parameters to optimize the performance of the model.
 
-```{r, warning=FALSE, message=FALSE}
+
+## ---- warning=FALSE, message=FALSE---------------------------------------
 set.seed(1)
 
 # Defining a cross validation (10 K folds )
@@ -506,12 +322,9 @@ model_results <- bind_rows(model_results,data_frame(method="loess",
                                      Accuracy = max(train_loess$results$Accuracy) ))
 
 
-```
 
-\subsection{Partial Least Squares (PLS)}
-We use \emph{pls} method with cross-validation of 10 folds to train the model. We tune the \textbf{ncomp} parameter to optimize the performance of the model.
 
-```{r, warning=FALSE, message=FALSE}
+## ---- warning=FALSE, message=FALSE---------------------------------------
 set.seed(1)
 
 # Define tuning parameters
@@ -538,12 +351,9 @@ model_results <- bind_rows(model_results,data_frame(method="pls",
                                      Accuracy = max(train_pls$results$Accuracy) ))
 
 
-```
 
-\subsection{Linear Discriminant Analysis (LDA)}
-The \emph{lda} is a statistical classifier, and we use this method with cross-validation of 10 folds for training. There is no parameter to tune for this model.
 
-```{r, warning=FALSE, message=FALSE}
+## ---- warning=FALSE, message=FALSE---------------------------------------
 set.seed(1)
 # Defining a cross validation (10 K folds )
 control <- trainControl(method = "repeatedcv", number=10, repeats=5)
@@ -562,12 +372,9 @@ model_results <- bind_rows(model_results,data_frame(method="lda",
                                      Accuracy = max(train_lda$results$Accuracy) ))
 
 
-```
 
-\subsection{Quadratic Discriminant Analysis (QDA)}
-The \emph{qda} is a statistical classifier, and we use the method with cross-validation of 10 folds for training. There is no parameter to tune for this model.
 
-```{r, warning=FALSE, message=FALSE}
+## ---- warning=FALSE, message=FALSE---------------------------------------
 set.seed(1)
 # Defining a cross validation (10 K folds )
 control <- trainControl(method = "repeatedcv", number=10, repeats=5)
@@ -586,12 +393,9 @@ model_results <- bind_rows(model_results,data_frame(method="qda",
                                      Accuracy = max(train_qda$results$Accuracy) ))
 
 
-```
-\subsection{Decision Tress}
 
-We use \emph{raprt} method with cross-validation of 10 folds for training. We tune the \emph{cp} parameter to optimize the performance of the model.
 
-```{r, warning=FALSE, message=FALSE}
+## ---- warning=FALSE, message=FALSE---------------------------------------
 set.seed(1)
 
 # Defining a cross validation (10 K folds )
@@ -614,11 +418,9 @@ model_results <- bind_rows(model_results,data_frame(method="rpart",
                                      Accuracy = max(train_rpart$results$Accuracy) ))
 
 
-```
-\subsection{Random Forests}
-We use \emph{rf} method with cross-validation of 10 folds for training. We tune the \emph{mtry} parameter to optimize the performance of the model.
 
-```{r, warning=FALSE, message=FALSE}
+
+## ---- warning=FALSE, message=FALSE---------------------------------------
 set.seed(1)
 
 # Defining a cross validation (10 K folds )
@@ -641,11 +443,9 @@ ggplot(train_rf, highlight = TRUE) +
 model_results <- bind_rows(model_results,data_frame(method="rf",  
                                      Accuracy = max(train_rf$results$Accuracy) ))
 
-```
-\subsection{Support Vector Machine}
-We use support vector machine with cross-validation of 10 folds for training. We tune the \emph{tau} parameter to optimize the performance of the model.
 
-```{r, warning=FALSE, message=FALSE}
+
+## ---- warning=FALSE, message=FALSE---------------------------------------
 set.seed(1)
 
 # Defining a cross validation (10 K folds )
@@ -665,12 +465,9 @@ sprintf("The accuracy of svm = %f",max(train_svm$results$Accuracy))
 model_results <- bind_rows(model_results,data_frame(method="svm",  
                                      Accuracy = max(train_svm$results$Accuracy) ))
 
-```
 
-\subsection{Adaptive Boosting (Adaboost)}
-AdaBoost is a machine learning meta-algorithm for classification. We train the model with cross-validation of 10 folds.
 
-```{r}
+## ------------------------------------------------------------------------
 set.seed(1)
 
 # Defining a cross validation (10 K folds )
@@ -691,12 +488,9 @@ sprintf("The accuracy of adaboost = %f",max(train_ada$results$Accuracy))
 model_results <- bind_rows(model_results,data_frame(method="ada",  
                                      Accuracy = max(train_ada$results$Accuracy) ))
 
-```
 
-\subsection{Random Forest with PCA}
-We apply principal component analysis on data and then use \emph{rf} method to train the model with cross-validation of 10 folds. We utilize the same tuning, which was used before with the random forest model.
 
-```{r}
+## ------------------------------------------------------------------------
 set.seed(1)
 
 # Defining a cross validation (10 K folds )
@@ -721,17 +515,13 @@ model_results <- bind_rows(model_results,data_frame(method="rf_pca",
 
 
 
-```
 
 
-The reported accuracies and kappas for all models across the training dataset are shown in the following table and graph. The results show that \emph{qda} model performs the worse. All other models provide an accuracy of around 0.70. The random forest, along with the principal component analysis, gives the best performance.
-
-```{r}
+## ------------------------------------------------------------------------
 model_results
-```
 
 
-```{r}
+## ------------------------------------------------------------------------
 # collect resamples
 results <- resamples(list(GLM=train_glm, 
                           KNN = train_knn,
@@ -746,17 +536,9 @@ results <- resamples(list(GLM=train_glm,
                           RF_PCA = train_rf_pca))
 # boxplots of results
 bwplot(results)
-```
 
 
-\section{Results}
-\label{sec:results}
-The statistical measurements of accuracy and precision reveal the necessary reliability of a test. Specificity is the ability of a test to exclude individuals who do not have a given disease correctly, and sensitivity is the ability of a test to identify people who have a given disease accurately. On the other hand, the F1 score is the harmonic mean of Precision and Recall and gives a better measure of the incorrectly classified cases than the accuracy metric. And, the kappa metric measures the inter-rater reliability.
-
-In Section \ref{sec:methods}, we trained several models using training data. Now, we will evaluate the performance of these models using validation data. We have not used \textbf{qda} model due to poor performance on training data. The results show that \textbf{rf} and \emph{rf_pca} models performs best in terms of precision and recall. However, the models have slightly lower sensitivity and specificity compared to other models. But, the \textbf{rf_pca} model gives the best kappa value and is significantly better than the remaining ones. So, we can deduce that overall, \textbf{rf_pca} performs the best compared to other models.
-
-
-```{r}
+## ------------------------------------------------------------------------
 # Function to display a confusion matrix
 # Code Source:
 # https://stackoverflow.com/questions/23891140/r-how-to-visualize-confusion-matrix-using-the-caret-package
@@ -823,9 +605,9 @@ draw_confusion_matrix <- function(cm, title) {
   text(70, 20, round(as.numeric(cm$overall[2]), 3), cex=1.4)
 }
 
-```
 
-```{r}
+
+## ------------------------------------------------------------------------
 # Creating an empty data frame to hold the results of models 
 # across validation dataset
 ml_results<-data_frame()
@@ -863,50 +645,45 @@ evaluate_performance <- function(model_name, model, validation,model_results,tit
 # Evaluating the performance of models
 ml_results<-evaluate_performance("glm",train_glm,validation,ml_results,"Confusion Matrix - glm")
 
-```
-```{r}
+
+## ------------------------------------------------------------------------
 # Evaluate knn model
 ml_results<-evaluate_performance("knn",train_knn,validation,ml_results,"Confusion Matrix - knn")
 
-```
 
 
-```{r}
+## ------------------------------------------------------------------------
 #Evaluate loess model
 ml_results<-evaluate_performance("loess",train_loess,validation,ml_results,"Confusion Matrix - loess")
-```
 
-```{r}
+
+## ------------------------------------------------------------------------
 ml_results<-evaluate_performance("pls",train_pls,validation,ml_results,"Confusion Matrix -pls")
-```
 
-```{r}
+
+## ------------------------------------------------------------------------
 ml_results<-evaluate_performance("lda",train_lda,validation,ml_results, "Confusion Matrix - lda")
-```
 
 
-```{r}
+## ------------------------------------------------------------------------
 ml_results<-evaluate_performance("rpart",train_rpart,validation,ml_results, "Confusion Matrix - rpart")
-```
 
-```{r}
+
+## ------------------------------------------------------------------------
 ml_results<-evaluate_performance("rf",train_rf,validation,ml_results,"Confusion Matrix - rf")
-```
 
-```{r}
+
+## ------------------------------------------------------------------------
 ml_results<-evaluate_performance("svmlinear",train_svm,validation,ml_results, "Confusion Matrix - svm")
-```
-```{r}
+
+## ------------------------------------------------------------------------
 ml_results<-evaluate_performance("ada",train_ada,validation,ml_results,"Confusion Matrix - adaboost")
-```
-```{r}
+
+## ------------------------------------------------------------------------
 ml_results<-evaluate_performance("rf_pca",train_rf_pca,validation,ml_results,"Confusion Matrix - rf pca")
-```
 
 
-Now, we do an experiment to combine the predictions of multiple models, i.e., ensemble model. The idea is to diagnose a liver disease only if 50% of the predictions from different models vote that the liver has a disease. The accuracy of the model and the resulting confusion matrix is not good to consider it for further analysis. 
-
-```{r, message=FALSE, warning=FALSE}
+## ---- message=FALSE, warning=FALSE---------------------------------------
 
 # Generating prediction of all models
 glm_predictions<-predict(train_glm, validation)
@@ -955,32 +732,8 @@ ml_results <- bind_rows(ml_results, data_frame(Models = "Ensemble",
              Specificity=specificity,
              F1_Score = f1_score,
              Kappa= kappa))
-```
 
-From the results, we can see that \emph{rf_pca} performs the best compared to the other models. We saw a significant improvement in \emph{kappa} and \emph{Specifivity} measures compared to the other models. Though, the model has a slightly lower sensitivity compared to the other models. 
 
-```{r}
+## ------------------------------------------------------------------------
 ml_results
-```
-
-\section{Conclusion}
-\label{sec:conclusion}
-In this project, we developed machine learning models to diagnose liver disease by analysing protein levels in the blood. We used patients' liver records collected from India.  We found out that some variables did not correlate with the presence or absence of liver disease. So, we ignored those variables and used the remaining variables to train the model. 
-
-The results show that \emph{rf+pca} performed the best on the validation dataset. We tried to further improve the results by combining the outputs of several models. The idea was to use votes to decide if the liver has a disease. If more than 50% of the models predict a disease, then we consider that the liver is damaged. But, the resulting model did not perform well.
-
-All models seem to overfit the data, and we end up getting more "Malignant" cases. The \emph{rf_pca} performs better, and we can correctly predict some "Benign" cases. The only reason we can think of is data is imbalanced. Ideally, both classes should have an equal distribution for patient records to train robust models. But, only 28% of the data belong to patients with liver disease. That's why the trained models are more biased in wrongly categorizing healthy patients. The ideal solution is to get more data to produce robust models. Alternatively, we can class weights to solve the problem of imbalanced data. We will explore the concept of class weights in future work.
-
-\begin{thebibliography}{9}
-\bibitem{cad} 
-Ethan Du-Crowa, Lucy Warrenb, Susan M Astleya and Johan Hullemanc,"Is there a safety-net effect with Computer-Aided Detection (CAD)?", Medical Imaging 2019.
-\bibitem{ld}
-Eugene, R., Sorrell, Michael F.; Maddrey, Willis C., "Schiff's Diseases of the Liver", 10th Edition, Lippincott Williams \& Wilkins by Schiff.
-
-\bibitem{bendi}
-Bendi,  Venkata . R, M. S. Prasad Babu, and N. B. Venkateswarlu, "Critical Comparative Study of Liver Patients from USA and INDIA: An Exploratory Analysis", International Journal of Computer Science Issues, May 2012.
-
-
-\end{thebibliography}
-
 
