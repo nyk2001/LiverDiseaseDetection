@@ -24,12 +24,13 @@
 \usepackage[margin=1in]{geometry}
 \usepackage{hyperref}
 \hypersetup{unicode=true,
-            pdftitle={Liver Disease Classification},
+            pdftitle={Liver Disease Classification Project},
             pdfauthor={Nabeel Khan},
             pdfborder={0 0 0},
             breaklinks=true}
 \urlstyle{same}  % don't use monospace font for urls
 \usepackage{color}
+\usepackage{adjustbox}
 \usepackage{fancyvrb}
 \newcommand{\VerbBar}{|}
 \newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
@@ -115,7 +116,7 @@
 
 \setlength{\droptitle}{-2em}
 
-  \title{Liver Disease Classification}
+  \title{Liver Disease Classification Project}
     \pretitle{\vspace{\droptitle}\centering\huge}
   \posttitle{\par}
     \author{Nabeel Khan}
@@ -159,8 +160,7 @@ based on experience. The initial diagnosis of liver disease increases
 the survival rate of patients. Therefore, a classification algorithm
 capable of automatically detecting the liver disease can assist the
 doctors in early diagnosis of liver damage. The classification
-techniques are commonly used in various automated medical diagnoses
-\cite{cad}.
+techniques are commonly used in various automated medical diagnoses.
 
 \subsection{Aim of Project}
 \label{sec:aim}
@@ -186,24 +186,12 @@ repository. We have downloaded data from the UCI website. Then, we split
 data into training and validation sets.
 
 \begin{itemize}
-\item The dataset is small and has only 583 patient records. The typical approach is to select 10-20% of the data for training. In this project, we choose 10\% of the data for testing or validation. This allows us to use most of the data (90%) to train our models. 
+\item The dataset is small and has only 583 patient records. The typical approach is to select 10-20\% of 
+the data for training. In this project, we choose 10\% of the data for testing or validation. This allows us to use most 
+of the data (90\%) to train our models. 
 \end{itemize}
 
-For training, we use \emph{K}-fold cross-validation to train our models.
-The goal of cross-validation is to determine the hyperparameters of the
-model, which give the lowest error rate. The selected model is,
-therefore, the one with the best performance on training data. It is a
-useful technique for assessing the effectiveness of the model,
-particularly in cases where we need to mitigate overfitting on unseen
-data.
-
-In \emph{K}-fold cross-validation, we randomly split training data into
-\emph{K} non-overlapping sets. For each set, we train the model using
-hyperparameters and compute the error rates. Then, we average the error
-rate for each hyperparameter. Finally, we select the hyperparameter of
-the model that gives the minimum error rate. The popular choices for
-\emph{K} are 5 and 10, as discussed in the course textbook. In this
-project, we use 10 folds.
+For model training, we have used \emph{K}-fold cross-validation to train our models. The goal of cross-validation is to determine the hyperparameters of the model, which give the lowest error rate. The selected model is, therefore, the one with the best performance on training data. Cross-validation is a useful technique for assessing the effectiveness of the model, particularly in cases where we need to mitigate overfitting on unseen data. In \emph{K}-fold cross-validation, we randomly split training data into \emph{K} non-overlapping sets. For each set, we train the model using hyperparameters and compute the error rates. Then, we average the error rate for each hyperparameter. Finally, we select the hyperparameter of the model that gives the minimum error rate. The popular choices for \emph{K} are 5 and 10, as discussed in the course textbook. In this project, we have used 10 folds.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -242,15 +230,20 @@ project, we use 10 folds.
 \CommentTok{################################}
 \CommentTok{# Indian Live Patient Records :}
  \CommentTok{# https://www.kaggle.com/uciml/indian-liver-patient-records/}
- \CommentTok{# https://archive.ics.uci.edu/ml/machine-learning-databases/00225/Indian Liver Patient Dataset (ILPD).csv}
+ \CommentTok{# https://archive.ics.uci.edu/ml/machine-learning-databases/00225/Indian 
+Liver Patient Dataset (ILPD).csv}
 
-\NormalTok{url <-}\StringTok{ "https://archive.ics.uci.edu/ml/machine-learning-databases/00225/Indian Liver Patient Dataset (ILPD).csv"}
+\NormalTok{url <-}\StringTok{ "https://archive.ics.uci.edu/ml/machine-learning-databases/00225/Indian 
+Liver Patient Dataset (ILPD).csv"}
 
 \CommentTok{# Download csv}
 \NormalTok{liverData <-}\StringTok{ }\KeywordTok{read.csv}\NormalTok{(url)}
 
 \CommentTok{# Rename columns of csv (follow the webpage for naming convention)}
-\KeywordTok{colnames}\NormalTok{(liverData)<-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{"Age"}\NormalTok{,}\StringTok{"Gender"}\NormalTok{,}\StringTok{"Total_Bilirubin"}\NormalTok{,}\StringTok{"Direct_Bilirubin"}\NormalTok{, }\StringTok{"Alkaline_Phosphotase"}\NormalTok{,}\StringTok{"Alamine_Aminotransferase"}\NormalTok{,}\StringTok{"Aspartate_Aminotransferase"}\NormalTok{,    }\StringTok{"Total_Protiens"}\NormalTok{,}\StringTok{"Albumin"}\NormalTok{,}\StringTok{"Albumin_and_Globulin_Ratio"}\NormalTok{,}\StringTok{"Dataset"}\NormalTok{)}
+\KeywordTok{colnames}\NormalTok{(liverData)<-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{"Age"}\NormalTok{,}\StringTok{"Gender"}\NormalTok{,}\StringTok{"Total_Bilirubin"}\NormalTok{,}\StringTok{"Direct_Bilirubin"}
+\NormalTok{, }\StringTok{"Alkaline_Phosphotase"}\NormalTok{,}\StringTok{"Alamine_Aminotransferase"}\NormalTok{,}\StringTok{"Aspartate_Aminotransferase"}
+\NormalTok{,}\StringTok{"Total_Protiens"}\NormalTok{,}\StringTok{"Albumin"}\NormalTok{,}\StringTok{"Albumin_and_Globulin_Ratio"}\NormalTok{,}
+\StringTok{"Dataset"}\NormalTok{)}
 
 \CommentTok{################################}
 \CommentTok{# Creating training and validation sets}
@@ -269,7 +262,7 @@ project, we use 10 folds.
 \end{Shaded}
 
 Both training and validation datasets contain records of patients with
-and with no liver disease.
+and without liver disease.
 
 \begin{itemize}
 \item The variable \emph{Dataset} in our indicates that if the liver is healthy or damaged. For instance, a value of 1 refers to disease. And, a value 2 means that the liver is healthy.
@@ -358,7 +351,7 @@ Specificity = \frac{Number of True Negatives} {Number of True Negatives + Number
 \end{equation}
 
 \item \textbf{F1 Score}
-F1 score is a harmonic mean between Precision and Recall. F1 Score is a better measure if we need to seek a balance between Precision and Recall. And, there is an uneven class distribution. 
+It is a harmonic mean between Precision and Recall. F1 Score is a better measure if we need to seek a balance between Precision and Recall. And, there is an uneven class distribution. 
 
 
 \begin{equation}
@@ -377,8 +370,7 @@ The statistical measurements of accuracy and precision reveal the
 necessary reliability of a test. Specificity is the ability of a test to
 exclude individuals who do not have a given disease correctly, and
 sensitivity is the ability of a test to identify people who have a given
-disease accurately. On the other hand, the F1 score is the harmonic mean
-of Precision and Recall and gives a better measure of the incorrectly
+disease accurately. On the other hand, the F1 score gives a better measure of the incorrectly
 classified cases than the accuracy metric. And, the kappa metric
 measures the inter-rater reliability.
 
@@ -390,14 +382,12 @@ The dataset contains 11 variables, namely, ``Age'', ``Gender'',
 ``Alkaline\_Phosphotase'',``Alamine\_Aminotransferase'',
 ``Aspartate\_Aminotransferase'',``Total\_Protiens'', ``Albumin'',
 ``Albumin\_and\_Globulin\_Ratio'', ``Dataset''. The `Dataset' variable
-indicates if the liver has a disease or not. For instance, a value of 1
-means that the liver is damaged, while a value of 2 means that the liver
-is healthy.
+indicates if the liver has a disease or not. 
 
 All other variables except ``Age'', ``Gender'', and ``Dataset''
 represent the amount of enzymes or proteins in the blood. The levels of
 the enzymes or proteins in the blood indicate the presence of liver
-disease. We will use these variables to train our machine learning
+disease. We will use these variables to train machine learning
 models to make diagnoses.
 
 \begin{Shaded}
@@ -405,12 +395,15 @@ models to make diagnoses.
 \KeywordTok{head}\NormalTok{(training)}
 \end{Highlighting}
 \end{Shaded}
+
+\setlength\LTleft{0pt}
+\setlength\LTright{0pt}
 \begin{longtable}[]{@{}rlrrrrrrrrr@{}}
 \toprule
-Age & Gender & Total\_Bilirubin & Direct\_Bilirubin &
-Alkaline\_Phosphotase & Alamine\_Aminotransferase &
-Aspartate\_Aminotransferase & Total\_Protiens & Albumin &
-Albumin\_and\_Globulin\_Ratio & Dataset\tabularnewline
+Age & Gender & TB & DB &
+ALP & ALT &
+AST & Total\_Protiens & Albumin &
+AG & Dataset\tabularnewline
 \midrule
 \endhead
 62 & Male & 10.9 & 5.5 & 699 & 64 & 100 & 7.5 & 3.2 & 0.74 &
@@ -428,8 +421,7 @@ Albumin\_and\_Globulin\_Ratio & Dataset\tabularnewline
 \bottomrule
 \end{longtable}
 
-The training dataset has 523 patient records. We notice that the
-``Albumin\_and\_Globulin\_Ratio'' variable has 4 null values. The
+We notice that the``Albumin\_and\_Globulin\_Ratio'' variable has 4 null values. The
 remaining variables do not contain any null values.
 
 \begin{itemize}
@@ -443,7 +435,7 @@ remaining variables do not contain any null values.
 \end{Shaded}
 
 \begin{verbatim}
-## [1] "Rows of training dataset = 523"
+## [1] "Patient records in training dataset = 523"
 \end{verbatim}
 
 \begin{Shaded}
@@ -491,7 +483,7 @@ remaining variables do not contain any null values.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{sprintf}\NormalTok{(}\StringTok{"Rows of validation dataset = %d"}\NormalTok{, }\KeywordTok{nrow}\NormalTok{(validation))}
+\KeywordTok{sprintf}\NormalTok{(}\StringTok{"Patient records in validation dataset = %d"}\NormalTok{, }\KeywordTok{nrow}\NormalTok{(validation))}
 \end{Highlighting}
 \end{Shaded}
 
@@ -558,6 +550,7 @@ remaining variables do not contain any null values.
 
 \subsection{Data Wrangling}
 \label{sec:dw}
+Data wrangling is the process of cleaning, structuring, and enriching raw data into the desired format for better decision making. It sits in between data acquisition and exploratory data analysis \cite{dw}. It is one of the essential steps to prepare data for machine learning.
 \subsubsection{Remove null values}
 
 We use the traditional data science approach and replace null values
@@ -566,11 +559,12 @@ with the mean of the ``Albumin\_and\_Globulin\_Ratio'' variable.
 \begin{Shaded}
 \begin{Highlighting}[]
 \CommentTok{# Replace null values with the mean of the variable}
-\NormalTok{training}\OperatorTok{$}\NormalTok{Albumin_and_Globulin_Ratio[}\KeywordTok{is.na}\NormalTok{(training}\OperatorTok{$}\NormalTok{Albumin_and_Globulin_Ratio)] <-}\StringTok{ }\KeywordTok{mean}\NormalTok{(training}\OperatorTok{$}\NormalTok{Albumin_and_Globulin_Ratio, }\DataTypeTok{na.rm=}\OtherTok{TRUE}\NormalTok{)}
+\NormalTok{training}\OperatorTok{$}\NormalTok{Albumin_and_Globulin_Ratio[}\KeywordTok{is.na}\NormalTok{(training}\OperatorTok{$}\NormalTok{Albumin_and_Globulin_Ratio)] <-}
+\StringTok{ }\KeywordTok{mean}\NormalTok{(training}\OperatorTok{$}\NormalTok{Albumin_and_Globulin_Ratio, }\DataTypeTok{na.rm=}\OtherTok{TRUE}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
-\subsubsection{Create 'LiverDisease' Variable}
+\subsubsection{Create `LiverDisease' Variable}
 
 To improve readability, we create a new variable, namely,
 ``LiverDisease'', which will have one of the following values:
@@ -580,7 +574,7 @@ To improve readability, we create a new variable, namely,
 \item Benign (B) indicating that the patient has no liver disease.
 \end{enumerate}
 
-We further delete the ``Dataset'' variable as it is no longer needed. We
+We delete the ``Dataset'' variable as it is no longer needed. We
 apply these operations to both training and validation datasets.
 
 \begin{Shaded}
@@ -591,7 +585,7 @@ apply these operations to both training and validation datasets.
 \NormalTok{training <-}\StringTok{ }\KeywordTok{transform}\NormalTok{(training, }\DataTypeTok{LiverDisease=} \KeywordTok{ifelse}\NormalTok{(Dataset}\OperatorTok{==}\DecValTok{1}\NormalTok{, }\StringTok{"M"}\NormalTok{,}\StringTok{"B"}\NormalTok{))}
 \NormalTok{validation <-}\StringTok{ }\KeywordTok{transform}\NormalTok{(validation, }\DataTypeTok{LiverDisease=} \KeywordTok{ifelse}\NormalTok{(Dataset}\OperatorTok{==}\DecValTok{1}\NormalTok{, }\StringTok{"M"}\NormalTok{,}\StringTok{"B"}\NormalTok{))}
 
-\CommentTok{# Deleting the column 'Dataset''' as no longer required}
+\CommentTok{# Deleting the column 'Dataset' as no longer required}
 \NormalTok{training<-}\KeywordTok{within}\NormalTok{(training, }\KeywordTok{rm}\NormalTok{(Dataset))}
 \NormalTok{validation<-}\KeywordTok{within}\NormalTok{(validation, }\KeywordTok{rm}\NormalTok{(Dataset))}
 
@@ -602,10 +596,9 @@ apply these operations to both training and validation datasets.
 
 \begin{longtable}[]{@{}rlrrrrrrrrl@{}}
 \toprule
-Age & Gender & Total\_Bilirubin & Direct\_Bilirubin &
-Alkaline\_Phosphotase & Alamine\_Aminotransferase &
-Aspartate\_Aminotransferase & Total\_Protiens & Albumin &
-Albumin\_and\_Globulin\_Ratio & LiverDisease\tabularnewline
+Age & Gender & TB & DB &
+ALP & ALT & AST & Total\_Protiens & Albumin &
+AG & LiverDisease\tabularnewline
 \midrule
 \endhead
 62 & Male & 10.9 & 5.5 & 699 & 64 & 100 & 7.5 & 3.2 & 0.74 &
@@ -623,7 +616,7 @@ M\tabularnewline
 \bottomrule
 \end{longtable}
 
-The training data has 28\% of the patient records, which has no liver
+The training data has 28\% of the patient records with no liver
 damage. The rest of the patients have a liver damage.
 
 \begin{Shaded}
@@ -688,7 +681,10 @@ dataset is unbiased towards a specific age group.
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{LiverDisease_files/figure-latex/unnamed-chunk-11-1.pdf}
+\begin{center}
+\includegraphics[width=0.7\textwidth]{LiverDisease_files/figure-latex/unnamed-chunk-11-1.pdf}
+\end{center}
+
 Now, we breakdown the distribution of ages to the presence or absence of
 liver diseases. Again, we notice a good spread of age group for both
 scenarios.
@@ -705,7 +701,9 @@ scenarios.
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{LiverDisease_files/figure-latex/unnamed-chunk-12-1.pdf}
+\begin{center}
+\includegraphics[width=0.7\textwidth]{LiverDisease_files/figure-latex/unnamed-chunk-12-1.pdf}
+\end{center}
 
 \subsection{Gender}
 
@@ -714,8 +712,7 @@ more and less equal distribution of records for both genders, although
 we do not expect it to make any difference in the performance of our
 models.
 
-Both ``Gender'' and ``Age'' variables are not used to train the model.
-These variables provide descriptive information.
+Both ``Gender'' and ``Age'' variables are not used to train the model because these variables provide descriptive information.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -749,7 +746,9 @@ diseases.
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{LiverDisease_files/figure-latex/unnamed-chunk-14-1.pdf}
+\begin{center}
+\includegraphics[width=0.6\textwidth]{LiverDisease_files/figure-latex/unnamed-chunk-14-1.pdf}
+\end{center}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -763,7 +762,9 @@ diseases.
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{LiverDisease_files/figure-latex/unnamed-chunk-15-1.pdf}
+\begin{center}
+\includegraphics[width=0.6\textwidth]{LiverDisease_files/figure-latex/unnamed-chunk-15-1.pdf}
+\end{center}
 
 Now, we look at the correlations of bilirubins. We observe that both
 bilirubins are weakly correlated with liver disease. However, both
@@ -806,7 +807,9 @@ disease, and we notice a similar trend in our dataset.
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{LiverDisease_files/figure-latex/unnamed-chunk-17-1.pdf}
+\begin{center}
+\includegraphics[width=0.7\textwidth]{LiverDisease_files/figure-latex/unnamed-chunk-17-1.pdf}
+\end{center}
 
 \subsection{Alamine and Aspartate Aminotransferases}
 
@@ -829,7 +832,9 @@ patients with liver diseases in our dataset.
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{LiverDisease_files/figure-latex/unnamed-chunk-18-1.pdf}
+\begin{center}
+\includegraphics[width=0.65\textwidth]{LiverDisease_files/figure-latex/unnamed-chunk-18-1.pdf}
+\end{center}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -843,7 +848,9 @@ patients with liver diseases in our dataset.
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{LiverDisease_files/figure-latex/unnamed-chunk-19-1.pdf}
+\begin{center}
+\includegraphics[width=0.65\textwidth]{LiverDisease_files/figure-latex/unnamed-chunk-19-1.pdf}
+\end{center}
 
 Contrary to bilirubins, there exists a weak correlation between both
 aminotransferases.
@@ -891,7 +898,9 @@ classification.
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{LiverDisease_files/figure-latex/unnamed-chunk-21-1.pdf}
+\begin{center}
+\includegraphics[width=0.65\textwidth]{LiverDisease_files/figure-latex/unnamed-chunk-21-1.pdf}
+\end{center}
 
 \subsection{Albumin}
 
@@ -911,7 +920,9 @@ notice a similar trend in our dataset.
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{LiverDisease_files/figure-latex/unnamed-chunk-22-1.pdf}
+\begin{center}
+\includegraphics[width=0.65\textwidth]{LiverDisease_files/figure-latex/unnamed-chunk-22-1.pdf}
+\end{center}
 
 \subsection{Albumin and Globulin Ratio (AG)}
 
@@ -932,7 +943,9 @@ we notice the same trend from distributions plot.
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{LiverDisease_files/figure-latex/unnamed-chunk-23-1.pdf}
+\begin{center}
+\includegraphics[width=0.65\textwidth]{LiverDisease_files/figure-latex/unnamed-chunk-23-1.pdf}
+\end{center}
 
 \section{Methods}
 \label{sec:methods}
@@ -955,12 +968,11 @@ For data pre-processing, we remove zero-variance predictors and then
 center and scale all those remaining using the preProc argument. The
 scaled features are then used to train the models. The feature scaling
 is one of the most critical steps of pre-processing data before creating
-a machine learning model. It can make a significant difference between a
+a machine learning model \cite{fs}. It can make a significant difference between a
 weak machine learning model and a better one.
 
 In this section, we use various machine learning models. Most of them
-were discussed in the course textbook. While some new are used based on
-claims that models provide a good classification. For all models, we use
+were discussed in the course textbook. For all models, we use
 cross-validation of 10 folds and tune the hyperparameters (if possible).
 For each fold, we split data into 90\% training and 10\% test set.
 
@@ -1026,7 +1038,9 @@ performance.
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{LiverDisease_files/figure-latex/unnamed-chunk-26-1.pdf}
+\begin{center}
+\includegraphics[width=0.65\textwidth]{LiverDisease_files/figure-latex/unnamed-chunk-26-1.pdf}
+\end{center}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1067,7 +1081,9 @@ and \textbf{degree} parameters to optimize the performance of the model.
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{LiverDisease_files/figure-latex/unnamed-chunk-27-1.pdf}
+\begin{center}
+\includegraphics[width=0.65\textwidth]{LiverDisease_files/figure-latex/unnamed-chunk-27-1.pdf}
+\end{center}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1107,7 +1123,9 @@ parameter to optimize the performance of the model.
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{LiverDisease_files/figure-latex/unnamed-chunk-28-1.pdf}
+\begin{center}
+\includegraphics[width=0.65\textwidth]{LiverDisease_files/figure-latex/unnamed-chunk-28-1.pdf}
+\end{center}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1215,7 +1233,9 @@ the \emph{cp} parameter to optimize the performance of the model.
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{LiverDisease_files/figure-latex/unnamed-chunk-31-1.pdf}
+\begin{center}
+\includegraphics[width=0.65\textwidth]{LiverDisease_files/figure-latex/unnamed-chunk-31-1.pdf}
+\end{center}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1256,7 +1276,9 @@ parameter to optimize the performance of the model.
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{LiverDisease_files/figure-latex/unnamed-chunk-32-1.pdf}
+\begin{center}
+\includegraphics[width=0.65\textwidth]{LiverDisease_files/figure-latex/unnamed-chunk-32-1.pdf}
+\end{center}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1296,7 +1318,9 @@ parameter to optimize the performance of the model.
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{LiverDisease_files/figure-latex/unnamed-chunk-33-1.pdf}
+\begin{center}
+\includegraphics[width=0.65\textwidth]{LiverDisease_files/figure-latex/unnamed-chunk-33-1.pdf}
+\end{center}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1342,11 +1366,8 @@ the \emph{ada} method to train the model with no parameter tuning.
 \end{Shaded}
 
 \subsection{Random Forest with PCA}
-
-We apply principal component analysis on data and then use \emph{rf}
-method to train the model. We use the same tuning, which was used before
-with the random forest model.
-
+We apply principal component analysis (PCA) on data followed by \emph{rf} method to train the model. We use the same tuning, which was used before with the random forest model.
+The PCA is a technique for reducing the dimensionality of datasets, increasing interpretability while minimizing information loss.
 \begin{Shaded}
 \begin{Highlighting}[]
 \KeywordTok{set.seed}\NormalTok{(}\DecValTok{1}\NormalTok{)}
@@ -1369,55 +1390,6 @@ with the random forest model.
 \end{Highlighting}
 \end{Shaded}
 
-\begin{verbatim}
-## Warning in randomForest.default(x, y, mtry = param$mtry, ...): invalid
-## mtry: reset to within valid range
-
-## Warning in randomForest.default(x, y, mtry = param$mtry, ...): invalid
-## mtry: reset to within valid range
-
-## Warning in randomForest.default(x, y, mtry = param$mtry, ...): invalid
-## mtry: reset to within valid range
-
-## Warning in randomForest.default(x, y, mtry = param$mtry, ...): invalid
-## mtry: reset to within valid range
-
-## Warning in randomForest.default(x, y, mtry = param$mtry, ...): invalid
-## mtry: reset to within valid range
-
-## Warning in randomForest.default(x, y, mtry = param$mtry, ...): invalid
-## mtry: reset to within valid range
-
-## Warning in randomForest.default(x, y, mtry = param$mtry, ...): invalid
-## mtry: reset to within valid range
-
-## Warning in randomForest.default(x, y, mtry = param$mtry, ...): invalid
-## mtry: reset to within valid range
-
-## Warning in randomForest.default(x, y, mtry = param$mtry, ...): invalid
-## mtry: reset to within valid range
-
-## Warning in randomForest.default(x, y, mtry = param$mtry, ...): invalid
-## mtry: reset to within valid range
-
-## Warning in randomForest.default(x, y, mtry = param$mtry, ...): invalid
-## mtry: reset to within valid range
-
-## Warning in randomForest.default(x, y, mtry = param$mtry, ...): invalid
-## mtry: reset to within valid range
-
-## Warning in randomForest.default(x, y, mtry = param$mtry, ...): invalid
-## mtry: reset to within valid range
-
-## Warning in randomForest.default(x, y, mtry = param$mtry, ...): invalid
-## mtry: reset to within valid range
-
-## Warning in randomForest.default(x, y, mtry = param$mtry, ...): invalid
-## mtry: reset to within valid range
-
-## Warning in randomForest.default(x, y, mtry = param$mtry, ...): invalid
-## mtry: reset to within valid range
-\end{verbatim}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1427,7 +1399,9 @@ with the random forest model.
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{LiverDisease_files/figure-latex/unnamed-chunk-35-1.pdf}
+\begin{center}
+\includegraphics[width=0.65\textwidth]{LiverDisease_files/figure-latex/unnamed-chunk-35-1.pdf}
+\end{center}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1449,7 +1423,8 @@ component analysis, gives the best performance.
 \end{Highlighting}
 \end{Shaded}
 
-\begin{longtable}[]{@{}lr@{}}
+\begin{center}
+\begin{longtable}[c]{llr}
 \toprule
 method & Accuracy\tabularnewline
 \midrule
@@ -1467,6 +1442,8 @@ ada & 0.7132075\tabularnewline
 rf\_pca & 0.7055878\tabularnewline
 \bottomrule
 \end{longtable}
+\end{center}
+
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1487,7 +1464,9 @@ rf\_pca & 0.7055878\tabularnewline
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{LiverDisease_files/figure-latex/unnamed-chunk-37-1.pdf}
+\begin{center}
+\includegraphics[width=0.65\textwidth]{LiverDisease_files/figure-latex/unnamed-chunk-37-1.pdf}
+\end{center}
 
 \section{Results}
 \label{sec:results}
@@ -1496,12 +1475,12 @@ In Section \ref{sec:methods}, we trained several models using training
 data. Now, we will evaluate the performance of these models using
 validation data. We have not used \textbf{qda} model in the evaluation
 due to poor performance on training data. The results show that
-\textbf{rf} and \textbackslash emph\{rf\_pca\} models performs best in
+\textbf{rf} and \textbf{$rf\_pca$} models performs best in
 terms of precision and recall. The kappa measure of
-\textbackslash textbf\{rf\_pca\} is also significantly better than the
+\textbf{$rf\_pca$} is also significantly better than the
 remaining models. However, both models have slightly lower sensitivity
 and specificity compared to other models. Based on results, we can
-hypothesize that as a whole \textbackslash textbf\{rf\_pca\} model
+hypothesize that as a whole \textbf{$rf\_pca$} model
 performs the best compared to other models.
 
 \begin{Shaded}
@@ -1516,8 +1495,10 @@ performs the best compared to other models.
 \NormalTok{  res <-}\StringTok{ }\KeywordTok{as.numeric}\NormalTok{(cm}\OperatorTok{$}\NormalTok{table)}
 
   \CommentTok{# Generate color gradients. Palettes come from RColorBrewer.}
-\NormalTok{  greenPalette <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{"#F7FCF5"}\NormalTok{,}\StringTok{"#E5F5E0"}\NormalTok{,}\StringTok{"#C7E9C0"}\NormalTok{,}\StringTok{"#A1D99B"}\NormalTok{,}\StringTok{"#74C476"}\NormalTok{,}\StringTok{"#41AB5D"}\NormalTok{,}\StringTok{"#238B45"}\NormalTok{,}\StringTok{"#006D2C"}\NormalTok{,}\StringTok{"#00441B"}\NormalTok{)}
-\NormalTok{  redPalette <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{"#FFF5F0"}\NormalTok{,}\StringTok{"#FEE0D2"}\NormalTok{,}\StringTok{"#FCBBA1"}\NormalTok{,}\StringTok{"#FC9272"}\NormalTok{,}\StringTok{"#FB6A4A"}\NormalTok{,}\StringTok{"#EF3B2C"}\NormalTok{,}\StringTok{"#CB181D"}\NormalTok{,}\StringTok{"#A50F15"}\NormalTok{,}\StringTok{"#67000D"}\NormalTok{)}
+\NormalTok{  greenPalette <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{"#F7FCF5"}\NormalTok{,}\StringTok{"#E5F5E0"}\NormalTok{,}\StringTok{"#C7E9C0"}\NormalTok{,}\StringTok{"#A1D99B"}\NormalTok{,}\StringTok{"#74C476"}\NormalTok{,}\StringTok{"#41AB5D"}\NormalTok{,}\StringTok{"#238B45"}
+\NormalTok{,}\StringTok{"#006D2C"}\NormalTok{,}\StringTok{"#00441B"}\NormalTok{)}
+\NormalTok{  redPalette <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{"#FFF5F0"}\NormalTok{,}\StringTok{"#FEE0D2"}\NormalTok{,} \StringTok{"#FCBBA1"}\NormalTok{,}\StringTok{"#FC9272"}\NormalTok{,}\StringTok{"#FB6A4A"}\NormalTok{,}\StringTok{"#EF3B2C"}\NormalTok{,}\StringTok{"#CB181D"}
+\NormalTok{,}\StringTok{"#A50F15"}\NormalTok{,}\StringTok{"#67000D"}\NormalTok{)}
 \NormalTok{  getColor <-}\StringTok{ }\ControlFlowTok{function}\NormalTok{ (}\DataTypeTok{greenOrRed =} \StringTok{"green"}\NormalTok{, }\DataTypeTok{amount =} \DecValTok{0}\NormalTok{) \{}
     \ControlFlowTok{if}\NormalTok{ (amount }\OperatorTok{==}\StringTok{ }\DecValTok{0}\NormalTok{)}
       \KeywordTok{return}\NormalTok{(}\StringTok{"#FFFFFF"}\NormalTok{)}
@@ -1615,7 +1596,9 @@ performs the best compared to other models.
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{LiverDisease_files/figure-latex/unnamed-chunk-39-1.pdf}
+\begin{center}
+\includegraphics[width=0.65\textwidth]{LiverDisease_files/figure-latex/unnamed-chunk-39-1.pdf}
+\end{center}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1624,7 +1607,9 @@ performs the best compared to other models.
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{LiverDisease_files/figure-latex/unnamed-chunk-40-1.pdf}
+\begin{center}
+\includegraphics[width=0.65\textwidth]{LiverDisease_files/figure-latex/unnamed-chunk-40-1.pdf}
+\end{center}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1633,7 +1618,9 @@ performs the best compared to other models.
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{LiverDisease_files/figure-latex/unnamed-chunk-41-1.pdf}
+\begin{center}
+\includegraphics[width=0.65\textwidth]{LiverDisease_files/figure-latex/unnamed-chunk-41-1.pdf}
+\end{center}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1641,7 +1628,9 @@ performs the best compared to other models.
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{LiverDisease_files/figure-latex/unnamed-chunk-42-1.pdf}
+\begin{center}
+\includegraphics[width=0.65\textwidth]{LiverDisease_files/figure-latex/unnamed-chunk-42-1.pdf}
+\end{center}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1649,7 +1638,9 @@ performs the best compared to other models.
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{LiverDisease_files/figure-latex/unnamed-chunk-43-1.pdf}
+\begin{center}
+\includegraphics[width=0.65\textwidth]{LiverDisease_files/figure-latex/unnamed-chunk-43-1.pdf}
+\end{center}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1657,7 +1648,9 @@ performs the best compared to other models.
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{LiverDisease_files/figure-latex/unnamed-chunk-44-1.pdf}
+\begin{center}
+\includegraphics[width=0.65\textwidth]{LiverDisease_files/figure-latex/unnamed-chunk-44-1.pdf}
+\end{center}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1665,7 +1658,10 @@ performs the best compared to other models.
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{LiverDisease_files/figure-latex/unnamed-chunk-45-1.pdf}
+\begin{center}
+\includegraphics[width=0.65\textwidth]{LiverDisease_files/figure-latex/unnamed-chunk-45-1.pdf}
+\end{center}
+
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1673,7 +1669,10 @@ performs the best compared to other models.
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{LiverDisease_files/figure-latex/unnamed-chunk-46-1.pdf}
+\begin{center}
+\includegraphics[width=0.65\textwidth]{LiverDisease_files/figure-latex/unnamed-chunk-46-1.pdf}
+\end{center}
+
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1681,7 +1680,10 @@ performs the best compared to other models.
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{LiverDisease_files/figure-latex/unnamed-chunk-47-1.pdf}
+\begin{center}
+\includegraphics[width=0.65\textwidth]{LiverDisease_files/figure-latex/unnamed-chunk-47-1.pdf}
+\end{center}
+
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1689,7 +1691,10 @@ performs the best compared to other models.
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{LiverDisease_files/figure-latex/unnamed-chunk-48-1.pdf}
+\begin{center}
+\includegraphics[width=0.65\textwidth]{LiverDisease_files/figure-latex/unnamed-chunk-48-1.pdf}
+\end{center}
+
 
 Now, we do an experiment to combine the predictions of multiple models,
 i.e., ensemble model. The idea is to diagnose a liver disease only if
@@ -1733,7 +1738,9 @@ not good to consider it for further analysis.
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{LiverDisease_files/figure-latex/unnamed-chunk-49-1.pdf}
+\begin{center}
+\includegraphics[width=0.65\textwidth]{LiverDisease_files/figure-latex/unnamed-chunk-49-1.pdf}
+\end{center}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1803,7 +1810,7 @@ not correlate with the presence or absence of liver disease. So, we
 ignored those variables and used the remaining variables to train the
 model to diagnose liver disease.
 
-The results show that \emph{$rf_pca$} performed the best on the
+The results show that \textbf{rf\_pca} performed the best on the
 validation dataset. We tried to further improve the results by combining
 the outputs of several models. The idea was to use votes to decide if
 the liver has a disease or not. If more than 50\% of the models predict
@@ -1811,7 +1818,7 @@ a disease, then we consider that the liver is damaged. But, the
 resulting model did not perform well.
 
 All models seem to overfit the data, and we end up getting more
-``Malignant'' cases. The \textbackslash emph\{rf\_pca\} performs better,
+``Malignant'' cases. The \textbf{rf\_pca} performs better,
 and we can correctly predict some ``Benign'' cases. The only reason we
 can think of is that the data is imbalanced. Ideally, both classes
 should have an equal distribution for patient records to train robust
@@ -1824,7 +1831,7 @@ produce robust models.
 \label{sec:futurework}
 
 In the future, we will explore class weights concepts to solve the
-problem of imbalanced data via weight balancing. The weight balancing
+problem of imbalanced data via weight balancing \cite{wb}. The weight balancing
 balances our data by altering the weight that each training sample
 carries when computing the loss. With balanced data, each sample and
 class in our loss function will carry an equal weight of 1.0. But
@@ -1833,15 +1840,20 @@ hold more weight if they are more important or less in number. We expect
 to improve our models using weight balancing.
 
 \begin{thebibliography}{9}
-\bibitem{cad} 
-Ethan Du-Crowa, Lucy Warrenb, Susan M Astleya and Johan Hullemanc,"Is there a safety-net effect with Computer-Aided Detection (CAD)?", Medical Imaging 2019.
 \bibitem{ld}
 Eugene, R., Sorrell, Michael F.; Maddrey, Willis C., "Schiff's Diseases of the Liver", 10th Edition, Lippincott Williams \& Wilkins by Schiff.
 
 \bibitem{bendi}
 Bendi,  Venkata . R, M. S. Prasad Babu, and N. B. Venkateswarlu, "Critical Comparative Study of Liver Patients from USA and INDIA: An Exploratory Analysis", International Journal of Computer Science Issues, May 2012.
 
+\bibitem{dw}
+"Top Data Wrangling Skills Required for Data Scientists", \url{https://medium.com/@ODSC/top-data-wrangling-skills-required-for-data-scientists-8a6b7dc604a7}
 
+\bibitem{fs}
+Baijayanta Roy, "All About Feature Scaling",\url{https://towardsdatascience.com/all-about-feature-scaling-bcc0ad75cb35}
+
+\bibitem{wb}
+George Seif, "Handling Imbalanced Datasets in Deep Learning", \url={"https://towardsdatascience.com/handling-imbalanced-datasets-in-deep-learning-f48407a0e758"}
 \end{thebibliography}
 
 

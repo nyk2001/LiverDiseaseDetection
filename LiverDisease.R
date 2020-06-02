@@ -60,7 +60,6 @@ rm(liverData)
 
 ## ------------------------------------------------------------------------
 # Looking at distributions of liver disease
-# 1 indicates that the liver is damage. While 2 means that the liver is healthy 
 print("Training Data")
 table(training$Dataset)
 print("Validation Data")
@@ -73,12 +72,14 @@ head(training)
 
 
 ## ------------------------------------------------------------------------
-sprintf("Rows of training dataset = %d", nrow(training))
+sprintf("Patient records in training dataset = %d", nrow(training))
 print("=========================")
 summary(training)
 
 
 ## ------------------------------------------------------------------------
+sprintf("Patient records in validation dataset = %d", nrow(validation))
+print("=========================")
 print("Validation Dataset")
 summary(validation)
 
@@ -95,7 +96,7 @@ training$Albumin_and_Globulin_Ratio[is.na(training$Albumin_and_Globulin_Ratio)] 
 training <- transform(training, LiverDisease= ifelse(Dataset==1, "M","B"))
 validation <- transform(validation, LiverDisease= ifelse(Dataset==1, "M","B"))
 
-# Deleting the column 'Dataset' as no longer required
+# Deleting the column 'Dataset''' as no longer required
 training<-within(training, rm(Dataset))
 validation<-within(validation, rm(Dataset))
 
@@ -248,14 +249,15 @@ training %>%
 
 ## ------------------------------------------------------------------------
 # Removing the variables 'Age' and 'Dataset' 
-training<-within(training, rm(Age,Total_Protiens))
-validation<-within(validation, rm(Age,Total_Protiens))
+training<-within(training, rm(Age,Gender,Total_Protiens))
+validation<-within(validation, rm(Age,Gender,Total_Protiens))
 
 
 
 ## ----warning=FALSE, message=FALSE----------------------------------------
+
 # Defining a cross-validation (10 K folds )
-control <- trainControl(method = "repeatedcv", number =10,repeats = 5)
+control <- trainControl(method = "cv", number =10 , p = 0.9)
 
 # Train logistic regression model
 train_glm <- train(LiverDisease ~., 
@@ -274,20 +276,23 @@ model_results <- data_frame(method = "glm", Accuracy = train_glm$results$Accurac
 ## ----warning=FALSE,message=FALSE-----------------------------------------
 
 set.seed(1)
-# Defining a cross validation (10 K folds )
-control <- trainControl(method = "repeatedcv", number = 10, repeats=5)
+# Defining a cross-validation (10 K folds )
+control <- trainControl(method = "cv", number =10 , p = 0.9)
+
+# Define tuning parameters
+tune_grid <- expand.grid(k = seq(3, 51, 2))
 
 # Train knn model
 train_knn <- train(LiverDisease~ .,
                    method = "knn", 
                    preProc = c("zv","center", "scale"),
                    data = training,
-                   tuneGrid = data.frame(k = seq(3, 51, 2)),
+                   tuneGrid = tune_grid,
                    trControl = control)
 
 # Plot the model and highlight the best result
 ggplot(train_knn, highlight = TRUE) +
-  ggtitle(paste("The best accuracy = ",round(max(train_knn$results$Accuracy),3)))
+  ggtitle(paste("The best accuracy = ",round(max(train_knn$results$Accuracy),3), " K =",train_knn$bestTune$k))
 
 # Storing the results
 model_results <- bind_rows(model_results,data_frame(method="knn",  
@@ -298,8 +303,8 @@ model_results <- bind_rows(model_results,data_frame(method="knn",
 ## ---- warning=FALSE, message=FALSE---------------------------------------
 set.seed(1)
 
-# Defining a cross validation (10 K folds )
-control <- trainControl(method = "repeatedcv", number = 10, repeats=5)
+# Defining a cross-validation (10 K folds )
+control <- trainControl(method = "cv", number =10 , p = 0.9)
 
 # Define tuning parameters
 tune_grid <- expand.grid(span = seq(0.15, 0.65, len = 15), degree = seq(0,1,0.25))
@@ -314,8 +319,9 @@ train_loess <- train(LiverDisease~.,
 
 # Plot the model and highlight the best result
 ggplot(train_loess, highlight = TRUE) +
-  ggtitle(paste("The best accuracy = ",round(max(train_loess$results$Accuracy),3)))
-
+  ggtitle(paste("The best accuracy = ",round(max(train_loess$results$Accuracy),3),
+                "Span = ", round(train_loess$bestTune$span,3),
+                "Degree = ", round(train_loess$bestTune$degree,1)))
 
 # Storing the results
 model_results <- bind_rows(model_results,data_frame(method="loess",  
@@ -330,8 +336,8 @@ set.seed(1)
 # Define tuning parameters
 tune_grid <- expand.grid(ncomp = seq(1,5, len = 10))
 
-# Defining a cross validation (10 K folds )
-control <- trainControl(method = "repeatedcv", number = 10, repeats=5)
+# Defining a cross-validation (10 K folds )
+control <- trainControl(method = "cv", number =10 , p = 0.9)
 
 # Train the model
 train_pls <- train(LiverDisease~.,
@@ -343,7 +349,8 @@ train_pls <- train(LiverDisease~.,
 
 # Plot the model and highlight the best result
 ggplot(train_pls, highlight = TRUE) +
-  ggtitle(paste("The best accuracy = ",round(max(train_pls$results$Accuracy),3)))
+  ggtitle(paste("The best accuracy = ",round(max(train_pls$results$Accuracy),3),
+                "Ncomp= ",train_pls$bestTune$ncomp))
 
 
 # Storing the results
@@ -355,8 +362,8 @@ model_results <- bind_rows(model_results,data_frame(method="pls",
 
 ## ---- warning=FALSE, message=FALSE---------------------------------------
 set.seed(1)
-# Defining a cross validation (10 K folds )
-control <- trainControl(method = "repeatedcv", number=10, repeats=5)
+# Defining a cross-validation (10 K folds )
+control <- trainControl(method = "cv", number =10 , p = 0.9)
 
 # Train the model
 train_lda <- train(LiverDisease~., 
@@ -376,8 +383,8 @@ model_results <- bind_rows(model_results,data_frame(method="lda",
 
 ## ---- warning=FALSE, message=FALSE---------------------------------------
 set.seed(1)
-# Defining a cross validation (10 K folds )
-control <- trainControl(method = "repeatedcv", number=10, repeats=5)
+# Defining a cross-validation (10 K folds )
+control <- trainControl(method = "cv", number =10 , p = 0.9)
 
 # Train the model
 train_qda <- train(LiverDisease~.,
@@ -398,8 +405,11 @@ model_results <- bind_rows(model_results,data_frame(method="qda",
 ## ---- warning=FALSE, message=FALSE---------------------------------------
 set.seed(1)
 
-# Defining a cross validation (10 K folds )
-control <- trainControl(method = "repeatedcv", number = 10, repeats=5)
+# Defining a cross-validation (10 K folds )
+control <- trainControl(method = "cv", number =10 , p = 0.9)
+
+# Define tuning parameters
+tune_grid <- expand.grid(cp = seq(0, 0.08, len = 10))
 
 # Train the model
 train_rpart <- train(LiverDisease~., 
@@ -407,11 +417,12 @@ train_rpart <- train(LiverDisease~.,
                      preProc = c("zv","center", "scale"),
                      data = training,
                      trControl = control,
-                     tuneGrid = data.frame(cp = seq(0, 0.08, len = 10)))
+                     tuneGrid = tune_grid)
 
 # Plot the model and highlight the best result
 ggplot(train_rpart, highlight = TRUE) +
-  ggtitle(paste("The best accuracy = ",round(max(train_rpart$results$Accuracy),3)))
+  ggtitle(paste("The best accuracy = ",round(max(train_rpart$results$Accuracy),3),
+                "CP = ", round(train_rpart$bestTune$cp,2)))
 
 # Storing the results
 model_results <- bind_rows(model_results,data_frame(method="rpart",  
@@ -423,8 +434,11 @@ model_results <- bind_rows(model_results,data_frame(method="rpart",
 ## ---- warning=FALSE, message=FALSE---------------------------------------
 set.seed(1)
 
-# Defining a cross validation (10 K folds )
-control <- trainControl(method = "repeatedcv", number = 10, repeats=5)
+# Defining a cross-validation (10 K folds )
+control <- trainControl(method = "cv", number =10 , p = 0.9)
+
+# Define tuning parameters
+tune_grid <- expand.grid(mtry=seq(1,7))
 
 # Train the model
 train_rf <- train(LiverDisease~.,
@@ -432,12 +446,13 @@ train_rf <- train(LiverDisease~.,
                      preProc = c("zv","center", "scale"),
                      data = training,
                      trControl = control,
-                     tuneGrid = data.frame(mtry=seq(1,7)),
+                     tuneGrid = tune_grid,
                      ntree=100)
 
 # Plot the model and highlight the best result
 ggplot(train_rf, highlight = TRUE) +
-  ggtitle(paste("The best accuracy = ",round(max(train_rf$results$Accuracy),3)))
+  ggtitle(paste("The best accuracy = ",round(max(train_rf$results$Accuracy),3),
+                "Mtry = ", round(train_rf$bestTune$mtry,1)))
 
 # Storing the results
 model_results <- bind_rows(model_results,data_frame(method="rf",  
@@ -448,18 +463,25 @@ model_results <- bind_rows(model_results,data_frame(method="rf",
 ## ---- warning=FALSE, message=FALSE---------------------------------------
 set.seed(1)
 
-# Defining a cross validation (10 K folds )
-control <- trainControl(method = "repeatedcv", number = 10, repeats = 5)
+# Defining a cross-validation (10 K folds )
+control <- trainControl(method = "cv", number =10 , p = 0.9)
+
+# Define tuning parameters
+tune_grid <- expand.grid(tau=seq(1,8))
 
 # Train the model
 train_svm <- train(LiverDisease~.,
                    preProc = c("zv","center", "scale"),
                    data = training,
                    method = "svmLinear",
-                   tune_grid= data.frame(tau=seq(1,10)),
+                   tune_grid= tune_grid,
                    trControl = control)
 
-sprintf("The accuracy of svm = %f",max(train_svm$results$Accuracy))
+# Plot the model and highlight the best result
+ggplot(train_rf, highlight = TRUE) +
+  ggtitle(paste("The best accuracy = ",round(max(train_svm$results$Accuracy),3),
+                "Tua = ", round(train_svm$bestTune$C,1)))
+
 
 # Storing the results
 model_results <- bind_rows(model_results,data_frame(method="svm",  
@@ -467,15 +489,13 @@ model_results <- bind_rows(model_results,data_frame(method="svm",
 
 
 
-## ------------------------------------------------------------------------
+## ----warning=FALSE,message=FALSE-----------------------------------------
 set.seed(1)
 
-# Defining a cross validation (10 K folds )
-control <- trainControl(method = "repeatedcv", number = 10, repeats = 5)
+# Defining a cross-validation (10 K folds )
+control <- trainControl(method = "cv", number =10 , p = 0.9)
 
-# Tuning the model
-tune_grid  = expand.grid(method = c("Adaboost.M1", "Real adaboost"))
- 
+# Train the model
 train_ada <- train(LiverDisease~.,
                    preProc = c("zv","center", "scale"),
                    data = training,
@@ -490,18 +510,22 @@ model_results <- bind_rows(model_results,data_frame(method="ada",
 
 
 
-## ------------------------------------------------------------------------
+## ----warning=FALSE,message=FALSE-----------------------------------------
 set.seed(1)
 
-# Defining a cross validation (10 K folds )
-control <- trainControl(method = "repeatedcv", number = 10, repeats=5)
+# Defining a cross-validation (10 K folds )
+control <- trainControl(method = "cv", number =10 , p = 0.9)
+
+# Define tuning parameters
+tune_grid <- expand.grid(mtry=seq(1,7))
+
 # Train the model
 train_rf_pca <- train(LiverDisease~.,
                      method = "rf",
                      preProc = c("zv","center", "scale"),
                      data = training,
                      trControl = control,
-                     tuneGrid = data.frame(mtry=seq(1,7)),
+                     tuneGrid = tune_grid,
                      preProcess=c("pca"),
                      ntree=100)
 

@@ -1,5 +1,5 @@
 ---
-title: "Liver Disease Classification"
+title: "Liver Disease Classification Project"
 author: "Nabeel Khan"
 date: "27-May-2020"
 output:
@@ -22,7 +22,7 @@ This project is part of the ‘HarvardX: PH125.9x Data Science: Capstone’ cour
 \label{sec:background}
 The liver plays a vital role in keeping us healthy. The liver's main job is to filter the blood coming from the digestive tract before passing it to the rest of the body. The liver also turns nutrients into chemicals our body needs, converts food into energy, and filters out poisons. The damage to the liver affects the whole body.
 
-The patients with liver disease are on the rise because of excessive consumption of alcohol, inhale of harmful gases, or intake of contaminated food. The liver disease can be detected by analysing the levels of enzymes in the human blood \cite{ld,bendi}. The problems with the liver are not easily discovered in an early stage. Moreover, the diagnosis of liver damage is subjective and varies from doctor to doctor based on experience.  The initial diagnosis of liver disease increases the survival rate of patients. Therefore, a classification algorithm capable of automatically detecting the liver disease can assist the doctors in early diagnosis of liver damage. The classification techniques are commonly used in various automated medical diagnoses \cite{cad}.  
+The patients with liver disease are on the rise because of excessive consumption of alcohol, inhale of harmful gases, or intake of contaminated food. The liver disease can be detected by analysing the levels of enzymes in the human blood \cite{ld,bendi}. The problems with the liver are not easily discovered in an early stage. Moreover, the diagnosis of liver damage is subjective and varies from doctor to doctor based on experience.  The initial diagnosis of liver disease increases the survival rate of patients. Therefore, a classification algorithm capable of automatically detecting the liver disease can assist the doctors in early diagnosis of liver damage. The classification techniques are commonly used in various automated medical diagnoses.  
 
 \subsection{Aim of Project}
 \label{sec:aim}
@@ -42,9 +42,7 @@ We have downloaded data from the UCI website. Then, we split data into training 
 \item The dataset is small and has only 583 patient records. The typical approach is to select 10-20% of the data for training. In this project, we choose 10\% of the data for testing or validation. This allows us to use most of the data (90%) to train our models. 
 \end{itemize}
 
-For training, we use \emph{K}-fold cross-validation to train our models. The goal of cross-validation is to determine the hyperparameters of the model, which give the lowest error rate. The selected model is, therefore, the one with the best performance on training data. It is a useful technique for assessing the effectiveness of the model, particularly in cases where we need to mitigate overfitting on unseen data.  
-
-In \emph{K}-fold cross-validation, we randomly split training data into \emph{K} non-overlapping sets. For each set, we train the model using hyperparameters and compute the error rates. Then, we average the error rate for each hyperparameter. Finally, we select the hyperparameter of the model that gives the minimum error rate. The popular choices for \emph{K} are 5 and 10, as discussed in the course textbook. In this project, we use 10 folds. 
+For model training, we have used \emph{K}-fold cross-validation to train our models. The goal of cross-validation is to determine the hyperparameters of the model, which give the lowest error rate. The selected model is, therefore, the one with the best performance on training data. Cross-validation is a useful technique for assessing the effectiveness of the model, particularly in cases where we need to mitigate overfitting on unseen data. In \emph{K}-fold cross-validation, we randomly split training data into \emph{K} non-overlapping sets. For each set, we train the model using hyperparameters and compute the error rates. Then, we average the error rate for each hyperparameter. Finally, we select the hyperparameter of the model that gives the minimum error rate. The popular choices for \emph{K} are 5 and 10, as discussed in the course textbook. In this project, we have used 10 folds.
 
 ```{r,message=FALSE, warning=FALSE}
 ################################
@@ -106,7 +104,7 @@ rm(liverData)
 
 ```
 
-Both training and validation datasets contain records of patients with and with no liver disease.
+Both training and validation datasets contain records of patients with and without liver disease.
 \begin{itemize}
 \item The variable \emph{Dataset} in our indicates that if the liver is healthy or damaged. For instance, a value of 1 refers to disease. And, a value 2 means that the liver is healthy.
 \end{itemize}
@@ -156,7 +154,7 @@ Specificity = \frac{Number of True Negatives} {Number of True Negatives + Number
 \end{equation}
 
 \item \textbf{F1 Score}
-F1 score is a harmonic mean between Precision and Recall. F1 Score is a better measure if we need to seek a balance between Precision and Recall. And, there is an uneven class distribution. 
+It is a harmonic mean between Precision and Recall. F1 Score is a better measure if we need to seek a balance between Precision and Recall. And, there is an uneven class distribution. 
 
 
 \begin{equation}
@@ -170,34 +168,33 @@ Cohen's Kappa (or simple kappa) measures inter-rater reliability and is often us
 
 The values of all metrics range from 0 to 1. Higher the value better is the metric and the performance of the model.
 
-The statistical measurements of accuracy and precision reveal the necessary reliability of a test. Specificity is the ability of a test to exclude individuals who do not have a given disease correctly, and sensitivity is the ability of a test to identify people who have a given disease accurately. On the other hand, the F1 score is the harmonic mean of Precision and Recall and gives a better measure of the incorrectly classified cases than the accuracy metric. And, the kappa metric measures the inter-rater reliability.
+The statistical measurements of accuracy and precision reveal the necessary reliability of a test. Specificity is the ability of a test to exclude individuals who do not have a given disease correctly, and sensitivity is the ability of a test to identify people who have a given disease accurately. On the other hand, the F1 score  gives a better measure of the incorrectly classified cases than the accuracy metric. And, the kappa metric measures the inter-rater reliability.
 
 \section{Data Exploration}
 \label{sec:exploration}
-The dataset contains 11 variables, namely, "Age", "Gender", "Total_Bilirubin", "Direct_Bilirubin", "Alkaline_Phosphotase","Alamine_Aminotransferase", "Aspartate_Aminotransferase","Total_Protiens", "Albumin", "Albumin_and_Globulin_Ratio", "Dataset". The 'Dataset' variable indicates if the liver has a disease or not. For instance, a value of 1 means that the liver is damaged, while a value of 2 means that the liver is healthy. 
+The dataset contains 11 variables, namely, "Age", "Gender", "Total_Bilirubin", "Direct_Bilirubin", "Alkaline_Phosphotase","Alamine_Aminotransferase", "Aspartate_Aminotransferase","Total_Protiens", "Albumin", "Albumin_and_Globulin_Ratio", "Dataset". The 'Dataset' variable indicates if the liver has a disease or not. 
 
-
-All other variables except "Age", "Gender", and "Dataset" represent the amount of enzymes or proteins in the blood. The levels of the enzymes or proteins in the blood indicate the presence of liver disease. We will use these variables to train our machine learning models to make diagnoses. 
+All other variables except "Age", "Gender", and "Dataset" represent the amount of enzymes or proteins in the blood. The levels of the enzymes or proteins in the blood indicate the presence of liver disease. We will use these variables to train machine learning models to make diagnoses. 
 
 
 ```{r}
 head(training)
 ```
 
-The training dataset has 523 patient records. We notice that the "Albumin_and_Globulin_Ratio" variable has 4 null values. The remaining variables do not contain any null values.
+We notice that the "Albumin_and_Globulin_Ratio" variable has 4 null values. The remaining variables do not contain any null values.
 
 \begin{itemize}
 \item The validation data also has no null values (confirmed via summary).
 \end{itemize}
 
 ```{r}
-sprintf("Rows of training dataset = %d", nrow(training))
+sprintf("Patient records in training dataset = %d", nrow(training))
 print("=========================")
 summary(training)
 ```
 
 ```{r}
-sprintf("Rows of validation dataset = %d", nrow(validation))
+sprintf("Patient records in validation dataset = %d", nrow(validation))
 print("=========================")
 print("Validation Dataset")
 summary(validation)
@@ -206,6 +203,8 @@ summary(validation)
 
 \subsection{Data Wrangling}
 \label{sec:dw}
+Data wrangling is the process of cleaning, structuring, and enriching raw data into the desired format for better decision making. It sits in between data acquisition and exploratory data analysis \cite{dw}. It is one of the essential steps to prepare data for machine learning.
+
 \subsubsection{Remove null values}
 We use the traditional data science approach and replace null values with the mean of the "Albumin_and_Globulin_Ratio" variable.
 
@@ -222,7 +221,7 @@ To improve readability, we create a new variable, namely, "LiverDisease", which 
 \end{enumerate}
 
 
-We further delete the "Dataset" variable as it is no longer needed. We apply these operations to both training and validation datasets.
+We delete the "Dataset" variable as it is no longer needed. We apply these operations to both training and validation datasets.
 
 ```{r}
 # Adding a new column, which will contain the disease information
@@ -238,7 +237,7 @@ validation<-within(validation, rm(Dataset))
 # Displaying the first six rows
 head(training)
 ```
-The training data has 28% of the patient records, which has no liver damage. The rest of the patients have a liver damage.
+The training data has 28% of the patient records with no liver damage. The rest of the patients have a liver damage.
 
 ```{r}
 summary(training$LiverDisease)/nrow(training)*100.0
@@ -287,7 +286,7 @@ training %>%
 \subsection{Gender}
 76% of the patient records are of males. It would be good to have a more and less equal distribution of records for both genders, although we do not expect it to make any difference in the performance of our models.  
 
-Both "Gender" and "Age" variables are not used to train the model. These variables provide descriptive information.
+Both ``Gender'' and ``Age'' variables are not used to train the model because these variables provide descriptive information.
 
 ```{r}
 # Getting summary of genders
@@ -431,9 +430,9 @@ validation<-within(validation, rm(Age,Gender,Total_Protiens))
 ```
 
 
-For data pre-processing, we remove zero-variance predictors and then center and scale all those remaining using the preProc argument. The scaled features are then used to train the models. The feature scaling is one of the most critical steps of pre-processing data before creating a machine learning model. It can make a significant difference between a weak machine learning model and a better one.
+For data pre-processing, we remove zero-variance predictors and then center and scale all those remaining using the preProc argument. The scaled features are then used to train the models. The feature scaling is one of the most critical steps of pre-processing data before creating a machine learning model \cite{fs}. It can make a significant difference between a weak machine learning model and a better one.
 
-In this section, we use various machine learning models. Most of them were discussed in the course textbook. While some new are used based on claims that models provide a good classification. For all models, we use cross-validation of 10 folds and tune the hyperparameters (if possible). For each fold, we split data into 90% training and 10% test set.
+In this section, we use various machine learning models. Most of them were discussed in the course textbook. For all models, we use cross-validation of 10 folds and tune the hyperparameters (if possible). For each fold, we split data into 90% training and 10% test set.
 
 \subsection{Logistic Regression}
 We use \emph{glm} method to train the model. There is no parameter tuning involved.
@@ -697,7 +696,7 @@ model_results <- bind_rows(model_results,data_frame(method="svm",
 \subsection{Adaptive Boosting (Adaboost)}
 AdaBoost is a machine learning meta-algorithm for classification. We use the \emph{ada} method to train the model with no parameter tuning. 
 
-```{r}
+```{r,warning=FALSE,message=FALSE}
 set.seed(1)
 
 # Defining a cross-validation (10 K folds )
@@ -719,9 +718,10 @@ model_results <- bind_rows(model_results,data_frame(method="ada",
 ```
 
 \subsection{Random Forest with PCA}
-We apply principal component analysis on data and then use \emph{rf} method to train the model. We use the same tuning, which was used before with the random forest model.
+We apply principal component analysis (PCA) on data followed by \emph{rf} method to train the model. We use the same tuning, which was used before with the random forest model.
+The PCA is a technique for reducing the dimensionality of datasets, increasing interpretability while minimizing information loss.
 
-```{r}
+```{r,warning=FALSE,message=FALSE}
 set.seed(1)
 
 # Defining a cross-validation (10 K folds )
@@ -999,17 +999,23 @@ All models seem to overfit the data, and we end up getting more "Malignant" case
 
 \subsection{Future Work}
 \label{sec:futurework}
-In the future, we will explore class weights concepts to solve the problem of imbalanced data via weight balancing. The weight balancing balances our data by altering the weight that each training sample carries when computing the loss. With balanced data, each sample and class in our loss function will carry an equal weight of 1.0. But sometimes we might want certain classes or certain training samples to hold more weight if they are more important or less in number. We expect to improve our models using weight balancing. 
+In the future, we will explore class weights concepts to solve the problem of imbalanced data via weight balancing \cite{wb}. The weight balancing balances our data by altering the weight that each training sample carries when computing the loss. With balanced data, each sample and class in our loss function will carry an equal weight of 1.0. But sometimes we might want certain classes or certain training samples to hold more weight if they are more important or less in number. We expect to improve our models using weight balancing. 
 
 \begin{thebibliography}{9}
-\bibitem{cad} 
-Ethan Du-Crowa, Lucy Warrenb, Susan M Astleya and Johan Hullemanc,"Is there a safety-net effect with Computer-Aided Detection (CAD)?", Medical Imaging 2019.
 \bibitem{ld}
 Eugene, R., Sorrell, Michael F.; Maddrey, Willis C., "Schiff's Diseases of the Liver", 10th Edition, Lippincott Williams \& Wilkins by Schiff.
 
 \bibitem{bendi}
 Bendi,  Venkata . R, M. S. Prasad Babu, and N. B. Venkateswarlu, "Critical Comparative Study of Liver Patients from USA and INDIA: An Exploratory Analysis", International Journal of Computer Science Issues, May 2012.
 
+\bibitem{dw}
+"Top Data Wrangling Skills Required for Data Scientists", \url{https://medium.com/@ODSC/top-data-wrangling-skills-required-for-data-scientists-8a6b7dc604a7}
+
+\bibitem{fs}
+Baijayanta Roy, "All About Feature Scaling",\url{https://towardsdatascience.com/all-about-feature-scaling-bcc0ad75cb35}
+
+\bibitem{wb}
+George Seif, "Handling Imbalanced Datasets in Deep Learning", \url={"https://towardsdatascience.com/handling-imbalanced-datasets-in-deep-learning-f48407a0e758#:~:text=Weight%20balancing%20balances%20our%20data,carries%20when%20computing%20the%20loss.&text=We%20can%20give%20weight%20to,factor%20depending%20on%20their%20class."}
 
 \end{thebibliography}
 
