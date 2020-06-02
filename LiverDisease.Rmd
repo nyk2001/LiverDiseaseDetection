@@ -22,30 +22,29 @@ This project is part of the ‘HarvardX: PH125.9x Data Science: Capstone’ cour
 \label{sec:background}
 The liver plays a vital role in keeping us healthy. The liver's main job is to filter the blood coming from the digestive tract before passing it to the rest of the body. The liver also turns nutrients into chemicals our body needs, converts food into energy, and filters out poisons. The damage to the liver affects the whole body.
 
-The patients with liver disease are on the rise because of excessive consumption of alcohol, inhale of harmful gases, or intake of contaminated food. The liver disease can be detected by analysing the levels of enzymes in the human blood \cite{ld,bendi}. The problems with the liver are not easily discovered in an early stage. Moreover, the diagnosis of liver damage is subjective and varies from doctor to doctor based on experience.  The initial diagnosis of liver disease increases the survival rate of patients. Therefore, a classification algorithm capable of automatically detecting the liver disease can assist the doctors in early diagnosis of liver damage. The classification techniques are commonly used in various automatic medical diagnoses tools\cite{cad}.  
+The patients with liver disease are on the rise because of excessive consumption of alcohol, inhale of harmful gases, or intake of contaminated food. The liver disease can be detected by analysing the levels of enzymes in the human blood \cite{ld,bendi}. The problems with the liver are not easily discovered in an early stage. Moreover, the diagnosis of liver damage is subjective and varies from doctor to doctor based on experience.  The initial diagnosis of liver disease increases the survival rate of patients. Therefore, a classification algorithm capable of automatically detecting the liver disease can assist the doctors in early diagnosis of liver damage. The classification techniques are commonly used in various automated medical diagnoses \cite{cad}.  
 
 \subsection{Aim of Project}
 \label{sec:aim}
-This project aims to develop a binary classifier or mahcine learning model, which uses information of blood enzymes to diagnose liver disease. That information will help doctors in making diagnosis and treat patients in time to save lives.
+This project aims to develop a machine learning model, which uses the information of blood enzymes to diagnose liver disease (binary classifier). The model's output can assist doctors in making early diagnoses and treating patients in time to save lives.
 
 \subsection{Dataset}
 \label{sec:dataset}
 We use the liver patient records data, which is collected from North East of Andhra Pradesh, India. The data set contains:
-\begin{enumerate}
-\item 416 liver patient records and 167 non-liver patient records.
-\end{enumerate} 
+\begin{itemize}
+\item 416 liver patient records, and 
+\item 167 non-liver patient records.
+\end{itemize} 
 
-\subsubsection{Download Data}
-\label{sec:dd}
 The dataset is publically available online both at Kaggle and UCI repository.
 We have downloaded data from the UCI website. Then, we split data into training and validation sets. 
 \begin{itemize}
-\item The dataset is small and has only 583 patient records. So, we use a typical approach and select 10\% of the data for validation. This allows us to use most of the data (90%) to train the models. 
+\item The dataset is small and has only 583 patient records. The typical approach is to select 10-20% of the data for training. In this project, we choose 10\% of the data for testing or validation. This allows us to use most of the data (90%) to train our models. 
 \end{itemize}
 
-For training, we use \emph{K}-fold cross-validation to train our models. The goal of cross-validation is to determine the hyperparameters of the model, which give the lowest error rate or the best performance. It is a very useful technique for assessing the effectiveness of the model, particularly in cases where you need to mitigate overfitting on unseen data.  
+For training, we use \emph{K}-fold cross-validation to train our models. The goal of cross-validation is to determine the hyperparameters of the model, which give the lowest error rate. The selected model is, therefore, the one with the best performance on training data. It is a useful technique for assessing the effectiveness of the model, particularly in cases where we need to mitigate overfitting on unseen data.  
 
-In \emph{K}-fold cross validation, we randomly split training data into \emph{K} non-overlapping sets. For each set, we train the model using hyperparameters and compute the average error rate for each hyperparameter. Finally, we select the hyperparameter of the model that gives the minimum error rate. The popular chocies for \emph{K} are 5 and 10. We will use 10 in this project.
+In \emph{K}-fold cross-validation, we randomly split training data into \emph{K} non-overlapping sets. For each set, we train the model using hyperparameters and compute the error rates. Then, we average the error rate for each hyperparameter. Finally, we select the hyperparameter of the model that gives the minimum error rate. The popular choices for \emph{K} are 5 and 10, as discussed in the course textbook. In this project, we use 10 folds. 
 
 ```{r,message=FALSE, warning=FALSE}
 ################################
@@ -107,9 +106,9 @@ rm(liverData)
 
 ```
 
-Both training and validation datasets have distributions of patients with and with no disease.
+Both training and validation datasets contain records of patients with and with no liver disease.
 \begin{itemize}
-\item The variable \emph{Dataset} indicates that if the liver is healthy or damaged. For instance, a value of 1 refers to disease. And, a value 2 means that liver is health.
+\item The variable \emph{Dataset} in our indicates that if the liver is healthy or damaged. For instance, a value of 1 refers to disease. And, a value 2 means that the liver is healthy.
 \end{itemize}
 
 ```{r}
@@ -121,7 +120,7 @@ table(validation$Dataset)
 
 ```
 
-\section{Metrics}
+\section{Evaluation Metrics}
 \label{sec:metrics}
 To evaluate the performance of classifiers, we use the following metrics:
 
@@ -157,7 +156,7 @@ Specificity = \frac{Number of True Negatives} {Number of True Negatives + Number
 \end{equation}
 
 \item \textbf{F1 Score}
-F1 score is a function of Precision and Recall. F1 Score is a better measure to use if we need to seek a balance between Precision and Recall. And, there is an uneven class distribution.
+F1 score is a harmonic mean between Precision and Recall. F1 Score is a better measure if we need to seek a balance between Precision and Recall. And, there is an uneven class distribution. 
 
 
 \begin{equation}
@@ -165,24 +164,27 @@ F1 Score = 2 * \frac{Precision * Recall} {Precision + Recall}
 \end{equation}
 
 \item \textbf{Cohen's Kappa}
-Cohen's Kappa (or simple kappa) measures inter-rater reliability (sometimes called interobserver agreement) and is often used to analyse the performance of classifiers. The kappa statistic measures the percentage of data values in the main diagonal of the table and then adjusts the values for the amount of agreement that could be expected due to chance alone.
+Cohen's Kappa (or simple kappa) measures inter-rater reliability and is often used to analyse the performance of classifiers. The kappa statistic measures the percentage of data values in the main diagonal of the table and then adjusts the values for the amount of agreement that could be expected due to chance alone.
 
 \end{enumerate}
 
-The values of all metrics range from 0 to 1. Higher the value better is the metric.
+The values of all metrics range from 0 to 1. Higher the value better is the metric and the performance of the model.
+
+The statistical measurements of accuracy and precision reveal the necessary reliability of a test. Specificity is the ability of a test to exclude individuals who do not have a given disease correctly, and sensitivity is the ability of a test to identify people who have a given disease accurately. On the other hand, the F1 score is the harmonic mean of Precision and Recall and gives a better measure of the incorrectly classified cases than the accuracy metric. And, the kappa metric measures the inter-rater reliability.
 
 \section{Data Exploration}
 \label{sec:exploration}
-The dataset contains 11 variables, namely, "Age", "Gender", "Total_Bilirubin", "Direct_Bilirubin","Alkaline_Phosphotase","Alamine_Aminotransferase", "Aspartate_Aminotransferase","Total_Protiens", "Albumin", "Albumin_and_Globulin_Ratio", "Dataset". The 'Dataset' variable indicates if the liver has a disease or not. For instance, a value of 1 means that the liver is damaged, while a value of 2 means that the liver is healthy. 
+The dataset contains 11 variables, namely, "Age", "Gender", "Total_Bilirubin", "Direct_Bilirubin", "Alkaline_Phosphotase","Alamine_Aminotransferase", "Aspartate_Aminotransferase","Total_Protiens", "Albumin", "Albumin_and_Globulin_Ratio", "Dataset". The 'Dataset' variable indicates if the liver has a disease or not. For instance, a value of 1 means that the liver is damaged, while a value of 2 means that the liver is healthy. 
 
 
-All other variables except "Age", "Gender", and "Dataset" represent the amount of enzymes or proteins in the blood. These variables (or a subset) will be used to train our machine learning models to make diagnoses. 
+All other variables except "Age", "Gender", and "Dataset" represent the amount of enzymes or proteins in the blood. The levels of the enzymes or proteins in the blood indicate the presence of liver disease. We will use these variables to train our machine learning models to make diagnoses. 
+
 
 ```{r}
 head(training)
 ```
 
-The training dataset has 523 records. We can see that the "Albumin_and_Globulin_Ratio" variable has 4 null values. The remaining variables do not contain any null values.
+The training dataset has 523 patient records. We notice that the "Albumin_and_Globulin_Ratio" variable has 4 null values. The remaining variables do not contain any null values.
 
 \begin{itemize}
 \item The validation data also has no null values (confirmed via summary).
@@ -195,6 +197,8 @@ summary(training)
 ```
 
 ```{r}
+sprintf("Rows of validation dataset = %d", nrow(validation))
+print("=========================")
 print("Validation Dataset")
 summary(validation)
 ```
@@ -210,7 +214,7 @@ We use the traditional data science approach and replace null values with the me
 training$Albumin_and_Globulin_Ratio[is.na(training$Albumin_and_Globulin_Ratio)] <- mean(training$Albumin_and_Globulin_Ratio, na.rm=TRUE)
 ```
 
-\subsubsection{Create LiverDisease Variable}
+\subsubsection{Create 'LiverDisease' Variable}
 To improve readability, we create a new variable, namely, "LiverDisease", which will have one of the following values: 
 \begin{enumerate}
 \item Malignant (M) indicating that the patient has liver disease.
@@ -227,14 +231,14 @@ We further delete the "Dataset" variable as it is no longer needed. We apply the
 training <- transform(training, LiverDisease= ifelse(Dataset==1, "M","B"))
 validation <- transform(validation, LiverDisease= ifelse(Dataset==1, "M","B"))
 
-# Deleting the column 'Dataset' as no longer required
+# Deleting the column 'Dataset''' as no longer required
 training<-within(training, rm(Dataset))
 validation<-within(validation, rm(Dataset))
 
 # Displaying the first six rows
 head(training)
 ```
-The training data has 28% of the patient records, which has no liver damage or dieases. The rest of the patients have a liver damage.
+The training data has 28% of the patient records, which has no liver damage. The rest of the patients have a liver damage.
 
 ```{r}
 summary(training$LiverDisease)/nrow(training)*100.0
@@ -268,7 +272,7 @@ age_stats %>% ggplot(aes(Age, Count)) +
   ggtitle("Distribution of Patient Ages")
 
 ```
-Now, we breakdown the distribution of ages to the presence or absence of liver diseases. We notice a good spread of age group for both scenarios.
+Now, we breakdown the distribution of ages to the presence or absence of liver diseases. Again, we notice a good spread of age group for both scenarios.
 
 ```{r}
 # Plotting distributions of ages based on liver diseases
@@ -290,7 +294,8 @@ Both "Gender" and "Age" variables are not used to train the model. These variabl
 summary(training$Gender)
 ```
 
-\subsection{Total_Bilirubin and Direct_Bilirubin}
+\subsection{Total and Direct Bilirubins}
+
 Bilirubin refers to any form of a yellowish pigment made in the liver when red blood cells are broken down. The elevated levels of bilirubin indicate that the liver is damaged. We find a similar trend with these variables that levels of bilirubin are high for patients with liver diseases.  
 
 ```{r}
@@ -338,7 +343,7 @@ training %>%
   ggtitle("Distribution of Alkaline Phosphotase based on liver disease")
 ```
  
-\subsection{Alamine_Aminotransferase and Aspartate_Aminotransferase}
+\subsection{Alamine and Aspartate Aminotransferases}
 Aminotransferases are enzymes that are important in the synthesis of amino acids, which form proteins. Alanine aminotransferase (ALT) and Aspartate aminotransferase (AST) are found primarily in the liver and kidney. High levels of ALT and AST are expected for patients with liver diseases. We also notice slightly elevated levels of these enzymes for patients with liver diseases in our dataset. 
 
 ```{r}
@@ -401,7 +406,7 @@ training %>%
   ggtitle("Distribution of Albumin based on liver disease") 
 ```
 
-\subsection{Albumin_and_Globulin_Ratio (AG)}
+\subsection{Albumin and Globulin Ratio (AG)}
 These proteins are crucial for body growth, development, and health. They form the structural part of most organs and makeup enzymes that regulate body functions. The low ratios of AG refer to liver issues, and we notice the same trend from distributions plot. 
 
 ```{r}
@@ -416,22 +421,25 @@ training %>%
 
 \section{Methods}
 \label{sec:methods}
-Based on the discussion in Section \ref{sec:dataanalysis}, we will not use "Age" and "Total Protein" variables to train the machine learning models. So, we remove these variables from both training and validation datasets. Then, we predict the liver disease using all the remaining variables of the dataset.
+Based on the discussion in Section \ref{sec:dataanalysis}, we will not use "Age","Gender", and "Total Protein" variables to train the machine learning models. So, we remove these variables from both training and validation datasets. Then, we predict the "LiverDisease" variable using all the remaining variables of the dataset.
 
 ```{r}
 # Removing the variables 'Age' and 'Dataset' 
-training<-within(training, rm(Age,Total_Protiens))
-validation<-within(validation, rm(Age,Total_Protiens))
+training<-within(training, rm(Age,Gender,Total_Protiens))
+validation<-within(validation, rm(Age,Gender,Total_Protiens))
 
 ```
 
 
-For data pre-processing, we remove zero-variance predictors and then center and scale all those remaining using the preProc argument. Feature scaling is one of the most critical steps during the pre-processing of data before creating a machine learning model. It can make a significant difference between a weak machine learning model and a better one.
+For data pre-processing, we remove zero-variance predictors and then center and scale all those remaining using the preProc argument. The scaled features are then used to train the models. The feature scaling is one of the most critical steps of pre-processing data before creating a machine learning model. It can make a significant difference between a weak machine learning model and a better one.
+
+In this section, we use various machine learning models. Most of them were discussed in the course textbook. While some new are used based on claims that models provide a good classification. For all models, we use cross-validation of 10 folds and tune the hyperparameters (if possible). For each fold, we split data into 90% training and 10% test set.
 
 \subsection{Logistic Regression}
-We use \emph{glm} method with cross-validation of 10 folds to train the model. 
+We use \emph{glm} method to train the model. There is no parameter tuning involved.
 
 ```{r,warning=FALSE, message=FALSE}
+
 # Defining a cross-validation (10 K folds )
 control <- trainControl(method = "cv", number =10 , p = 0.9)
 
@@ -449,26 +457,29 @@ sprintf("The accuracy of GLM = %f",train_glm$results$Accuracy)
 model_results <- data_frame(method = "glm", Accuracy = train_glm$results$Accuracy)
 ```
 \subsection{K-nearest neigbors (knn)}
-We use \emph{knn} method with cross-validation of 10 folds to train the model. We tune the model with several values of \emph{k}, ranging from 3 to 51, to optimize the performance. 
+We use \emph{knn} method to train the model. We tune the model with several values of \emph{k}, ranging from 3 to 51, to optimize the performance. 
 
 
 ```{r,warning=FALSE,message=FALSE}
 
 set.seed(1)
-# Defining a cross validation (10 K folds )
-control <- trainControl(method = "repeatedcv", number = 10, repeats=5)
+# Defining a cross-validation (10 K folds )
+control <- trainControl(method = "cv", number =10 , p = 0.9)
+
+# Define tuning parameters
+tune_grid <- expand.grid(k = seq(3, 51, 2))
 
 # Train knn model
 train_knn <- train(LiverDisease~ .,
                    method = "knn", 
                    preProc = c("zv","center", "scale"),
                    data = training,
-                   tuneGrid = data.frame(k = seq(3, 51, 2)),
+                   tuneGrid = tune_grid,
                    trControl = control)
 
 # Plot the model and highlight the best result
 ggplot(train_knn, highlight = TRUE) +
-  ggtitle(paste("The best accuracy = ",round(max(train_knn$results$Accuracy),3)))
+  ggtitle(paste("The best accuracy = ",round(max(train_knn$results$Accuracy),3), " K =",train_knn$bestTune$k))
 
 # Storing the results
 model_results <- bind_rows(model_results,data_frame(method="knn",  
@@ -476,13 +487,13 @@ model_results <- bind_rows(model_results,data_frame(method="knn",
 
 ```
 \subsection{Local Regression}
-We use \emph{loess} method with cross-validation of 10 folds to train the model. We tune the \textbf{span} and \textbf{degree} parameters to optimize the performance of the model.
+We use \emph{loess} method to train the model. We tune the \textbf{span} and \textbf{degree} parameters to optimize the performance of the model.
 
 ```{r, warning=FALSE, message=FALSE}
 set.seed(1)
 
-# Defining a cross validation (10 K folds )
-control <- trainControl(method = "repeatedcv", number = 10, repeats=5)
+# Defining a cross-validation (10 K folds )
+control <- trainControl(method = "cv", number =10 , p = 0.9)
 
 # Define tuning parameters
 tune_grid <- expand.grid(span = seq(0.15, 0.65, len = 15), degree = seq(0,1,0.25))
@@ -497,8 +508,9 @@ train_loess <- train(LiverDisease~.,
 
 # Plot the model and highlight the best result
 ggplot(train_loess, highlight = TRUE) +
-  ggtitle(paste("The best accuracy = ",round(max(train_loess$results$Accuracy),3)))
-
+  ggtitle(paste("The best accuracy = ",round(max(train_loess$results$Accuracy),3),
+                "Span = ", round(train_loess$bestTune$span,3),
+                "Degree = ", round(train_loess$bestTune$degree,1)))
 
 # Storing the results
 model_results <- bind_rows(model_results,data_frame(method="loess",  
@@ -508,7 +520,7 @@ model_results <- bind_rows(model_results,data_frame(method="loess",
 ```
 
 \subsection{Partial Least Squares (PLS)}
-We use \emph{pls} method with cross-validation of 10 folds to train the model. We tune the \textbf{ncomp} parameter to optimize the performance of the model.
+We use \emph{pls} method to train the model. We tune the \textbf{ncomp} parameter to optimize the performance of the model.
 
 ```{r, warning=FALSE, message=FALSE}
 set.seed(1)
@@ -516,8 +528,8 @@ set.seed(1)
 # Define tuning parameters
 tune_grid <- expand.grid(ncomp = seq(1,5, len = 10))
 
-# Defining a cross validation (10 K folds )
-control <- trainControl(method = "repeatedcv", number = 10, repeats=5)
+# Defining a cross-validation (10 K folds )
+control <- trainControl(method = "cv", number =10 , p = 0.9)
 
 # Train the model
 train_pls <- train(LiverDisease~.,
@@ -529,7 +541,8 @@ train_pls <- train(LiverDisease~.,
 
 # Plot the model and highlight the best result
 ggplot(train_pls, highlight = TRUE) +
-  ggtitle(paste("The best accuracy = ",round(max(train_pls$results$Accuracy),3)))
+  ggtitle(paste("The best accuracy = ",round(max(train_pls$results$Accuracy),3),
+                "Ncomp= ",train_pls$bestTune$ncomp))
 
 
 # Storing the results
@@ -540,12 +553,12 @@ model_results <- bind_rows(model_results,data_frame(method="pls",
 ```
 
 \subsection{Linear Discriminant Analysis (LDA)}
-The \emph{lda} is a statistical classifier, and we use this method with cross-validation of 10 folds for training. There is no parameter to tune for this model.
+The \emph{lda} is a statistical classifier, and we use this method for training. There is no parameter to tune for this model.
 
 ```{r, warning=FALSE, message=FALSE}
 set.seed(1)
-# Defining a cross validation (10 K folds )
-control <- trainControl(method = "repeatedcv", number=10, repeats=5)
+# Defining a cross-validation (10 K folds )
+control <- trainControl(method = "cv", number =10 , p = 0.9)
 
 # Train the model
 train_lda <- train(LiverDisease~., 
@@ -564,12 +577,12 @@ model_results <- bind_rows(model_results,data_frame(method="lda",
 ```
 
 \subsection{Quadratic Discriminant Analysis (QDA)}
-The \emph{qda} is a statistical classifier, and we use the method with cross-validation of 10 folds for training. There is no parameter to tune for this model.
+The \emph{qda} is a statistical classifier, and we use the method for training. There is no parameter to tune for this model.
 
 ```{r, warning=FALSE, message=FALSE}
 set.seed(1)
-# Defining a cross validation (10 K folds )
-control <- trainControl(method = "repeatedcv", number=10, repeats=5)
+# Defining a cross-validation (10 K folds )
+control <- trainControl(method = "cv", number =10 , p = 0.9)
 
 # Train the model
 train_qda <- train(LiverDisease~.,
@@ -588,13 +601,16 @@ model_results <- bind_rows(model_results,data_frame(method="qda",
 ```
 \subsection{Decision Tress}
 
-We use \emph{raprt} method with cross-validation of 10 folds for training. We tune the \emph{cp} parameter to optimize the performance of the model.
+We use \emph{raprt} method with cross-validation for training. We tune the \emph{cp} parameter to optimize the performance of the model.
 
 ```{r, warning=FALSE, message=FALSE}
 set.seed(1)
 
-# Defining a cross validation (10 K folds )
-control <- trainControl(method = "repeatedcv", number = 10, repeats=5)
+# Defining a cross-validation (10 K folds )
+control <- trainControl(method = "cv", number =10 , p = 0.9)
+
+# Define tuning parameters
+tune_grid <- expand.grid(cp = seq(0, 0.08, len = 10))
 
 # Train the model
 train_rpart <- train(LiverDisease~., 
@@ -602,11 +618,12 @@ train_rpart <- train(LiverDisease~.,
                      preProc = c("zv","center", "scale"),
                      data = training,
                      trControl = control,
-                     tuneGrid = data.frame(cp = seq(0, 0.08, len = 10)))
+                     tuneGrid = tune_grid)
 
 # Plot the model and highlight the best result
 ggplot(train_rpart, highlight = TRUE) +
-  ggtitle(paste("The best accuracy = ",round(max(train_rpart$results$Accuracy),3)))
+  ggtitle(paste("The best accuracy = ",round(max(train_rpart$results$Accuracy),3),
+                "CP = ", round(train_rpart$bestTune$cp,2)))
 
 # Storing the results
 model_results <- bind_rows(model_results,data_frame(method="rpart",  
@@ -615,13 +632,16 @@ model_results <- bind_rows(model_results,data_frame(method="rpart",
 
 ```
 \subsection{Random Forests}
-We use \emph{rf} method with cross-validation of 10 folds for training. We tune the \emph{mtry} parameter to optimize the performance of the model.
+We use \emph{rf} method to train the model. We tune the \emph{mtry} parameter to optimize the performance of the model.
 
 ```{r, warning=FALSE, message=FALSE}
 set.seed(1)
 
-# Defining a cross validation (10 K folds )
-control <- trainControl(method = "repeatedcv", number = 10, repeats=5)
+# Defining a cross-validation (10 K folds )
+control <- trainControl(method = "cv", number =10 , p = 0.9)
+
+# Define tuning parameters
+tune_grid <- expand.grid(mtry=seq(1,7))
 
 # Train the model
 train_rf <- train(LiverDisease~.,
@@ -629,12 +649,13 @@ train_rf <- train(LiverDisease~.,
                      preProc = c("zv","center", "scale"),
                      data = training,
                      trControl = control,
-                     tuneGrid = data.frame(mtry=seq(1,7)),
+                     tuneGrid = tune_grid,
                      ntree=100)
 
 # Plot the model and highlight the best result
 ggplot(train_rf, highlight = TRUE) +
-  ggtitle(paste("The best accuracy = ",round(max(train_rf$results$Accuracy),3)))
+  ggtitle(paste("The best accuracy = ",round(max(train_rf$results$Accuracy),3),
+                "Mtry = ", round(train_rf$bestTune$mtry,1)))
 
 # Storing the results
 model_results <- bind_rows(model_results,data_frame(method="rf",  
@@ -642,23 +663,30 @@ model_results <- bind_rows(model_results,data_frame(method="rf",
 
 ```
 \subsection{Support Vector Machine}
-We use support vector machine with cross-validation of 10 folds for training. We tune the \emph{tau} parameter to optimize the performance of the model.
+We use support vector machine for training. We tune the \emph{tau} parameter to optimize the performance of the model.
 
 ```{r, warning=FALSE, message=FALSE}
 set.seed(1)
 
-# Defining a cross validation (10 K folds )
-control <- trainControl(method = "repeatedcv", number = 10, repeats = 5)
+# Defining a cross-validation (10 K folds )
+control <- trainControl(method = "cv", number =10 , p = 0.9)
+
+# Define tuning parameters
+tune_grid <- expand.grid(tau=seq(1,8))
 
 # Train the model
 train_svm <- train(LiverDisease~.,
                    preProc = c("zv","center", "scale"),
                    data = training,
                    method = "svmLinear",
-                   tune_grid= data.frame(tau=seq(1,10)),
+                   tune_grid= tune_grid,
                    trControl = control)
 
-sprintf("The accuracy of svm = %f",max(train_svm$results$Accuracy))
+# Plot the model and highlight the best result
+ggplot(train_rf, highlight = TRUE) +
+  ggtitle(paste("The best accuracy = ",round(max(train_svm$results$Accuracy),3),
+                "Tua = ", round(train_svm$bestTune$C,1)))
+
 
 # Storing the results
 model_results <- bind_rows(model_results,data_frame(method="svm",  
@@ -667,17 +695,15 @@ model_results <- bind_rows(model_results,data_frame(method="svm",
 ```
 
 \subsection{Adaptive Boosting (Adaboost)}
-AdaBoost is a machine learning meta-algorithm for classification. We train the model with cross-validation of 10 folds.
+AdaBoost is a machine learning meta-algorithm for classification. We use the \emph{ada} method to train the model with no parameter tuning. 
 
 ```{r}
 set.seed(1)
 
-# Defining a cross validation (10 K folds )
-control <- trainControl(method = "repeatedcv", number = 10, repeats = 5)
+# Defining a cross-validation (10 K folds )
+control <- trainControl(method = "cv", number =10 , p = 0.9)
 
-# Tuning the model
-tune_grid  = expand.grid(method = c("Adaboost.M1", "Real adaboost"))
- 
+# Train the model
 train_ada <- train(LiverDisease~.,
                    preProc = c("zv","center", "scale"),
                    data = training,
@@ -693,20 +719,24 @@ model_results <- bind_rows(model_results,data_frame(method="ada",
 ```
 
 \subsection{Random Forest with PCA}
-We apply principal component analysis on data and then use \emph{rf} method to train the model with cross-validation of 10 folds. We utilize the same tuning, which was used before with the random forest model.
+We apply principal component analysis on data and then use \emph{rf} method to train the model. We use the same tuning, which was used before with the random forest model.
 
 ```{r}
 set.seed(1)
 
-# Defining a cross validation (10 K folds )
-control <- trainControl(method = "repeatedcv", number = 10, repeats=5)
+# Defining a cross-validation (10 K folds )
+control <- trainControl(method = "cv", number =10 , p = 0.9)
+
+# Define tuning parameters
+tune_grid <- expand.grid(mtry=seq(1,7))
+
 # Train the model
 train_rf_pca <- train(LiverDisease~.,
                      method = "rf",
                      preProc = c("zv","center", "scale"),
                      data = training,
                      trControl = control,
-                     tuneGrid = data.frame(mtry=seq(1,7)),
+                     tuneGrid = tune_grid,
                      preProcess=c("pca"),
                      ntree=100)
 
@@ -750,9 +780,7 @@ bwplot(results)
 
 \section{Results}
 \label{sec:results}
-The statistical measurements of accuracy and precision reveal the necessary reliability of a test. Specificity is the ability of a test to exclude individuals who do not have a given disease correctly, and sensitivity is the ability of a test to identify people who have a given disease accurately. On the other hand, the F1 score is the harmonic mean of Precision and Recall and gives a better measure of the incorrectly classified cases than the accuracy metric. And, the kappa metric measures the inter-rater reliability.
-
-In Section \ref{sec:methods}, we trained several models using training data. Now, we will evaluate the performance of these models using validation data. We have not used \textbf{qda} model due to poor performance on training data. The results show that \textbf{rf} and \emph{rf_pca} models performs best in terms of precision and recall. However, the models have slightly lower sensitivity and specificity compared to other models. But, the \textbf{rf_pca} model gives the best kappa value and is significantly better than the remaining ones. So, we can deduce that overall, \textbf{rf_pca} performs the best compared to other models.
+In Section \ref{sec:methods}, we trained several models using training data. Now, we will evaluate the performance of these models using validation data. We have not used \textbf{qda} model in the evaluation due to poor performance on training data. The results show that \textbf{rf} and \emph{rf_pca} models performs best in terms of precision and recall. The kappa measure of \textbf{rf_pca} is also significantly better than the remaining models. However, both models have slightly lower sensitivity and specificity compared to other models. Based on results, we can hypothesize that as a whole \textbf{rf_pca} model performs the best compared to other models.
 
 
 ```{r}
@@ -956,7 +984,6 @@ ml_results <- bind_rows(ml_results, data_frame(Models = "Ensemble",
              Kappa= kappa))
 ```
 
-From the results, we can see that \emph{rf_pca} performs the best compared to the other models. We saw a significant improvement in \emph{kappa} and \emph{Specifivity} measures compared to the other models. Though, the model has a slightly lower sensitivity compared to the other models. 
 
 ```{r}
 ml_results
@@ -964,11 +991,15 @@ ml_results
 
 \section{Conclusion}
 \label{sec:conclusion}
-In this project, we developed machine learning models to diagnose liver disease by analysing protein levels in the blood. We used patients' liver records collected from India.  We found out that some variables did not correlate with the presence or absence of liver disease. So, we ignored those variables and used the remaining variables to train the model. 
+In this project, we developed machine learning models to diagnose liver disease by analyzing protein levels in the blood. We used patients' liver records collected from India.  We found out that some variables did not correlate with the presence or absence of liver disease. So, we ignored those variables and used the remaining variables to train the model to diagnose liver disease. 
 
-The results show that \emph{rf+pca} performed the best on the validation dataset. We tried to further improve the results by combining the outputs of several models. The idea was to use votes to decide if the liver has a disease. If more than 50% of the models predict a disease, then we consider that the liver is damaged. But, the resulting model did not perform well.
+The results show that \emph{$rf_pca$} performed the best on the validation dataset. We tried to further improve the results by combining the outputs of several models. The idea was to use votes to decide if the liver has a disease or not. If more than 50% of the models predict a disease, then we consider that the liver is damaged. But, the resulting model did not perform well.
 
-All models seem to overfit the data, and we end up getting more "Malignant" cases. The \emph{rf_pca} performs better, and we can correctly predict some "Benign" cases. The only reason we can think of is data is imbalanced. Ideally, both classes should have an equal distribution for patient records to train robust models. But, only 28% of the data belong to patients with liver disease. That's why the trained models are more biased in wrongly categorizing healthy patients. The ideal solution is to get more data to produce robust models. Alternatively, we can class weights to solve the problem of imbalanced data. We will explore the concept of class weights in future work.
+All models seem to overfit the data, and we end up getting more "Malignant" cases. The \emph{rf_pca} performs better, and we can correctly predict some "Benign" cases. The only reason we can think of is that the data is imbalanced. Ideally, both classes should have an equal distribution for patient records to train robust models. But, only 28% of the data belong to patients with liver disease. That's why the trained models are more biased in wrongly categorizing healthy patients. The ideal solution is to get more data to produce robust models. 
+
+\subsection{Future Work}
+\label{sec:futurework}
+In the future, we will explore class weights concepts to solve the problem of imbalanced data via weight balancing. The weight balancing balances our data by altering the weight that each training sample carries when computing the loss. With balanced data, each sample and class in our loss function will carry an equal weight of 1.0. But sometimes we might want certain classes or certain training samples to hold more weight if they are more important or less in number. We expect to improve our models using weight balancing. 
 
 \begin{thebibliography}{9}
 \bibitem{cad} 

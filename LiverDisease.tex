@@ -159,16 +159,16 @@ based on experience. The initial diagnosis of liver disease increases
 the survival rate of patients. Therefore, a classification algorithm
 capable of automatically detecting the liver disease can assist the
 doctors in early diagnosis of liver damage. The classification
-techniques are commonly used in various automatic medical diagnoses
-tools\cite{cad}.
+techniques are commonly used in various automated medical diagnoses
+\cite{cad}.
 
 \subsection{Aim of Project}
 \label{sec:aim}
 
-This project aims to develop a binary classifier or mahcine learning
-model, which uses information of blood enzymes to diagnose liver
-disease. That information will help doctors in making diagnosis and
-treat patients in time to save lives.
+This project aims to develop a machine learning model, which uses the
+information of blood enzymes to diagnose liver disease (binary
+classifier). The model's output can assist doctors in making early
+diagnoses and treating patients in time to save lives.
 
 \subsection{Dataset}
 \label{sec:dataset}
@@ -176,34 +176,34 @@ treat patients in time to save lives.
 We use the liver patient records data, which is collected from North
 East of Andhra Pradesh, India. The data set contains:
 
-\begin{enumerate}
-\item 416 liver patient records and 167 non-liver patient records.
-\end{enumerate}
-
-\subsubsection{Download Data}
-\label{sec:dd}
+\begin{itemize}
+\item 416 liver patient records, and 
+\item 167 non-liver patient records.
+\end{itemize}
 
 The dataset is publically available online both at Kaggle and UCI
 repository. We have downloaded data from the UCI website. Then, we split
 data into training and validation sets.
 
 \begin{itemize}
-\item The dataset is small and has only 583 patient records. So, we use a typical approach and select 10\% of the data for validation. This allows us to use most of the data (90%) to train the models. 
+\item The dataset is small and has only 583 patient records. The typical approach is to select 10-20% of the data for training. In this project, we choose 10\% of the data for testing or validation. This allows us to use most of the data (90%) to train our models. 
 \end{itemize}
 
 For training, we use \emph{K}-fold cross-validation to train our models.
 The goal of cross-validation is to determine the hyperparameters of the
-model, which give the lowest error rate or the best performance. It is a
-very useful technique for assessing the effectiveness of the model,
-particularly in cases where you need to mitigate overfitting on unseen
+model, which give the lowest error rate. The selected model is,
+therefore, the one with the best performance on training data. It is a
+useful technique for assessing the effectiveness of the model,
+particularly in cases where we need to mitigate overfitting on unseen
 data.
 
-In \emoh{K}-fold cross validation, we randomly split training data into
+In \emph{K}-fold cross-validation, we randomly split training data into
 \emph{K} non-overlapping sets. For each set, we train the model using
-hyperparameters and compute the average error rate for each
-hyperparameter. Finally, we select the hyperparameter of the model that
-gives the minimum error rate. The popular chocies for \emph{K} are 5 and
-10. We will use 10 in this project.
+hyperparameters and compute the error rates. Then, we average the error
+rate for each hyperparameter. Finally, we select the hyperparameter of
+the model that gives the minimum error rate. The popular choices for
+\emph{K} are 5 and 10, as discussed in the course textbook. In this
+project, we use 10 folds.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -268,11 +268,11 @@ gives the minimum error rate. The popular chocies for \emph{K} are 5 and
 \end{Highlighting}
 \end{Shaded}
 
-Both training and validation datasets have distributions of patients
-with and with no disease.
+Both training and validation datasets contain records of patients with
+and with no liver disease.
 
 \begin{itemize}
-\item The variable \emph{Dataset} indicates that if the liver is healthy or damaged. For instance, a value of 1 refers to disease. And, a value 2 means that liver is health.
+\item The variable \emph{Dataset} in our indicates that if the liver is healthy or damaged. For instance, a value of 1 refers to disease. And, a value 2 means that the liver is healthy.
 \end{itemize}
 
 \begin{Shaded}
@@ -320,7 +320,7 @@ with and with no disease.
 ## 41 18
 \end{verbatim}
 
-\section{Metrics}
+\section{Evaluation Metrics}
 \label{sec:metrics}
 
 To evaluate the performance of classifiers, we use the following
@@ -358,7 +358,7 @@ Specificity = \frac{Number of True Negatives} {Number of True Negatives + Number
 \end{equation}
 
 \item \textbf{F1 Score}
-F1 score is a function of Precision and Recall. F1 Score is a better measure to use if we need to seek a balance between Precision and Recall. And, there is an uneven class distribution.
+F1 score is a harmonic mean between Precision and Recall. F1 Score is a better measure if we need to seek a balance between Precision and Recall. And, there is an uneven class distribution. 
 
 
 \begin{equation}
@@ -366,19 +366,28 @@ F1 Score = 2 * \frac{Precision * Recall} {Precision + Recall}
 \end{equation}
 
 \item \textbf{Cohen's Kappa}
-Cohen's Kappa (or simple kappa) measures inter-rater reliability (sometimes called interobserver agreement) and is often used to analyse the performance of classifiers. The kappa statistic measures the percentage of data values in the main diagonal of the table and then adjusts the values for the amount of agreement that could be expected due to chance alone.
+Cohen's Kappa (or simple kappa) measures inter-rater reliability and is often used to analyse the performance of classifiers. The kappa statistic measures the percentage of data values in the main diagonal of the table and then adjusts the values for the amount of agreement that could be expected due to chance alone.
 
 \end{enumerate}
 
 The values of all metrics range from 0 to 1. Higher the value better is
-the metric.
+the metric and the performance of the model.
+
+The statistical measurements of accuracy and precision reveal the
+necessary reliability of a test. Specificity is the ability of a test to
+exclude individuals who do not have a given disease correctly, and
+sensitivity is the ability of a test to identify people who have a given
+disease accurately. On the other hand, the F1 score is the harmonic mean
+of Precision and Recall and gives a better measure of the incorrectly
+classified cases than the accuracy metric. And, the kappa metric
+measures the inter-rater reliability.
 
 \section{Data Exploration}
 \label{sec:exploration}
 
 The dataset contains 11 variables, namely, ``Age'', ``Gender'',
-``Total\_Bilirubin'',
-``Direct\_Bilirubin'',``Alkaline\_Phosphotase'',``Alamine\_Aminotransferase'',
+``Total\_Bilirubin'', ``Direct\_Bilirubin'',
+``Alkaline\_Phosphotase'',``Alamine\_Aminotransferase'',
 ``Aspartate\_Aminotransferase'',``Total\_Protiens'', ``Albumin'',
 ``Albumin\_and\_Globulin\_Ratio'', ``Dataset''. The `Dataset' variable
 indicates if the liver has a disease or not. For instance, a value of 1
@@ -386,8 +395,9 @@ means that the liver is damaged, while a value of 2 means that the liver
 is healthy.
 
 All other variables except ``Age'', ``Gender'', and ``Dataset''
-represent the amount of enzymes or proteins in the blood. These
-variables (or a subset) will be used to train our machine learning
+represent the amount of enzymes or proteins in the blood. The levels of
+the enzymes or proteins in the blood indicate the presence of liver
+disease. We will use these variables to train our machine learning
 models to make diagnoses.
 
 \begin{Shaded}
@@ -395,7 +405,6 @@ models to make diagnoses.
 \KeywordTok{head}\NormalTok{(training)}
 \end{Highlighting}
 \end{Shaded}
-
 \begin{longtable}[]{@{}rlrrrrrrrrr@{}}
 \toprule
 Age & Gender & Total\_Bilirubin & Direct\_Bilirubin &
@@ -419,7 +428,7 @@ Albumin\_and\_Globulin\_Ratio & Dataset\tabularnewline
 \bottomrule
 \end{longtable}
 
-The training dataset has 523 records. We can see that the
+The training dataset has 523 patient records. We notice that the
 ``Albumin\_and\_Globulin\_Ratio'' variable has 4 null values. The
 remaining variables do not contain any null values.
 
@@ -478,6 +487,26 @@ remaining variables do not contain any null values.
 ##  3rd Qu.:7.20   3rd Qu.:3.800   3rd Qu.:1.1000             3rd Qu.:2.000  
 ##  Max.   :9.60   Max.   :5.500   Max.   :2.8000             Max.   :2.000  
 ##                                 NA's   :4
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{sprintf}\NormalTok{(}\StringTok{"Rows of validation dataset = %d"}\NormalTok{, }\KeywordTok{nrow}\NormalTok{(validation))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "Rows of validation dataset = 59"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{print}\NormalTok{(}\StringTok{"========================="}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "========================="
 \end{verbatim}
 
 \begin{Shaded}
@@ -541,7 +570,7 @@ with the mean of the ``Albumin\_and\_Globulin\_Ratio'' variable.
 \end{Highlighting}
 \end{Shaded}
 
-\subsubsection{Create LiverDisease Variable}
+\subsubsection{Create 'LiverDisease' Variable}
 
 To improve readability, we create a new variable, namely,
 ``LiverDisease'', which will have one of the following values:
@@ -562,7 +591,7 @@ apply these operations to both training and validation datasets.
 \NormalTok{training <-}\StringTok{ }\KeywordTok{transform}\NormalTok{(training, }\DataTypeTok{LiverDisease=} \KeywordTok{ifelse}\NormalTok{(Dataset}\OperatorTok{==}\DecValTok{1}\NormalTok{, }\StringTok{"M"}\NormalTok{,}\StringTok{"B"}\NormalTok{))}
 \NormalTok{validation <-}\StringTok{ }\KeywordTok{transform}\NormalTok{(validation, }\DataTypeTok{LiverDisease=} \KeywordTok{ifelse}\NormalTok{(Dataset}\OperatorTok{==}\DecValTok{1}\NormalTok{, }\StringTok{"M"}\NormalTok{,}\StringTok{"B"}\NormalTok{))}
 
-\CommentTok{# Deleting the column 'Dataset' as no longer required}
+\CommentTok{# Deleting the column 'Dataset''' as no longer required}
 \NormalTok{training<-}\KeywordTok{within}\NormalTok{(training, }\KeywordTok{rm}\NormalTok{(Dataset))}
 \NormalTok{validation<-}\KeywordTok{within}\NormalTok{(validation, }\KeywordTok{rm}\NormalTok{(Dataset))}
 
@@ -595,7 +624,7 @@ M\tabularnewline
 \end{longtable}
 
 The training data has 28\% of the patient records, which has no liver
-damage or dieases. The rest of the patients have a liver damage.
+damage. The rest of the patients have a liver damage.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -611,9 +640,9 @@ damage or dieases. The rest of the patients have a liver damage.
 \section{Data Analysis}
 \label{sec:dataanalysis}
 
-In this section, we extract insights from all variables to get an
-in-depth understanding before using them to train the machine learning
-models.
+In this section, we explore data and extract insights from all variables
+to get an in-depth understanding before using them to train the machine
+learning models.
 
 \subsection{Age}
 
@@ -661,7 +690,8 @@ dataset is unbiased towards a specific age group.
 
 \includegraphics{LiverDisease_files/figure-latex/unnamed-chunk-11-1.pdf}
 Now, we breakdown the distribution of ages to the presence or absence of
-liver diseases. We notice a good spread of age group for both scenarios.
+liver diseases. Again, we notice a good spread of age group for both
+scenarios.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -699,7 +729,8 @@ These variables provide descriptive information.
 ##    123    400
 \end{verbatim}
 
-\textbackslash subsection\{Total\_Bilirubin and Direct\_Bilirubin\}
+\subsection{Total and Direct Bilirubins}
+
 Bilirubin refers to any form of a yellowish pigment made in the liver
 when red blood cells are broken down. The elevated levels of bilirubin
 indicate that the liver is damaged. We find a similar trend with these
@@ -777,14 +808,14 @@ disease, and we notice a similar trend in our dataset.
 
 \includegraphics{LiverDisease_files/figure-latex/unnamed-chunk-17-1.pdf}
 
-\textbackslash subsection\{Alamine\_Aminotransferase and
-Aspartate\_Aminotransferase\} Aminotransferases are enzymes that are
-important in the synthesis of amino acids, which form proteins. Alanine
-aminotransferase (ALT) and Aspartate aminotransferase (AST) are found
-primarily in the liver and kidney. High levels of ALT and AST are
-expected for patients with liver diseases. We also notice slightly
-elevated levels of these enzymes for patients with liver diseases in our
-dataset.
+\subsection{Alamine and Aspartate Aminotransferases}
+
+Aminotransferases are enzymes that are important in the synthesis of
+amino acids, which form proteins. Alanine aminotransferase (ALT) and
+Aspartate aminotransferase (AST) are found primarily in the liver and
+kidney. High levels of ALT and AST are expected for patients with liver
+diseases. We also notice slightly elevated levels of these enzymes for
+patients with liver diseases in our dataset.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -882,11 +913,12 @@ notice a similar trend in our dataset.
 
 \includegraphics{LiverDisease_files/figure-latex/unnamed-chunk-22-1.pdf}
 
-\textbackslash subsection\{Albumin\_and\_Globulin\_Ratio (AG)\} These
-proteins are crucial for body growth, development, and health. They form
-the structural part of most organs and makeup enzymes that regulate body
-functions. The low ratios of AG refer to liver issues, and we notice the
-same trend from distributions plot.
+\subsection{Albumin and Globulin Ratio (AG)}
+
+These proteins are crucial for body growth, development, and health.
+They form the structural part of most organs and makeup enzymes that
+regulate body functions. The low ratios of AG refer to liver issues, and
+we notice the same trend from distributions plot.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -906,34 +938,41 @@ same trend from distributions plot.
 \label{sec:methods}
 
 Based on the discussion in Section \ref{sec:dataanalysis}, we will not
-use ``Age'' and ``Total Protein'' variables to train the machine
-learning models. So, we remove these variables from both training and
-validation datasets. Then, we predict the liver disease using all the
-remaining variables of the dataset.
+use ``Age'',``Gender'', and ``Total Protein'' variables to train the
+machine learning models. So, we remove these variables from both
+training and validation datasets. Then, we predict the ``LiverDisease''
+variable using all the remaining variables of the dataset.
 
 \begin{Shaded}
 \begin{Highlighting}[]
 \CommentTok{# Removing the variables 'Age' and 'Dataset' }
-\NormalTok{training<-}\KeywordTok{within}\NormalTok{(training, }\KeywordTok{rm}\NormalTok{(Age,Total_Protiens))}
-\NormalTok{validation<-}\KeywordTok{within}\NormalTok{(validation, }\KeywordTok{rm}\NormalTok{(Age,Total_Protiens))}
+\NormalTok{training<-}\KeywordTok{within}\NormalTok{(training, }\KeywordTok{rm}\NormalTok{(Age,Gender,Total_Protiens))}
+\NormalTok{validation<-}\KeywordTok{within}\NormalTok{(validation, }\KeywordTok{rm}\NormalTok{(Age,Gender,Total_Protiens))}
 \end{Highlighting}
 \end{Shaded}
 
 For data pre-processing, we remove zero-variance predictors and then
-center and scale all those remaining using the preProc argument. Feature
-scaling is one of the most critical steps during the pre-processing of
-data before creating a machine learning model. It can make a significant
-difference between a weak machine learning model and a better one.
+center and scale all those remaining using the preProc argument. The
+scaled features are then used to train the models. The feature scaling
+is one of the most critical steps of pre-processing data before creating
+a machine learning model. It can make a significant difference between a
+weak machine learning model and a better one.
+
+In this section, we use various machine learning models. Most of them
+were discussed in the course textbook. While some new are used based on
+claims that models provide a good classification. For all models, we use
+cross-validation of 10 folds and tune the hyperparameters (if possible).
+For each fold, we split data into 90\% training and 10\% test set.
 
 \subsection{Logistic Regression}
 
-We use \emph{glm} method with cross-validation of 10 folds to train the
-model.
+We use \emph{glm} method to train the model. There is no parameter
+tuning involved.
 
 \begin{Shaded}
 \begin{Highlighting}[]
 \CommentTok{# Defining a cross-validation (10 K folds )}
-\NormalTok{control <-}\StringTok{ }\KeywordTok{trainControl}\NormalTok{(}\DataTypeTok{method =} \StringTok{"repeatedcv"}\NormalTok{, }\DataTypeTok{number =}\DecValTok{10}\NormalTok{, }\DataTypeTok{repeats =} \DecValTok{5}\NormalTok{,}\DataTypeTok{p =} \FloatTok{0.9}\NormalTok{)}
+\NormalTok{control <-}\StringTok{ }\KeywordTok{trainControl}\NormalTok{(}\DataTypeTok{method =} \StringTok{"cv"}\NormalTok{, }\DataTypeTok{number =}\DecValTok{10}\NormalTok{ , }\DataTypeTok{p =} \FloatTok{0.9}\NormalTok{)}
 
 \CommentTok{# Train logistic regression model}
 \NormalTok{train_glm <-}\StringTok{ }\KeywordTok{train}\NormalTok{(LiverDisease }\OperatorTok{~}\NormalTok{., }
@@ -948,7 +987,7 @@ model.
 \end{Shaded}
 
 \begin{verbatim}
-## [1] "The accuracy of GLM = 0.702495"
+## [1] "The accuracy of GLM = 0.705423"
 \end{verbatim}
 
 \begin{Shaded}
@@ -960,27 +999,30 @@ model.
 
 \subsection{K-nearest neigbors (knn)}
 
-We use \emph{knn} method with cross-validation of 10 folds to train the
-model. We tune the model with several values of \emph{k}, ranging from 3
-to 51, to optimize the performance.
+We use \emph{knn} method to train the model. We tune the model with
+several values of \emph{k}, ranging from 3 to 51, to optimize the
+performance.
 
 \begin{Shaded}
 \begin{Highlighting}[]
 \KeywordTok{set.seed}\NormalTok{(}\DecValTok{1}\NormalTok{)}
-\CommentTok{# Defining a cross validation (10 K folds )}
-\NormalTok{control <-}\StringTok{ }\KeywordTok{trainControl}\NormalTok{(}\DataTypeTok{method =} \StringTok{"repeatedcv"}\NormalTok{, }\DataTypeTok{number =} \DecValTok{10}\NormalTok{, }\DataTypeTok{repeats=}\DecValTok{5}\NormalTok{)}
+\CommentTok{# Defining a cross-validation (10 K folds )}
+\NormalTok{control <-}\StringTok{ }\KeywordTok{trainControl}\NormalTok{(}\DataTypeTok{method =} \StringTok{"cv"}\NormalTok{, }\DataTypeTok{number =}\DecValTok{10}\NormalTok{ , }\DataTypeTok{p =} \FloatTok{0.9}\NormalTok{)}
+
+\CommentTok{# Define tuning parameters}
+\NormalTok{tune_grid <-}\StringTok{ }\KeywordTok{expand.grid}\NormalTok{(}\DataTypeTok{k =} \KeywordTok{seq}\NormalTok{(}\DecValTok{3}\NormalTok{, }\DecValTok{51}\NormalTok{, }\DecValTok{2}\NormalTok{))}
 
 \CommentTok{# Train knn model}
 \NormalTok{train_knn <-}\StringTok{ }\KeywordTok{train}\NormalTok{(LiverDisease}\OperatorTok{~}\StringTok{ }\NormalTok{.,}
                    \DataTypeTok{method =} \StringTok{"knn"}\NormalTok{, }
                    \DataTypeTok{preProc =} \KeywordTok{c}\NormalTok{(}\StringTok{"zv"}\NormalTok{,}\StringTok{"center"}\NormalTok{, }\StringTok{"scale"}\NormalTok{),}
                    \DataTypeTok{data =}\NormalTok{ training,}
-                   \DataTypeTok{tuneGrid =} \KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{k =} \KeywordTok{seq}\NormalTok{(}\DecValTok{3}\NormalTok{, }\DecValTok{51}\NormalTok{, }\DecValTok{2}\NormalTok{)),}
+                   \DataTypeTok{tuneGrid =}\NormalTok{ tune_grid,}
                    \DataTypeTok{trControl =}\NormalTok{ control)}
 
 \CommentTok{# Plot the model and highlight the best result}
 \KeywordTok{ggplot}\NormalTok{(train_knn, }\DataTypeTok{highlight =} \OtherTok{TRUE}\NormalTok{) }\OperatorTok{+}
-\StringTok{  }\KeywordTok{ggtitle}\NormalTok{(}\KeywordTok{paste}\NormalTok{(}\StringTok{"The best accuracy = "}\NormalTok{,}\KeywordTok{round}\NormalTok{(}\KeywordTok{max}\NormalTok{(train_knn}\OperatorTok{$}\NormalTok{results}\OperatorTok{$}\NormalTok{Accuracy),}\DecValTok{3}\NormalTok{)))}
+\StringTok{  }\KeywordTok{ggtitle}\NormalTok{(}\KeywordTok{paste}\NormalTok{(}\StringTok{"The best accuracy = "}\NormalTok{,}\KeywordTok{round}\NormalTok{(}\KeywordTok{max}\NormalTok{(train_knn}\OperatorTok{$}\NormalTok{results}\OperatorTok{$}\NormalTok{Accuracy),}\DecValTok{3}\NormalTok{), }\StringTok{" K ="}\NormalTok{,train_knn}\OperatorTok{$}\NormalTok{bestTune}\OperatorTok{$}\NormalTok{k))}
 \end{Highlighting}
 \end{Shaded}
 
@@ -996,16 +1038,15 @@ to 51, to optimize the performance.
 
 \subsection{Local Regression}
 
-We use \emph{loess} method with cross-validation of 10 folds to train
-the model. We tune the \textbf{span} and \textbf{degree} parameters to
-optimize the performance of the model.
+We use \emph{loess} method to train the model. We tune the \textbf{span}
+and \textbf{degree} parameters to optimize the performance of the model.
 
 \begin{Shaded}
 \begin{Highlighting}[]
 \KeywordTok{set.seed}\NormalTok{(}\DecValTok{1}\NormalTok{)}
 
-\CommentTok{# Defining a cross validation (10 K folds )}
-\NormalTok{control <-}\StringTok{ }\KeywordTok{trainControl}\NormalTok{(}\DataTypeTok{method =} \StringTok{"repeatedcv"}\NormalTok{, }\DataTypeTok{number =} \DecValTok{10}\NormalTok{, }\DataTypeTok{repeats=}\DecValTok{5}\NormalTok{)}
+\CommentTok{# Defining a cross-validation (10 K folds )}
+\NormalTok{control <-}\StringTok{ }\KeywordTok{trainControl}\NormalTok{(}\DataTypeTok{method =} \StringTok{"cv"}\NormalTok{, }\DataTypeTok{number =}\DecValTok{10}\NormalTok{ , }\DataTypeTok{p =} \FloatTok{0.9}\NormalTok{)}
 
 \CommentTok{# Define tuning parameters}
 \NormalTok{tune_grid <-}\StringTok{ }\KeywordTok{expand.grid}\NormalTok{(}\DataTypeTok{span =} \KeywordTok{seq}\NormalTok{(}\FloatTok{0.15}\NormalTok{, }\FloatTok{0.65}\NormalTok{, }\DataTypeTok{len =} \DecValTok{15}\NormalTok{), }\DataTypeTok{degree =} \KeywordTok{seq}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{1}\NormalTok{,}\FloatTok{0.25}\NormalTok{))}
@@ -1020,7 +1061,9 @@ optimize the performance of the model.
 
 \CommentTok{# Plot the model and highlight the best result}
 \KeywordTok{ggplot}\NormalTok{(train_loess, }\DataTypeTok{highlight =} \OtherTok{TRUE}\NormalTok{) }\OperatorTok{+}
-\StringTok{  }\KeywordTok{ggtitle}\NormalTok{(}\KeywordTok{paste}\NormalTok{(}\StringTok{"The best accuracy = "}\NormalTok{,}\KeywordTok{round}\NormalTok{(}\KeywordTok{max}\NormalTok{(train_loess}\OperatorTok{$}\NormalTok{results}\OperatorTok{$}\NormalTok{Accuracy),}\DecValTok{3}\NormalTok{)))}
+\StringTok{  }\KeywordTok{ggtitle}\NormalTok{(}\KeywordTok{paste}\NormalTok{(}\StringTok{"The best accuracy = "}\NormalTok{,}\KeywordTok{round}\NormalTok{(}\KeywordTok{max}\NormalTok{(train_loess}\OperatorTok{$}\NormalTok{results}\OperatorTok{$}\NormalTok{Accuracy),}\DecValTok{3}\NormalTok{),}
+                \StringTok{"Span = "}\NormalTok{, }\KeywordTok{round}\NormalTok{(train_loess}\OperatorTok{$}\NormalTok{bestTune}\OperatorTok{$}\NormalTok{span,}\DecValTok{3}\NormalTok{),}
+                \StringTok{"Degree = "}\NormalTok{, }\KeywordTok{round}\NormalTok{(train_loess}\OperatorTok{$}\NormalTok{bestTune}\OperatorTok{$}\NormalTok{degree,}\DecValTok{1}\NormalTok{)))}
 \end{Highlighting}
 \end{Shaded}
 
@@ -1036,9 +1079,8 @@ optimize the performance of the model.
 
 \subsection{Partial Least Squares (PLS)}
 
-We use \emph{pls} method with cross-validation of 10 folds to train the
-model. We tune the \textbf{ncomp} parameter to optimize the performance
-of the model.
+We use \emph{pls} method to train the model. We tune the \textbf{ncomp}
+parameter to optimize the performance of the model.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1047,8 +1089,8 @@ of the model.
 \CommentTok{# Define tuning parameters}
 \NormalTok{tune_grid <-}\StringTok{ }\KeywordTok{expand.grid}\NormalTok{(}\DataTypeTok{ncomp =} \KeywordTok{seq}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{5}\NormalTok{, }\DataTypeTok{len =} \DecValTok{10}\NormalTok{))}
 
-\CommentTok{# Defining a cross validation (10 K folds )}
-\NormalTok{control <-}\StringTok{ }\KeywordTok{trainControl}\NormalTok{(}\DataTypeTok{method =} \StringTok{"repeatedcv"}\NormalTok{, }\DataTypeTok{number =} \DecValTok{10}\NormalTok{, }\DataTypeTok{repeats=}\DecValTok{5}\NormalTok{)}
+\CommentTok{# Defining a cross-validation (10 K folds )}
+\NormalTok{control <-}\StringTok{ }\KeywordTok{trainControl}\NormalTok{(}\DataTypeTok{method =} \StringTok{"cv"}\NormalTok{, }\DataTypeTok{number =}\DecValTok{10}\NormalTok{ , }\DataTypeTok{p =} \FloatTok{0.9}\NormalTok{)}
 
 \CommentTok{# Train the model}
 \NormalTok{train_pls <-}\StringTok{ }\KeywordTok{train}\NormalTok{(LiverDisease}\OperatorTok{~}\NormalTok{.,}
@@ -1060,7 +1102,8 @@ of the model.
 
 \CommentTok{# Plot the model and highlight the best result}
 \KeywordTok{ggplot}\NormalTok{(train_pls, }\DataTypeTok{highlight =} \OtherTok{TRUE}\NormalTok{) }\OperatorTok{+}
-\StringTok{  }\KeywordTok{ggtitle}\NormalTok{(}\KeywordTok{paste}\NormalTok{(}\StringTok{"The best accuracy = "}\NormalTok{,}\KeywordTok{round}\NormalTok{(}\KeywordTok{max}\NormalTok{(train_pls}\OperatorTok{$}\NormalTok{results}\OperatorTok{$}\NormalTok{Accuracy),}\DecValTok{3}\NormalTok{)))}
+\StringTok{  }\KeywordTok{ggtitle}\NormalTok{(}\KeywordTok{paste}\NormalTok{(}\StringTok{"The best accuracy = "}\NormalTok{,}\KeywordTok{round}\NormalTok{(}\KeywordTok{max}\NormalTok{(train_pls}\OperatorTok{$}\NormalTok{results}\OperatorTok{$}\NormalTok{Accuracy),}\DecValTok{3}\NormalTok{),}
+                \StringTok{"Ncomp= "}\NormalTok{,train_pls}\OperatorTok{$}\NormalTok{bestTune}\OperatorTok{$}\NormalTok{ncomp))}
 \end{Highlighting}
 \end{Shaded}
 
@@ -1076,15 +1119,14 @@ of the model.
 
 \subsection{Linear Discriminant Analysis (LDA)}
 
-The \emph{lda} is a statistical classifier, and we use this method with
-cross-validation of 10 folds for training. There is no parameter to tune
-for this model.
+The \emph{lda} is a statistical classifier, and we use this method for
+training. There is no parameter to tune for this model.
 
 \begin{Shaded}
 \begin{Highlighting}[]
 \KeywordTok{set.seed}\NormalTok{(}\DecValTok{1}\NormalTok{)}
-\CommentTok{# Defining a cross validation (10 K folds )}
-\NormalTok{control <-}\StringTok{ }\KeywordTok{trainControl}\NormalTok{(}\DataTypeTok{method =} \StringTok{"repeatedcv"}\NormalTok{, }\DataTypeTok{number=}\DecValTok{10}\NormalTok{, }\DataTypeTok{repeats=}\DecValTok{5}\NormalTok{)}
+\CommentTok{# Defining a cross-validation (10 K folds )}
+\NormalTok{control <-}\StringTok{ }\KeywordTok{trainControl}\NormalTok{(}\DataTypeTok{method =} \StringTok{"cv"}\NormalTok{, }\DataTypeTok{number =}\DecValTok{10}\NormalTok{ , }\DataTypeTok{p =} \FloatTok{0.9}\NormalTok{)}
 
 \CommentTok{# Train the model}
 \NormalTok{train_lda <-}\StringTok{ }\KeywordTok{train}\NormalTok{(LiverDisease}\OperatorTok{~}\NormalTok{., }
@@ -1098,7 +1140,7 @@ for this model.
 \end{Shaded}
 
 \begin{verbatim}
-## [1] "The accuracy of lda = 0.710134"
+## [1] "The accuracy of lda = 0.713171"
 \end{verbatim}
 
 \begin{Shaded}
@@ -1111,15 +1153,14 @@ for this model.
 
 \subsection{Quadratic Discriminant Analysis (QDA)}
 
-The \emph{qda} is a statistical classifier, and we use the method with
-cross-validation of 10 folds for training. There is no parameter to tune
-for this model.
+The \emph{qda} is a statistical classifier, and we use the method for
+training. There is no parameter to tune for this model.
 
 \begin{Shaded}
 \begin{Highlighting}[]
 \KeywordTok{set.seed}\NormalTok{(}\DecValTok{1}\NormalTok{)}
-\CommentTok{# Defining a cross validation (10 K folds )}
-\NormalTok{control <-}\StringTok{ }\KeywordTok{trainControl}\NormalTok{(}\DataTypeTok{method =} \StringTok{"repeatedcv"}\NormalTok{, }\DataTypeTok{number=}\DecValTok{10}\NormalTok{, }\DataTypeTok{repeats=}\DecValTok{5}\NormalTok{)}
+\CommentTok{# Defining a cross-validation (10 K folds )}
+\NormalTok{control <-}\StringTok{ }\KeywordTok{trainControl}\NormalTok{(}\DataTypeTok{method =} \StringTok{"cv"}\NormalTok{, }\DataTypeTok{number =}\DecValTok{10}\NormalTok{ , }\DataTypeTok{p =} \FloatTok{0.9}\NormalTok{)}
 
 \CommentTok{# Train the model}
 \NormalTok{train_qda <-}\StringTok{ }\KeywordTok{train}\NormalTok{(LiverDisease}\OperatorTok{~}\NormalTok{.,}
@@ -1133,7 +1174,7 @@ for this model.
 \end{Shaded}
 
 \begin{verbatim}
-## [1] "The accuracy of qda = 0.557171"
+## [1] "The accuracy of qda = 0.556785"
 \end{verbatim}
 
 \begin{Shaded}
@@ -1146,16 +1187,18 @@ for this model.
 
 \subsection{Decision Tress}
 
-We use \emph{raprt} method with cross-validation of 10 folds for
-training. We tune the \emph{cp} parameter to optimize the performance of
-the model.
+We use \emph{raprt} method with cross-validation for training. We tune
+the \emph{cp} parameter to optimize the performance of the model.
 
 \begin{Shaded}
 \begin{Highlighting}[]
 \KeywordTok{set.seed}\NormalTok{(}\DecValTok{1}\NormalTok{)}
 
-\CommentTok{# Defining a cross validation (10 K folds )}
-\NormalTok{control <-}\StringTok{ }\KeywordTok{trainControl}\NormalTok{(}\DataTypeTok{method =} \StringTok{"repeatedcv"}\NormalTok{, }\DataTypeTok{number =} \DecValTok{10}\NormalTok{, }\DataTypeTok{repeats=}\DecValTok{5}\NormalTok{)}
+\CommentTok{# Defining a cross-validation (10 K folds )}
+\NormalTok{control <-}\StringTok{ }\KeywordTok{trainControl}\NormalTok{(}\DataTypeTok{method =} \StringTok{"cv"}\NormalTok{, }\DataTypeTok{number =}\DecValTok{10}\NormalTok{ , }\DataTypeTok{p =} \FloatTok{0.9}\NormalTok{)}
+
+\CommentTok{# Define tuning parameters}
+\NormalTok{tune_grid <-}\StringTok{ }\KeywordTok{expand.grid}\NormalTok{(}\DataTypeTok{cp =} \KeywordTok{seq}\NormalTok{(}\DecValTok{0}\NormalTok{, }\FloatTok{0.08}\NormalTok{, }\DataTypeTok{len =} \DecValTok{10}\NormalTok{))}
 
 \CommentTok{# Train the model}
 \NormalTok{train_rpart <-}\StringTok{ }\KeywordTok{train}\NormalTok{(LiverDisease}\OperatorTok{~}\NormalTok{., }
@@ -1163,11 +1206,12 @@ the model.
                      \DataTypeTok{preProc =} \KeywordTok{c}\NormalTok{(}\StringTok{"zv"}\NormalTok{,}\StringTok{"center"}\NormalTok{, }\StringTok{"scale"}\NormalTok{),}
                      \DataTypeTok{data =}\NormalTok{ training,}
                      \DataTypeTok{trControl =}\NormalTok{ control,}
-                     \DataTypeTok{tuneGrid =} \KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{cp =} \KeywordTok{seq}\NormalTok{(}\DecValTok{0}\NormalTok{, }\FloatTok{0.08}\NormalTok{, }\DataTypeTok{len =} \DecValTok{10}\NormalTok{)))}
+                     \DataTypeTok{tuneGrid =}\NormalTok{ tune_grid)}
 
 \CommentTok{# Plot the model and highlight the best result}
 \KeywordTok{ggplot}\NormalTok{(train_rpart, }\DataTypeTok{highlight =} \OtherTok{TRUE}\NormalTok{) }\OperatorTok{+}
-\StringTok{  }\KeywordTok{ggtitle}\NormalTok{(}\KeywordTok{paste}\NormalTok{(}\StringTok{"The best accuracy = "}\NormalTok{,}\KeywordTok{round}\NormalTok{(}\KeywordTok{max}\NormalTok{(train_rpart}\OperatorTok{$}\NormalTok{results}\OperatorTok{$}\NormalTok{Accuracy),}\DecValTok{3}\NormalTok{)))}
+\StringTok{  }\KeywordTok{ggtitle}\NormalTok{(}\KeywordTok{paste}\NormalTok{(}\StringTok{"The best accuracy = "}\NormalTok{,}\KeywordTok{round}\NormalTok{(}\KeywordTok{max}\NormalTok{(train_rpart}\OperatorTok{$}\NormalTok{results}\OperatorTok{$}\NormalTok{Accuracy),}\DecValTok{3}\NormalTok{),}
+                \StringTok{"CP = "}\NormalTok{, }\KeywordTok{round}\NormalTok{(train_rpart}\OperatorTok{$}\NormalTok{bestTune}\OperatorTok{$}\NormalTok{cp,}\DecValTok{2}\NormalTok{)))}
 \end{Highlighting}
 \end{Shaded}
 
@@ -1183,16 +1227,18 @@ the model.
 
 \subsection{Random Forests}
 
-We use \emph{rf} method with cross-validation of 10 folds for training.
-We tune the \emph{mtry} parameter to optimize the performance of the
-model.
+We use \emph{rf} method to train the model. We tune the \emph{mtry}
+parameter to optimize the performance of the model.
 
 \begin{Shaded}
 \begin{Highlighting}[]
 \KeywordTok{set.seed}\NormalTok{(}\DecValTok{1}\NormalTok{)}
 
-\CommentTok{# Defining a cross validation (10 K folds )}
-\NormalTok{control <-}\StringTok{ }\KeywordTok{trainControl}\NormalTok{(}\DataTypeTok{method =} \StringTok{"repeatedcv"}\NormalTok{, }\DataTypeTok{number =} \DecValTok{10}\NormalTok{, }\DataTypeTok{repeats=}\DecValTok{5}\NormalTok{)}
+\CommentTok{# Defining a cross-validation (10 K folds )}
+\NormalTok{control <-}\StringTok{ }\KeywordTok{trainControl}\NormalTok{(}\DataTypeTok{method =} \StringTok{"cv"}\NormalTok{, }\DataTypeTok{number =}\DecValTok{10}\NormalTok{ , }\DataTypeTok{p =} \FloatTok{0.9}\NormalTok{)}
+
+\CommentTok{# Define tuning parameters}
+\NormalTok{tune_grid <-}\StringTok{ }\KeywordTok{expand.grid}\NormalTok{(}\DataTypeTok{mtry=}\KeywordTok{seq}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{7}\NormalTok{))}
 
 \CommentTok{# Train the model}
 \NormalTok{train_rf <-}\StringTok{ }\KeywordTok{train}\NormalTok{(LiverDisease}\OperatorTok{~}\NormalTok{.,}
@@ -1200,12 +1246,13 @@ model.
                      \DataTypeTok{preProc =} \KeywordTok{c}\NormalTok{(}\StringTok{"zv"}\NormalTok{,}\StringTok{"center"}\NormalTok{, }\StringTok{"scale"}\NormalTok{),}
                      \DataTypeTok{data =}\NormalTok{ training,}
                      \DataTypeTok{trControl =}\NormalTok{ control,}
-                     \DataTypeTok{tuneGrid =} \KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{mtry=}\KeywordTok{seq}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{7}\NormalTok{)),}
+                     \DataTypeTok{tuneGrid =}\NormalTok{ tune_grid,}
                      \DataTypeTok{ntree=}\DecValTok{100}\NormalTok{)}
 
 \CommentTok{# Plot the model and highlight the best result}
 \KeywordTok{ggplot}\NormalTok{(train_rf, }\DataTypeTok{highlight =} \OtherTok{TRUE}\NormalTok{) }\OperatorTok{+}
-\StringTok{  }\KeywordTok{ggtitle}\NormalTok{(}\KeywordTok{paste}\NormalTok{(}\StringTok{"The best accuracy = "}\NormalTok{,}\KeywordTok{round}\NormalTok{(}\KeywordTok{max}\NormalTok{(train_rf}\OperatorTok{$}\NormalTok{results}\OperatorTok{$}\NormalTok{Accuracy),}\DecValTok{3}\NormalTok{)))}
+\StringTok{  }\KeywordTok{ggtitle}\NormalTok{(}\KeywordTok{paste}\NormalTok{(}\StringTok{"The best accuracy = "}\NormalTok{,}\KeywordTok{round}\NormalTok{(}\KeywordTok{max}\NormalTok{(train_rf}\OperatorTok{$}\NormalTok{results}\OperatorTok{$}\NormalTok{Accuracy),}\DecValTok{3}\NormalTok{),}
+                \StringTok{"Mtry = "}\NormalTok{, }\KeywordTok{round}\NormalTok{(train_rf}\OperatorTok{$}\NormalTok{bestTune}\OperatorTok{$}\NormalTok{mtry,}\DecValTok{1}\NormalTok{)))}
 \end{Highlighting}
 \end{Shaded}
 
@@ -1221,32 +1268,35 @@ model.
 
 \subsection{Support Vector Machine}
 
-We use support vector machine with cross-validation of 10 folds for
-training. We tune the \emph{tau} parameter to optimize the performance
-of the model.
+We use support vector machine for training. We tune the \emph{tau}
+parameter to optimize the performance of the model.
 
 \begin{Shaded}
 \begin{Highlighting}[]
 \KeywordTok{set.seed}\NormalTok{(}\DecValTok{1}\NormalTok{)}
 
-\CommentTok{# Defining a cross validation (10 K folds )}
-\NormalTok{control <-}\StringTok{ }\KeywordTok{trainControl}\NormalTok{(}\DataTypeTok{method =} \StringTok{"repeatedcv"}\NormalTok{, }\DataTypeTok{number =} \DecValTok{10}\NormalTok{, }\DataTypeTok{repeats =} \DecValTok{5}\NormalTok{)}
+\CommentTok{# Defining a cross-validation (10 K folds )}
+\NormalTok{control <-}\StringTok{ }\KeywordTok{trainControl}\NormalTok{(}\DataTypeTok{method =} \StringTok{"cv"}\NormalTok{, }\DataTypeTok{number =}\DecValTok{10}\NormalTok{ , }\DataTypeTok{p =} \FloatTok{0.9}\NormalTok{)}
+
+\CommentTok{# Define tuning parameters}
+\NormalTok{tune_grid <-}\StringTok{ }\KeywordTok{expand.grid}\NormalTok{(}\DataTypeTok{tau=}\KeywordTok{seq}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{8}\NormalTok{))}
 
 \CommentTok{# Train the model}
 \NormalTok{train_svm <-}\StringTok{ }\KeywordTok{train}\NormalTok{(LiverDisease}\OperatorTok{~}\NormalTok{.,}
                    \DataTypeTok{preProc =} \KeywordTok{c}\NormalTok{(}\StringTok{"zv"}\NormalTok{,}\StringTok{"center"}\NormalTok{, }\StringTok{"scale"}\NormalTok{),}
                    \DataTypeTok{data =}\NormalTok{ training,}
                    \DataTypeTok{method =} \StringTok{"svmLinear"}\NormalTok{,}
-                   \DataTypeTok{tune_grid=} \KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{tau=}\KeywordTok{seq}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{10}\NormalTok{)),}
+                   \DataTypeTok{tune_grid=}\NormalTok{ tune_grid,}
                    \DataTypeTok{trControl =}\NormalTok{ control)}
 
-\KeywordTok{sprintf}\NormalTok{(}\StringTok{"The accuracy of svm = %f"}\NormalTok{,}\KeywordTok{max}\NormalTok{(train_svm}\OperatorTok{$}\NormalTok{results}\OperatorTok{$}\NormalTok{Accuracy))}
+\CommentTok{# Plot the model and highlight the best result}
+\KeywordTok{ggplot}\NormalTok{(train_rf, }\DataTypeTok{highlight =} \OtherTok{TRUE}\NormalTok{) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{ggtitle}\NormalTok{(}\KeywordTok{paste}\NormalTok{(}\StringTok{"The best accuracy = "}\NormalTok{,}\KeywordTok{round}\NormalTok{(}\KeywordTok{max}\NormalTok{(train_svm}\OperatorTok{$}\NormalTok{results}\OperatorTok{$}\NormalTok{Accuracy),}\DecValTok{3}\NormalTok{),}
+                \StringTok{"Tua = "}\NormalTok{, }\KeywordTok{round}\NormalTok{(train_svm}\OperatorTok{$}\NormalTok{bestTune}\OperatorTok{$}\NormalTok{C,}\DecValTok{1}\NormalTok{)))}
 \end{Highlighting}
 \end{Shaded}
 
-\begin{verbatim}
-## [1] "The accuracy of svm = 0.715098"
-\end{verbatim}
+\includegraphics{LiverDisease_files/figure-latex/unnamed-chunk-33-1.pdf}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1258,19 +1308,17 @@ of the model.
 
 \subsection{Adaptive Boosting (Adaboost)}
 
-AdaBoost is a machine learning meta-algorithm for classification. We
-train the model with cross-validation of 10 folds.
+AdaBoost is a machine learning meta-algorithm for classification. We use
+the \emph{ada} method to train the model with no parameter tuning.
 
 \begin{Shaded}
 \begin{Highlighting}[]
 \KeywordTok{set.seed}\NormalTok{(}\DecValTok{1}\NormalTok{)}
 
-\CommentTok{# Defining a cross validation (10 K folds )}
-\NormalTok{control <-}\StringTok{ }\KeywordTok{trainControl}\NormalTok{(}\DataTypeTok{method =} \StringTok{"repeatedcv"}\NormalTok{, }\DataTypeTok{number =} \DecValTok{10}\NormalTok{, }\DataTypeTok{repeats =} \DecValTok{5}\NormalTok{)}
+\CommentTok{# Defining a cross-validation (10 K folds )}
+\NormalTok{control <-}\StringTok{ }\KeywordTok{trainControl}\NormalTok{(}\DataTypeTok{method =} \StringTok{"cv"}\NormalTok{, }\DataTypeTok{number =}\DecValTok{10}\NormalTok{ , }\DataTypeTok{p =} \FloatTok{0.9}\NormalTok{)}
 
-\CommentTok{# Tuning the model}
-\NormalTok{tune_grid  =}\StringTok{ }\KeywordTok{expand.grid}\NormalTok{(}\DataTypeTok{method =} \KeywordTok{c}\NormalTok{(}\StringTok{"Adaboost.M1"}\NormalTok{, }\StringTok{"Real adaboost"}\NormalTok{))}
- 
+\CommentTok{# Train the model}
 \NormalTok{train_ada <-}\StringTok{ }\KeywordTok{train}\NormalTok{(LiverDisease}\OperatorTok{~}\NormalTok{.,}
                    \DataTypeTok{preProc =} \KeywordTok{c}\NormalTok{(}\StringTok{"zv"}\NormalTok{,}\StringTok{"center"}\NormalTok{, }\StringTok{"scale"}\NormalTok{),}
                    \DataTypeTok{data =}\NormalTok{ training,}
@@ -1282,7 +1330,7 @@ train the model with cross-validation of 10 folds.
 \end{Shaded}
 
 \begin{verbatim}
-## [1] "The accuracy of adaboost = 0.713581"
+## [1] "The accuracy of adaboost = 0.713208"
 \end{verbatim}
 
 \begin{Shaded}
@@ -1296,127 +1344,32 @@ train the model with cross-validation of 10 folds.
 \subsection{Random Forest with PCA}
 
 We apply principal component analysis on data and then use \emph{rf}
-method to train the model with cross-validation of 10 folds. We utilize
-the same tuning, which was used before with the random forest model.
+method to train the model. We use the same tuning, which was used before
+with the random forest model.
 
 \begin{Shaded}
 \begin{Highlighting}[]
 \KeywordTok{set.seed}\NormalTok{(}\DecValTok{1}\NormalTok{)}
 
-\CommentTok{# Defining a cross validation (10 K folds )}
-\NormalTok{control <-}\StringTok{ }\KeywordTok{trainControl}\NormalTok{(}\DataTypeTok{method =} \StringTok{"repeatedcv"}\NormalTok{, }\DataTypeTok{number =} \DecValTok{10}\NormalTok{, }\DataTypeTok{repeats=}\DecValTok{5}\NormalTok{)}
+\CommentTok{# Defining a cross-validation (10 K folds )}
+\NormalTok{control <-}\StringTok{ }\KeywordTok{trainControl}\NormalTok{(}\DataTypeTok{method =} \StringTok{"cv"}\NormalTok{, }\DataTypeTok{number =}\DecValTok{10}\NormalTok{ , }\DataTypeTok{p =} \FloatTok{0.9}\NormalTok{)}
+
+\CommentTok{# Define tuning parameters}
+\NormalTok{tune_grid <-}\StringTok{ }\KeywordTok{expand.grid}\NormalTok{(}\DataTypeTok{mtry=}\KeywordTok{seq}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{7}\NormalTok{))}
+
 \CommentTok{# Train the model}
 \NormalTok{train_rf_pca <-}\StringTok{ }\KeywordTok{train}\NormalTok{(LiverDisease}\OperatorTok{~}\NormalTok{.,}
                      \DataTypeTok{method =} \StringTok{"rf"}\NormalTok{,}
                      \DataTypeTok{preProc =} \KeywordTok{c}\NormalTok{(}\StringTok{"zv"}\NormalTok{,}\StringTok{"center"}\NormalTok{, }\StringTok{"scale"}\NormalTok{),}
                      \DataTypeTok{data =}\NormalTok{ training,}
                      \DataTypeTok{trControl =}\NormalTok{ control,}
-                     \DataTypeTok{tuneGrid =} \KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{mtry=}\KeywordTok{seq}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{7}\NormalTok{)),}
+                     \DataTypeTok{tuneGrid =}\NormalTok{ tune_grid,}
                      \DataTypeTok{preProcess=}\KeywordTok{c}\NormalTok{(}\StringTok{"pca"}\NormalTok{),}
                      \DataTypeTok{ntree=}\DecValTok{100}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{verbatim}
-## Warning in randomForest.default(x, y, mtry = param$mtry, ...): invalid
-## mtry: reset to within valid range
-
-## Warning in randomForest.default(x, y, mtry = param$mtry, ...): invalid
-## mtry: reset to within valid range
-
-## Warning in randomForest.default(x, y, mtry = param$mtry, ...): invalid
-## mtry: reset to within valid range
-
-## Warning in randomForest.default(x, y, mtry = param$mtry, ...): invalid
-## mtry: reset to within valid range
-
-## Warning in randomForest.default(x, y, mtry = param$mtry, ...): invalid
-## mtry: reset to within valid range
-
-## Warning in randomForest.default(x, y, mtry = param$mtry, ...): invalid
-## mtry: reset to within valid range
-
-## Warning in randomForest.default(x, y, mtry = param$mtry, ...): invalid
-## mtry: reset to within valid range
-
-## Warning in randomForest.default(x, y, mtry = param$mtry, ...): invalid
-## mtry: reset to within valid range
-
-## Warning in randomForest.default(x, y, mtry = param$mtry, ...): invalid
-## mtry: reset to within valid range
-
-## Warning in randomForest.default(x, y, mtry = param$mtry, ...): invalid
-## mtry: reset to within valid range
-
-## Warning in randomForest.default(x, y, mtry = param$mtry, ...): invalid
-## mtry: reset to within valid range
-
-## Warning in randomForest.default(x, y, mtry = param$mtry, ...): invalid
-## mtry: reset to within valid range
-
-## Warning in randomForest.default(x, y, mtry = param$mtry, ...): invalid
-## mtry: reset to within valid range
-
-## Warning in randomForest.default(x, y, mtry = param$mtry, ...): invalid
-## mtry: reset to within valid range
-
-## Warning in randomForest.default(x, y, mtry = param$mtry, ...): invalid
-## mtry: reset to within valid range
-
-## Warning in randomForest.default(x, y, mtry = param$mtry, ...): invalid
-## mtry: reset to within valid range
-
-## Warning in randomForest.default(x, y, mtry = param$mtry, ...): invalid
-## mtry: reset to within valid range
-
-## Warning in randomForest.default(x, y, mtry = param$mtry, ...): invalid
-## mtry: reset to within valid range
-
-## Warning in randomForest.default(x, y, mtry = param$mtry, ...): invalid
-## mtry: reset to within valid range
-
-## Warning in randomForest.default(x, y, mtry = param$mtry, ...): invalid
-## mtry: reset to within valid range
-
-## Warning in randomForest.default(x, y, mtry = param$mtry, ...): invalid
-## mtry: reset to within valid range
-
-## Warning in randomForest.default(x, y, mtry = param$mtry, ...): invalid
-## mtry: reset to within valid range
-
-## Warning in randomForest.default(x, y, mtry = param$mtry, ...): invalid
-## mtry: reset to within valid range
-
-## Warning in randomForest.default(x, y, mtry = param$mtry, ...): invalid
-## mtry: reset to within valid range
-
-## Warning in randomForest.default(x, y, mtry = param$mtry, ...): invalid
-## mtry: reset to within valid range
-
-## Warning in randomForest.default(x, y, mtry = param$mtry, ...): invalid
-## mtry: reset to within valid range
-
-## Warning in randomForest.default(x, y, mtry = param$mtry, ...): invalid
-## mtry: reset to within valid range
-
-## Warning in randomForest.default(x, y, mtry = param$mtry, ...): invalid
-## mtry: reset to within valid range
-
-## Warning in randomForest.default(x, y, mtry = param$mtry, ...): invalid
-## mtry: reset to within valid range
-
-## Warning in randomForest.default(x, y, mtry = param$mtry, ...): invalid
-## mtry: reset to within valid range
-
-## Warning in randomForest.default(x, y, mtry = param$mtry, ...): invalid
-## mtry: reset to within valid range
-
-## Warning in randomForest.default(x, y, mtry = param$mtry, ...): invalid
-## mtry: reset to within valid range
-
-## Warning in randomForest.default(x, y, mtry = param$mtry, ...): invalid
-## mtry: reset to within valid range
-
 ## Warning in randomForest.default(x, y, mtry = param$mtry, ...): invalid
 ## mtry: reset to within valid range
 
@@ -1501,17 +1454,17 @@ component analysis, gives the best performance.
 method & Accuracy\tabularnewline
 \midrule
 \endhead
-glm & 0.7024949\tabularnewline
-knn & 0.7002355\tabularnewline
-loess & 0.6956271\tabularnewline
-pls & 0.7143429\tabularnewline
-lda & 0.7101339\tabularnewline
-qda & 0.5571708\tabularnewline
-rpart & 0.7150976\tabularnewline
-rf & 0.7063528\tabularnewline
-svm & 0.7150976\tabularnewline
-ada & 0.7135809\tabularnewline
-rf\_pca & 0.7108886\tabularnewline
+glm & 0.7054227\tabularnewline
+knn & 0.7095065\tabularnewline
+loess & 0.6997823\tabularnewline
+pls & 0.7150943\tabularnewline
+lda & 0.7131713\tabularnewline
+qda & 0.5567852\tabularnewline
+rpart & 0.7150943\tabularnewline
+rf & 0.6922351\tabularnewline
+svm & 0.7150943\tabularnewline
+ada & 0.7132075\tabularnewline
+rf\_pca & 0.7055878\tabularnewline
 \bottomrule
 \end{longtable}
 
@@ -1539,26 +1492,17 @@ rf\_pca & 0.7108886\tabularnewline
 \section{Results}
 \label{sec:results}
 
-The statistical measurements of accuracy and precision reveal the
-necessary reliability of a test. Specificity is the ability of a test to
-exclude individuals who do not have a given disease correctly, and
-sensitivity is the ability of a test to identify people who have a given
-disease accurately. On the other hand, the F1 score is the harmonic mean
-of Precision and Recall and gives a better measure of the incorrectly
-classified cases than the accuracy metric. And, the kappa metric
-measures the inter-rater reliability.
-
 In Section \ref{sec:methods}, we trained several models using training
 data. Now, we will evaluate the performance of these models using
-validation data. We have not used \textbf{qda} model due to poor
-performance on training data. The results show that \textbf{rf} and
-\textbackslash emph\{rf\_pca\} models performs best in terms of
-precision and recall. However, the models have slightly lower
-sensitivity and specificity compared to other models. But, the
-\textbackslash textbf\{rf\_pca\} model gives the best kappa value and is
-significantly better than the remaining ones. So, we can deduce that
-overall, \textbackslash textbf\{rf\_pca\} performs the best compared to
-other models.
+validation data. We have not used \textbf{qda} model in the evaluation
+due to poor performance on training data. The results show that
+\textbf{rf} and \textbackslash emph\{rf\_pca\} models performs best in
+terms of precision and recall. The kappa measure of
+\textbackslash textbf\{rf\_pca\} is also significantly better than the
+remaining models. However, both models have slightly lower sensitivity
+and specificity compared to other models. Based on results, we can
+hypothesize that as a whole \textbackslash textbf\{rf\_pca\} model
+performs the best compared to other models.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1812,12 +1756,6 @@ not good to consider it for further analysis.
 \end{Highlighting}
 \end{Shaded}
 
-From the results, we can see that \textbackslash emph\{rf\_pca\}
-performs the best compared to the other models. We saw a significant
-improvement in \emph{kappa} and \emph{Specifivity} measures compared to
-the other models. Though, the model has a slightly lower sensitivity
-compared to the other models.
-
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{ml_results}
@@ -1832,24 +1770,24 @@ Kappa\tabularnewline
 \endhead
 glm & 0.7118644 & 0.7142857 & 0.9756098 & 0.1111111 & 0.8247423 &
 0.1131742\tabularnewline
-knn & 0.7118644 & 0.7068966 & 1.0000000 & 0.0555556 & 0.8282828 &
-0.0755760\tabularnewline
-loess & 0.6610169 & 0.7142857 & 0.8536585 & 0.2222222 & 0.7777778 &
-0.0866873\tabularnewline
+knn & 0.6610169 & 0.6909091 & 0.9268293 & 0.0555556 & 0.7916667 &
+-0.0225303\tabularnewline
+loess & 0.7288136 & 0.7272727 & 0.9756098 & 0.1666667 & 0.8333333 &
+0.1819757\tabularnewline
 pls & 0.6949153 & 0.6949153 & 1.0000000 & 0.0000000 & 0.8200000 &
 0.0000000\tabularnewline
-lda & 0.7118644 & 0.7068966 & 1.0000000 & 0.0555556 & 0.8282828 &
-0.0755760\tabularnewline
+lda & 0.6949153 & 0.6949153 & 1.0000000 & 0.0000000 & 0.8200000 &
+0.0000000\tabularnewline
 rpart & 0.6949153 & 0.6949153 & 1.0000000 & 0.0000000 & 0.8200000 &
 0.0000000\tabularnewline
-rf & 0.7457627 & 0.7500000 & 0.9512195 & 0.2777778 & 0.8387097 &
-0.2763696\tabularnewline
+rf & 0.7627119 & 0.7755102 & 0.9268293 & 0.3888889 & 0.8444444 &
+0.3606811\tabularnewline
 svmlinear & 0.6949153 & 0.6949153 & 1.0000000 & 0.0000000 & 0.8200000 &
 0.0000000\tabularnewline
 ada & 0.6949153 & 0.6949153 & 1.0000000 & 0.0000000 & 0.8200000 &
 0.0000000\tabularnewline
-rf\_pca & 0.7796610 & 0.7916667 & 0.9268293 & 0.4444444 & 0.8539326 &
-0.4167300\tabularnewline
+rf\_pca & 0.6949153 & 0.7555556 & 0.8292683 & 0.3888889 & 0.7906977 &
+0.2326590\tabularnewline
 Ensemble & 0.6949153 & 0.6949153 & 1.0000000 & 0.0000000 & 0.8200000 &
 0.0000000\tabularnewline
 \bottomrule
@@ -1859,29 +1797,40 @@ Ensemble & 0.6949153 & 0.6949153 & 1.0000000 & 0.0000000 & 0.8200000 &
 \label{sec:conclusion}
 
 In this project, we developed machine learning models to diagnose liver
-disease by analysing protein levels in the blood. We used patients'
+disease by analyzing protein levels in the blood. We used patients'
 liver records collected from India. We found out that some variables did
 not correlate with the presence or absence of liver disease. So, we
 ignored those variables and used the remaining variables to train the
-model.
+model to diagnose liver disease.
 
-The results show that \emph{rf+pca} performed the best on the validation
-dataset. We tried to further improve the results by combining the
-outputs of several models. The idea was to use votes to decide if the
-liver has a disease. If more than 50\% of the models predict a disease,
-then we consider that the liver is damaged. But, the resulting model did
-not perform well.
+The results show that \emph{$rf_pca$} performed the best on the
+validation dataset. We tried to further improve the results by combining
+the outputs of several models. The idea was to use votes to decide if
+the liver has a disease or not. If more than 50\% of the models predict
+a disease, then we consider that the liver is damaged. But, the
+resulting model did not perform well.
 
 All models seem to overfit the data, and we end up getting more
 ``Malignant'' cases. The \textbackslash emph\{rf\_pca\} performs better,
 and we can correctly predict some ``Benign'' cases. The only reason we
-can think of is data is imbalanced. Ideally, both classes should have an
-equal distribution for patient records to train robust models. But, only
-28\% of the data belong to patients with liver disease. That's why the
-trained models are more biased in wrongly categorizing healthy patients.
-The ideal solution is to get more data to produce robust models.
-Alternatively, we can class weights to solve the problem of imbalanced
-data. We will explore the concept of class weights in future work.
+can think of is that the data is imbalanced. Ideally, both classes
+should have an equal distribution for patient records to train robust
+models. But, only 28\% of the data belong to patients with liver
+disease. That's why the trained models are more biased in wrongly
+categorizing healthy patients. The ideal solution is to get more data to
+produce robust models.
+
+\subsection{Future Work}
+\label{sec:futurework}
+
+In the future, we will explore class weights concepts to solve the
+problem of imbalanced data via weight balancing. The weight balancing
+balances our data by altering the weight that each training sample
+carries when computing the loss. With balanced data, each sample and
+class in our loss function will carry an equal weight of 1.0. But
+sometimes we might want certain classes or certain training samples to
+hold more weight if they are more important or less in number. We expect
+to improve our models using weight balancing.
 
 \begin{thebibliography}{9}
 \bibitem{cad} 
